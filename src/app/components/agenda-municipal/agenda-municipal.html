@@ -1,0 +1,35 @@
+<section class="agenda-section">
+  <div class="agenda-container">
+    <div class="section-header">
+      <span class="section-kicker">Actividades</span>
+
+      <div class="section-title-row">
+        <div>
+          <h2>Agenda municipal</h2>
+          <p>
+            Conocé las actividades, operativos y propuestas abiertas a la comunidad.
+          </p>
+        </div>
+
+        <a href="#" class="view-all">Ver agenda completa</a>
+      </div>
+    </div>
+
+    <div class="agenda-grid">
+      @for (evento of eventos; track evento.id) {
+        <article class="agenda-card">
+          <div class="date-box">
+            <strong>{{ evento.dia }}</strong>
+            <span>{{ evento.mes }}</span>
+          </div>
+
+          <div class="event-content">
+            <span class="event-category">{{ evento.categoria }}</span>
+            <h3>{{ evento.titulo }}</h3>
+            <p>{{ evento.lugar }}</p>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>

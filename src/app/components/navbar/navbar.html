@@ -1,0 +1,22 @@
+<header class="navbar">
+  <div class="navbar-container">
+    <div class="brand">
+      <div class="brand-icon">E</div>
+
+      <div>
+        <p>Municipalidad de</p>
+        <strong>Ensenada</strong>
+      </div>
+    </div>
+
+    <nav class="nav-links" aria-label="Navegación principal">
+      @for (link of links; track link.texto) {
+        <a [href]="link.ruta">{{ link.texto }}</a>
+      }
+    </nav>
+
+    <button class="search-button" aria-label="Buscar">
+      🔍
+    </button>
+  </div>
+</header>

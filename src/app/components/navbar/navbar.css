@@ -1,0 +1,81 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: white;
+  border-bottom: 0.0625rem solid #e5e7eb;
+}
+
+.navbar-container {
+  height: 4.75rem;
+  max-width: 73.75rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #14532d;
+}
+
+.brand-icon {
+  width: 2.625rem;
+  height: 2.625rem;
+  border-radius: 50%;
+  background-color: #15803d;
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+
+.brand p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #374151;
+}
+
+.brand strong {
+  font-size: 1.125rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.375rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #111827;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: #15803d;
+}
+
+.search-button {
+  border: none;
+  background-color: #f3f4f6;
+  width: 2.375rem;
+  height: 2.375rem;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: #dcfce7;
+}
+
+@media (max-width: 56.25rem) {
+  .nav-links {
+    display: none;
+  }
+}

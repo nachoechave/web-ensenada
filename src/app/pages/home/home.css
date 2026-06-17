@@ -1,0 +1,67 @@
+.hero {
+  min-height: 32.5rem;
+  display: flex;
+  align-items: center;
+  padding: 5rem 8%;
+  background:
+    linear-gradient(rgba(5, 46, 22, 0.65), rgba(5, 46, 22, 0.65)),
+    url('/assets/ensenada-hero.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+.hero-content {
+  max-width: 38.75rem;
+}
+
+.hero-label {
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: #bbf7d0;
+}
+
+.hero h1 {
+  margin: 0 0 1.25rem;
+  font-size: 3rem;
+  line-height: 1.1;
+}
+
+.hero p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+.hero button {
+  margin-top: 1.5rem;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #15803d;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hero button:hover {
+  background-color: #166534;
+}
+
+main {
+  background-color: #f8fafc;
+}
+
+@media (max-width: 48rem) {
+  .hero {
+    min-height: 28.75rem;
+    padding: 3.75rem 1.5rem;
+  }
+
+  .hero h1 {
+    font-size: 2.125rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+}

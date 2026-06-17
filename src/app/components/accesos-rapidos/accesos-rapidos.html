@@ -1,0 +1,27 @@
+<section class="quick-access">
+  <div class="quick-container">
+    <div class="section-header">
+      <span class="section-kicker">Servicios municipales</span>
+      <h2>Accesos rápidos</h2>
+      <p>
+        Encontrá de forma simple los trámites, servicios y canales de atención
+        más consultados por los vecinos.
+      </p>
+    </div>
+
+    <div class="quick-grid">
+      @for (acceso of accesos; track acceso.numero) {
+        <article class="quick-card" [class.featured]="acceso.destacado">
+          <div class="quick-icon">{{ acceso.numero }}</div>
+
+          <div>
+            <h3>{{ acceso.titulo }}</h3>
+            <p>{{ acceso.descripcion }}</p>
+          </div>
+
+          <span class="quick-arrow">→</span>
+        </article>
+      }
+    </div>
+  </div>
+</section>

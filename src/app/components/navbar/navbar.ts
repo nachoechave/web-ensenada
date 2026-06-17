@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 type NavLink = {
   texto: string;
@@ -7,7 +8,7 @@ type NavLink = {
 
 @Component({
   selector: 'app-navbar',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
@@ -15,7 +16,7 @@ export class Navbar {
   links: NavLink[] = [
     {
       texto: 'Inicio',
-      ruta: '#',
+      ruta: '/',
     },
     {
       texto: 'Municipio',
@@ -31,7 +32,7 @@ export class Navbar {
     },
     {
       texto: 'Noticias',
-      ruta: '#',
+      ruta: '/noticias',
     },
     {
       texto: 'Cultura',

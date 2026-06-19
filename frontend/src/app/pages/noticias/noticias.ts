@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 type Noticia = {
   id: number;
@@ -11,7 +12,7 @@ type Noticia = {
 
 @Component({
   selector: 'app-noticias',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './noticias.html',
   styleUrl: './noticias.css',
 })

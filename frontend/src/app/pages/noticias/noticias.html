@@ -11,28 +11,26 @@
 
 <section class="news-page">
   <div class="news-page-container">
-    <article class="news-item">
-      <h2>Avanzan las obras de mejora urbana en distintos barrios</h2>
-      <p>
-        El Municipio continúa trabajando en pavimento, iluminación y puesta en
-        valor de espacios públicos.
-      </p>
-    </article>
+    @for (noticia of noticias; track noticia.id) {
+      <article class="news-item">
+        <img
+          class="news-item-image"
+          [src]="noticia.imagen"
+          [alt]="noticia.titulo"
+        />
 
-    <article class="news-item">
-      <h2>Agenda cultural para este fin de semana</h2>
-      <p>
-        Actividades libres y gratuitas para disfrutar en familia en distintos
-        espacios de la ciudad.
-      </p>
-    </article>
+        <div class="news-item-content">
+          <div class="news-meta">
+            <span>{{ noticia.categoria }}</span>
+            <small>{{ noticia.fecha }}</small>
+          </div>
 
-    <article class="news-item">
-      <h2>Inscripción abierta a escuelas deportivas municipales</h2>
-      <p>
-        Programas deportivos para niños, jóvenes y adultos en espacios
-        municipales.
-      </p>
-    </article>
+          <h2>{{ noticia.titulo }}</h2>
+          <p>{{ noticia.resumen }}</p>
+
+          <a [routerLink]="['/noticias', noticia.id]">Leer noticia →</a>
+        </div>
+      </article>
+    }
   </div>
 </section>

@@ -1,0 +1,30 @@
+<section class="noticias-page">
+  <div class="encabezado">
+    <span>Actualidad municipal</span>
+    <h1>Noticias de Ensenada</h1>
+    <p>
+      Conocé las últimas novedades, obras, actividades y programas impulsados
+      por el Municipio.
+    </p>
+  </div>
+
+  <div class="noticias-grid">
+    @for (noticia of noticias; track noticia.id) {
+      <article class="noticia">
+        <img [src]="noticia.imagen" [alt]="noticia.titulo" />
+
+        <div class="noticia-contenido">
+          <span class="categoria">{{ noticia.categoria }}</span>
+
+          <h2>{{ noticia.titulo }}</h2>
+
+          <p class="fecha">{{ noticia.fecha }}</p>
+
+          <p class="bajada">{{ noticia.bajada }}</p>
+
+          <a [routerLink]="['/noticias', noticia.id]">Leer noticia</a>
+        </div>
+      </article>
+    }
+  </div>
+</section>

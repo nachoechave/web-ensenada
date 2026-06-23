@@ -1,0 +1,33 @@
+<section class="detalle-noticia">
+  @if (noticia) {
+    <article class="noticia-card">
+      <div class="imagen-contenedor">
+        <img [src]="noticia.imagen" [alt]="noticia.titulo" />
+      </div>
+
+      <div class="contenido">
+        <span class="categoria">{{ noticia.categoria }}</span>
+
+        <h1>{{ noticia.titulo }}</h1>
+
+        <p class="fecha">{{ noticia.fecha }}</p>
+
+        <p class="bajada">{{ noticia.bajada }}</p>
+
+        <div class="texto">
+          @for (parrafo of noticia.contenido; track parrafo) {
+            <p>{{ parrafo }}</p>
+          }
+        </div>
+
+        <a routerLink="/noticias" class="volver">Volver a noticias</a>
+      </div>
+    </article>
+  } @else {
+    <div class="no-encontrada">
+      <h1>Noticia no encontrada</h1>
+      <p>La noticia que estás buscando no existe o fue eliminada.</p>
+      <a routerLink="/noticias">Volver a noticias</a>
+    </div>
+  }
+</section>

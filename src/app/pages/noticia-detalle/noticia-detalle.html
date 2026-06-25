@@ -2,7 +2,7 @@
   @if (noticia) {
     <article class="noticia-card">
       <div class="imagen-contenedor">
-        <img [src]="noticia.imagen" [alt]="noticia.titulo" />
+        <img [src]="noticia.imagenUrl" [alt]="noticia.titulo" />
       </div>
 
       <div class="contenido">
@@ -10,7 +10,7 @@
 
         <h1>{{ noticia.titulo }}</h1>
 
-        <p class="fecha">{{ noticia.fecha }}</p>
+        <p class="fecha">{{ noticia.fechaPublicacion }}</p>
 
         <p class="bajada">{{ noticia.bajada }}</p>
 

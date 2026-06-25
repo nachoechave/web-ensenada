@@ -12,39 +12,42 @@
           </p>
         </div>
 
-        <a href="#" class="view-all">Ver todas</a>
+        <a routerLink="/noticias" class="view-all">Ver todas</a>
       </div>
     </div>
 
     <div class="news-grid">
-      <article class="main-news-card">
-        <img
-          class="news-image main-image"
-          [src]="noticiaPrincipal.imagen"
-          [alt]="noticiaPrincipal.titulo"
-        />
+      @if (noticiaPrincipal) {
+        <article class="main-news-card">
+          <img
+            class="news-image main-image"
+            [src]="noticiaPrincipal.imagenUrl"
+            [alt]="noticiaPrincipal.titulo"
+          />
 
-        <div class="news-content">
-          <span class="news-category">{{ noticiaPrincipal.categoria }}</span>
-          <h3>{{ noticiaPrincipal.titulo }}</h3>
-          <p>{{ noticiaPrincipal.resumen }}</p>
-          <a href="#">Leer más →</a>
-        </div>
-      </article>
+          <div class="news-content">
+            <span class="news-category">{{ noticiaPrincipal.categoria }}</span>
+            <h3>{{ noticiaPrincipal.titulo }}</h3>
+            <p>{{ noticiaPrincipal.bajada }}</p>
+            <a [routerLink]="['/noticias', noticiaPrincipal.id]">Leer más →</a>
+          </div>
+        </article>
+      }
 
       <div class="secondary-news">
         @for (noticia of noticiasSecundarias; track noticia.id) {
           <article class="news-card">
             <img
               class="news-image small-image"
-              [src]="noticia.imagen"
+              [src]="noticia.imagenUrl"
               [alt]="noticia.titulo"
             />
 
             <div class="news-content">
               <span class="news-category">{{ noticia.categoria }}</span>
               <h3>{{ noticia.titulo }}</h3>
-              <p>{{ noticia.resumen }}</p>
+              <p>{{ noticia.bajada }}</p>
+              <a [routerLink]="['/noticias', noticia.id]">Leer más →</a>
             </div>
           </article>
         }

@@ -12,5 +12,5 @@ import { Noticia } from '../../models/noticia.model';
 export class Noticias {
   private noticiasService = inject(NoticiasService);
 
-  noticias: Noticia[] = this.noticiasService.obtenerNoticias();
+  noticias: Noticia[] = this.noticiasService.obtenerNoticiasPublicadas();
 }

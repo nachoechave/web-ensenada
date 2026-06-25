@@ -123,4 +123,21 @@ h1 {
   .bajada {
     font-size: 1.1rem;
   }
+
+  .noticia-detalle,
+.noticia-detalle * {
+  word-break: normal;
+  overflow-wrap: normal;
+  writing-mode: horizontal-tb;
+}
+
+.noticia-contenido,
+.contenido,
+.detalle-contenido,
+article,
+p {
+  max-width: 100%;
+  white-space: normal;
+  line-height: 1.7;
+}
 }

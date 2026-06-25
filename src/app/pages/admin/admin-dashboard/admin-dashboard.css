@@ -1,0 +1,66 @@
+.admin-dashboard {
+  color: #10231d;
+}
+
+.dashboard-hero {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 1.25rem;
+  box-shadow: 0 0.5rem 1.5rem rgba(15, 61, 46, 0.08);
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin: 0.25rem 0 0.75rem;
+    color: #0f3d2e;
+    font-size: 2rem;
+  }
+
+  p {
+    color: #5d6b66;
+    line-height: 1.6;
+    max-width: 45rem;
+  }
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #2f8f65;
+  letter-spacing: 0.08em;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.stat-card {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  box-shadow: 0 0.5rem 1.5rem rgba(15, 61, 46, 0.08);
+
+  span {
+    color: #5d6b66;
+    font-weight: 700;
+  }
+
+  strong {
+    display: block;
+    color: #0f3d2e;
+    font-size: 2.4rem;
+    margin: 0.75rem 0;
+  }
+
+  p {
+    color: #6b7773;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

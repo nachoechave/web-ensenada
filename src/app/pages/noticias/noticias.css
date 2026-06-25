@@ -103,3 +103,15 @@
 .noticia a:hover {
   text-decoration: underline;
 }
+
+.noticia-card,
+.noticia-card * {
+  word-break: normal;
+  overflow-wrap: normal;
+  writing-mode: horizontal-tb;
+}
+
+.noticia-card p {
+  white-space: normal;
+  line-height: 1.5;
+}

@@ -1,0 +1,33 @@
+<section class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <span>ME</span>
+      <div>
+        <strong>Municipio</strong>
+        <small>Panel de prensa</small>
+      </div>
+    </div>
+
+    <nav class="admin-nav">
+      <a
+        routerLink="/admin"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        Inicio
+      </a>
+
+      <a routerLink="/admin/noticias" routerLinkActive="active">
+        Noticias
+      </a>
+
+      <a routerLink="/" class="public-link">
+        Ver sitio público
+      </a>
+    </nav>
+  </aside>
+
+  <main class="admin-content">
+    <router-outlet></router-outlet>
+  </main>
+</section>

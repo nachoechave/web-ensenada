@@ -1,0 +1,128 @@
+.admin-news-header {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  box-shadow: 0 0.5rem 1.5rem rgba(15, 61, 46, 0.08);
+}
+
+.admin-news-header h1 {
+  margin: 0.25rem 0 0.5rem;
+  color: #0f3d2e;
+}
+
+.admin-news-header p {
+  color: #5d6b66;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #2f8f65;
+  letter-spacing: 0.08em;
+}
+
+.primary-button {
+  background: #0f7a4f;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 0.85rem 1.25rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.news-table {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 0.5rem 1.5rem rgba(15, 61, 46, 0.08);
+}
+
+.table-head,
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.8fr;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.25rem;
+}
+
+.table-head {
+  background: #e7f1ec;
+  color: #0f3d2e;
+  font-weight: 800;
+}
+
+.table-row {
+  border-top: 1px solid #e5ebe8;
+}
+
+.table-row strong {
+  color: #10231d;
+}
+
+.table-row p {
+  color: #6b7773;
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.status {
+  width: fit-content;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: #f3d7d7;
+  color: #8a1f1f;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.status.published {
+  background: #dff3e8;
+  color: #0f6b45;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.actions a,
+.actions button {
+  border: none;
+  background: #edf4f0;
+  color: #0f3d2e;
+  border-radius: 999px;
+  padding: 0.5rem 0.75rem;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.actions .danger {
+  background: #fde7e7;
+  color: #9a1f1f;
+}
+
+@media (max-width: 900px) {
+  .admin-news-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .table-head {
+    display: none;
+  }
+
+  .table-row {
+    grid-template-columns: 1fr;
+  }
+}

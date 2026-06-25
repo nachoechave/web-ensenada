@@ -1,0 +1,51 @@
+<section class="admin-news">
+  <header class="admin-news-header">
+    <div>
+      <p class="eyebrow">Contenido</p>
+      <h1>Noticias</h1>
+      <p>Gestioná las noticias que aparecen publicadas en el sitio municipal.</p>
+    </div>
+
+    <a routerLink="/admin/noticias/nueva" class="primary-button">
+      Nueva noticia
+    </a>
+  </header>
+
+  <div class="news-table">
+    <div class="table-head">
+      <span>Título</span>
+      <span>Categoría</span>
+      <span>Estado</span>
+      <span>Acciones</span>
+    </div>
+
+    @for (noticia of noticias; track noticia.id) {
+      <article class="table-row">
+        <div>
+          <strong>{{ noticia.titulo }}</strong>
+          <p>{{ noticia.fechaPublicacion }} · {{ noticia.autor }}</p>
+        </div>
+
+        <span>{{ noticia.categoria }}</span>
+
+        <span class="status" [class.published]="noticia.publicada">
+          {{ noticia.publicada ? 'Publicada' : 'Borrador' }}
+        </span>
+
+        <div class="actions">
+          <a [routerLink]="['/admin/noticias/editar', noticia.id]">
+            Editar
+          </a>
+
+          <button type="button" (click)="cambiarEstadoPublicacion(noticia)">
+            {{ noticia.publicada ? 'Ocultar' : 'Publicar' }}
+          </button>
+
+          <button type="button" class="danger" (click)="eliminarNoticia(noticia.id)">
+            Eliminar
+          </button>
+        </div>
+      </article>
+    }
+  </div>
+</section>

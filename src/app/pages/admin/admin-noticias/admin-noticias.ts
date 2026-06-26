@@ -1,7 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NoticiasService } from '../../../services/noticias.service';
-import { Noticia } from '../../../models/noticia.model';
+
+interface AdminNoticia {
+  id: number;
+  titulo: string;
+  categoria: string;
+  fecha: string;
+  estado: 'Publicada' | 'Borrador';
+}
 
 @Component({
   selector: 'app-admin-noticias',
@@ -10,26 +16,37 @@ import { Noticia } from '../../../models/noticia.model';
   styleUrl: './admin-noticias.css',
 })
 export class AdminNoticias {
-  private readonly noticiasService = inject(NoticiasService);
-
-  noticias: Noticia[] = this.noticiasService.obtenerNoticias();
+  noticias: AdminNoticia[] = [
+    {
+      id: 1,
+      titulo: 'El municipio avanza con nuevas obras en los barrios',
+      categoria: 'Obras públicas',
+      fecha: '2026-06-25',
+      estado: 'Publicada',
+    },
+    {
+      id: 2,
+      titulo: 'Nueva agenda de actividades culturales',
+      categoria: 'Cultura',
+      fecha: '2026-06-24',
+      estado: 'Publicada',
+    },
+    {
+      id: 3,
+      titulo: 'Inscripción abierta a talleres deportivos',
+      categoria: 'Deportes',
+      fecha: '2026-06-23',
+      estado: 'Borrador',
+    },
+  ];
 
   eliminarNoticia(id: number): void {
-    const confirma = confirm('¿Seguro que querés eliminar esta noticia?');
+    const confirmar = confirm('¿Seguro que querés eliminar esta noticia?');
 
-    if (!confirma) {
+    if (!confirmar) {
       return;
     }
 
-    this.noticiasService.eliminarNoticia(id);
-    this.noticias = this.noticiasService.obtenerNoticias();
-  }
-
-  cambiarEstadoPublicacion(noticia: Noticia): void {
-    this.noticiasService.actualizarNoticia(noticia.id, {
-      publicada: !noticia.publicada,
-    });
-
-    this.noticias = this.noticiasService.obtenerNoticias();
+    this.noticias = this.noticias.filter((noticia) => noticia.id !== id);
   }
 }

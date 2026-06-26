@@ -1,109 +1,104 @@
-<section class="news-form-page">
-  <header class="form-header">
-    <div>
-      <p class="eyebrow">Contenido</p>
-      <h1>{{ modoEdicion ? 'Editar noticia' : 'Nueva noticia' }}</h1>
-      <p>Completá la información que se mostrará en el sitio municipal.</p>
-    </div>
+<div class="admin-page-header">
+  <div>
+    <span>{{ esEdicion ? 'Editar noticia' : 'Nueva noticia' }}</span>
+    <h2>{{ esEdicion ? 'Editar contenido' : 'Crear noticia' }}</h2>
+    <p>
+      Completá la información de la noticia para publicarla en el sitio municipal.
+    </p>
+  </div>
 
-    <a routerLink="/admin/noticias" class="secondary-button">
-      Volver
-    </a>
-  </header>
+  <a routerLink="/admin/noticias" class="secondary-button">
+    Volver al listado
+  </a>
+</div>
 
-  <form class="news-form" (ngSubmit)="guardarNoticia()">
-    <label>
-      Título
+<form class="news-form" (ngSubmit)="guardarNoticia()" #formNoticia="ngForm">
+  <div class="form-grid">
+    <label class="form-field full">
+      <span>Título</span>
       <input
         type="text"
         name="titulo"
         [(ngModel)]="noticia.titulo"
         required
-        placeholder="Ej: El Municipio inauguró nuevas obras"
+        placeholder="Ej: El municipio inauguró nuevas obras"
       />
     </label>
 
-    <label>
-      Bajada
-      <input
-        type="text"
+    <label class="form-field full">
+      <span>Bajada</span>
+      <textarea
         name="bajada"
         [(ngModel)]="noticia.bajada"
+        rows="3"
         required
-        placeholder="Resumen corto de la noticia"
-      />
-    </label>
-
-    <div class="form-grid">
-      <label>
-        Categoría
-        <select name="categoria" [(ngModel)]="noticia.categoria" required>
-          <option value="">Seleccionar categoría</option>
-          <option value="Obras Públicas">Obras Públicas</option>
-          <option value="Cultura">Cultura</option>
-          <option value="Deportes">Deportes</option>
-          <option value="Salud">Salud</option>
-          <option value="Educación">Educación</option>
-          <option value="Institucional">Institucional</option>
-        </select>
-      </label>
-
-      <label>
-        Fecha de publicación
-        <input
-          type="date"
-          name="fechaPublicacion"
-          [(ngModel)]="noticia.fechaPublicacion"
-          required
-        />
-      </label>
-    </div>
-
-    <label>
-        Imagen principal
-        <input
-            type="file"
-            name="imagen"
-            accept="image/*"
-            (change)="seleccionarImagen($event)"
-        />
-    </label>
-
-    @if (noticia.imagenUrl) {
-        <div class="image-preview">
-            <p>Vista previa</p>
-            <img [src]="noticia.imagenUrl" alt="Vista previa de la noticia" />
-        </div>
-    }
-
-    <label>
-      Contenido
-      <textarea
-        name="contenido"
-        [(ngModel)]="noticia.contenido"
-        rows="9"
-        required
-        placeholder="Escribí el cuerpo completo de la noticia"
+        placeholder="Resumen breve de la noticia"
       ></textarea>
     </label>
 
-    <label class="checkbox-label">
-      <input
-        type="checkbox"
-        name="publicada"
-        [(ngModel)]="noticia.publicada"
-      />
-      Publicar noticia
+    <label class="form-field">
+      <span>Categoría</span>
+      <select name="categoria" [(ngModel)]="noticia.categoria" required>
+        @for (categoria of categorias; track categoria) {
+          <option [value]="categoria">{{ categoria }}</option>
+        }
+      </select>
     </label>
 
-    <div class="form-actions">
-      <a routerLink="/admin/noticias" class="secondary-button">
-        Cancelar
-      </a>
+    <label class="form-field">
+      <span>Fecha</span>
+      <input type="date" name="fecha" [(ngModel)]="noticia.fecha" required />
+    </label>
 
-      <button type="submit" class="primary-button">
-        {{ modoEdicion ? 'Guardar cambios' : 'Crear noticia' }}
+    <label class="form-field">
+      <span>Estado</span>
+      <select name="estado" [(ngModel)]="noticia.estado" required>
+        <option value="Borrador">Borrador</option>
+        <option value="Publicada">Publicada</option>
+      </select>
+    </label>
+
+    <div class="form-field">
+      <span>Imagen principal</span>
+
+      <input
+        #imagenInput
+        class="file-input"
+        type="file"
+        accept="image/png, image/jpeg, image/webp"
+        (change)="seleccionarImagen($event)"
+      />
+
+      <button type="button" class="file-upload" (click)="imagenInput.click()">
+        Seleccionar imagen desde el equipo
       </button>
+
+      @if (imagenPreview) {
+        <div class="image-preview">
+          <img [src]="imagenPreview" alt="Vista previa de la noticia" />
+        </div>
+      }
     </div>
-  </form>
-</section>
+
+    <label class="form-field full">
+      <span>Contenido</span>
+      <textarea
+        name="contenido"
+        [(ngModel)]="noticia.contenido"
+        rows="8"
+        required
+        placeholder="Escribí el contenido completo de la noticia..."
+      ></textarea>
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <a routerLink="/admin/noticias" class="cancel-button">
+      Cancelar
+    </a>
+
+    <button type="submit" [disabled]="formNoticia.invalid">
+      {{ esEdicion ? 'Guardar cambios' : 'Crear noticia' }}
+    </button>
+  </div>
+</form>

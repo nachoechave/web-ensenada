@@ -1,87 +1,115 @@
 .admin-layout {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 17rem 1fr;
+  grid-template-columns: 17.5rem 1fr;
   background: #f4f7f5;
 }
 
 .admin-sidebar {
   background: #0f3d2e;
-  color: #ffffff;
-  padding: 2rem 1.5rem;
+  color: white;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .admin-brand {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  margin-bottom: 2rem;
+  gap: 0.8rem;
+}
 
-  span {
-    width: 2.75rem;
-    height: 2.75rem;
-    display: grid;
-    place-items: center;
-    border-radius: 0.9rem;
-    background: #ffffff;
-    color: #0f3d2e;
-    font-weight: 900;
-  }
+.admin-logo {
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 0.8rem;
+  background: #30a46c;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 1.4rem;
+}
 
-  strong,
-  small {
-    display: block;
-  }
+.admin-brand strong {
+  display: block;
+  font-size: 0.95rem;
+}
 
-  small {
-    color: rgba(255, 255, 255, 0.72);
-  }
+.admin-brand small {
+  display: block;
+  margin-top: 0.2rem;
+  color: #cde7dc;
+  font-size: 0.8rem;
 }
 
 .admin-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-
-  a {
-    color: #ffffff;
-    text-decoration: none;
-    padding: 0.85rem 1rem;
-    border-radius: 0.75rem;
-    transition: background 0.2s ease;
-    font-weight: 700;
-  }
-
-  a:hover,
-  a.active {
-    background: rgba(255, 255, 255, 0.15);
-  }
-
-  .public-link {
-    margin-top: 1rem;
-    background: rgba(255, 255, 255, 0.08);
-  }
+  gap: 0.5rem;
 }
 
-.admin-content {
+.admin-nav a,
+.public-link {
+  color: #e9fff4;
+  text-decoration: none;
+  padding: 0.8rem 0.9rem;
+  border-radius: 0.7rem;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.admin-nav a:hover,
+.public-link:hover,
+.admin-nav a.active {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.public-link {
+  margin-top: auto;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.admin-main {
   padding: 2rem;
 }
 
-@media (max-width: 768px) {
+.admin-header {
+  background: white;
+  border-radius: 1.2rem;
+  padding: 1.5rem;
+  box-shadow: 0 0.6rem 1.5rem rgba(15, 61, 46, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.admin-header h1 {
+  margin: 0;
+  color: #12382b;
+  font-size: 1.7rem;
+}
+
+.admin-header p {
+  margin: 0.4rem 0 0;
+  color: #5b6b63;
+}
+
+.admin-content {
+  background: white;
+  border-radius: 1.2rem;
+  padding: 1.5rem;
+  box-shadow: 0 0.6rem 1.5rem rgba(15, 61, 46, 0.08);
+}
+
+@media (max-width: 48rem) {
   .admin-layout {
     grid-template-columns: 1fr;
   }
 
   .admin-sidebar {
-    padding: 1.25rem;
+    position: static;
   }
 
-  .admin-nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .admin-content {
+  .admin-main {
     padding: 1rem;
   }
 }

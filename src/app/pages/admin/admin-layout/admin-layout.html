@@ -1,10 +1,10 @@
-<section class="admin-layout">
+<div class="admin-layout">
   <aside class="admin-sidebar">
     <div class="admin-brand">
-      <span>ME</span>
+      <span class="admin-logo">E</span>
       <div>
-        <strong>Municipio</strong>
-        <small>Panel de prensa</small>
+        <strong>Municipio de Ensenada</strong>
+        <small>Panel de periodistas</small>
       </div>
     </div>
 
@@ -14,20 +14,33 @@
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
       >
-        Inicio
+        Dashboard
       </a>
 
       <a routerLink="/admin/noticias" routerLinkActive="active">
         Noticias
       </a>
 
-      <a routerLink="/" class="public-link">
-        Ver sitio público
+      <a routerLink="/admin/noticias/nueva" routerLinkActive="active">
+        Nueva noticia
       </a>
     </nav>
+
+    <a class="public-link" routerLink="/">
+      Volver al sitio público
+    </a>
   </aside>
 
-  <main class="admin-content">
-    <router-outlet></router-outlet>
+  <main class="admin-main">
+    <header class="admin-header">
+      <div>
+        <h1>Panel de administración</h1>
+        <p>Gestión de contenidos para la web municipal.</p>
+      </div>
+    </header>
+
+    <section class="admin-content">
+      <router-outlet></router-outlet>
+    </section>
   </main>
-</section>
+</div>

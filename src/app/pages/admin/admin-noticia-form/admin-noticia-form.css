@@ -1,123 +1,129 @@
-.news-form-page {
-  color: #10231d;
-}
-
-.form-header {
-  background: #ffffff;
-  padding: 2rem;
-  border-radius: 1.25rem;
-  margin-bottom: 1.5rem;
+.admin-page-header {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
-  align-items: center;
-  box-shadow: 0 0.5rem 1.5rem rgba(15, 61, 46, 0.08);
+  margin-bottom: 1.5rem;
 }
 
-.form-header h1 {
-  margin: 0.25rem 0 0.5rem;
-  color: #0f3d2e;
-}
-
-.form-header p {
-  color: #5d6b66;
-}
-
-.eyebrow {
-  text-transform: uppercase;
+.admin-page-header span {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #258b5b;
   font-size: 0.8rem;
   font-weight: 800;
-  color: #2f8f65;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-page-header h2 {
+  margin: 0;
+  color: #12382b;
+  font-size: 1.8rem;
+}
+
+.admin-page-header p {
+  margin: 0.5rem 0 0;
+  color: #5b6b63;
+}
+
+.secondary-button {
+  color: #0f6b45;
+  text-decoration: none;
+  border: 1px solid #b7d8c8;
+  border-radius: 0.7rem;
+  padding: 0.85rem 1rem;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 .news-form {
-  background: #ffffff;
-  padding: 2rem;
-  border-radius: 1.25rem;
-  box-shadow: 0 0.5rem 1.5rem rgba(15, 61, 46, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.news-form label {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  color: #0f3d2e;
-  font-weight: 800;
-}
-
-.news-form input,
-.news-form select,
-.news-form textarea {
-  width: 100%;
-  border: 1px solid #d7e4de;
-  border-radius: 0.8rem;
-  padding: 0.85rem 1rem;
-  font: inherit;
-  color: #10231d;
-  background: #ffffff;
-}
-
-.news-form textarea {
-  resize: vertical;
-}
-
-.news-form input:focus,
-.news-form select:focus,
-.news-form textarea:focus {
-  outline: 3px solid rgba(47, 143, 101, 0.18);
-  border-color: #2f8f65;
+  border: 1px solid #e4eee8;
+  border-radius: 1rem;
+  padding: 1.5rem;
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
 }
 
-.checkbox-label {
-  flex-direction: row !important;
-  align-items: center;
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
 }
 
-.checkbox-label input {
-  width: auto;
+.form-field.full {
+  grid-column: 1 / -1;
+}
+
+.form-field span {
+  color: #315347;
+  font-weight: 800;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  border: 1px solid #cfe0d7;
+  border-radius: 0.7rem;
+  padding: 0.85rem 1rem;
+  color: #12382b;
+  font: inherit;
+  background: white;
+}
+
+.form-field textarea {
+  resize: vertical;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  outline: 2px solid rgba(15, 107, 69, 0.2);
+  border-color: #0f6b45;
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 1rem;
-  margin-top: 0.5rem;
+  margin-top: 1.5rem;
 }
 
-.primary-button,
-.secondary-button {
-  border: none;
+.cancel-button {
+  color: #5b6b63;
   text-decoration: none;
-  border-radius: 999px;
-  padding: 0.85rem 1.25rem;
+  font-weight: 800;
+}
+
+.form-actions button {
+  border: 0;
+  border-radius: 0.7rem;
+  padding: 0.9rem 1.2rem;
+  background: #0f6b45;
+  color: white;
   font-weight: 800;
   cursor: pointer;
 }
 
-.primary-button {
-  background: #0f7a4f;
-  color: #ffffff;
+.form-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.secondary-button {
-  background: #edf4f0;
-  color: #0f3d2e;
-}
-
-@media (max-width: 768px) {
-  .form-header {
+@media (max-width: 48rem) {
+  .admin-page-header {
     flex-direction: column;
-    align-items: flex-start;
+  }
+
+  .secondary-button {
+    width: 100%;
+    text-align: center;
   }
 
   .form-grid {
@@ -129,29 +135,44 @@
     align-items: stretch;
   }
 
-  .primary-button,
-  .secondary-button {
+  .form-actions button,
+  .cancel-button {
+    width: 100%;
     text-align: center;
- 
-
-.image-preview {
-  border: 1px solid #d7e4de;
-  border-radius: 1rem;
-  padding: 1rem;
-  background: #f8fbf9;
+  }
 }
 
-.image-preview p {
-  margin-bottom: 0.75rem;
-  color: #0f3d2e;
+.file-upload {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #8abfa3;
+  border-radius: 0.7rem;
+  padding: 0.85rem 1rem;
+  color: #0f6b45;
+  background: #f4fbf7;
   font-weight: 800;
+  cursor: pointer;
+  text-align: center;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.file-input {
+  display: none;
+}
+
+.image-preview {
+  margin-top: 0.8rem;
+  border: 1px solid #e4eee8;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  background: #f4f7f5;
 }
 
 .image-preview img {
-  width: 100%;
-  max-height: 22rem;
-  object-fit: cover;
-  border-radius: 0.8rem;
   display: block;
-}}
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
 }

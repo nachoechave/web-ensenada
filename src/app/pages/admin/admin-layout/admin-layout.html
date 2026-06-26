@@ -2,6 +2,7 @@
   <aside class="admin-sidebar">
     <div class="admin-brand">
       <span class="admin-logo">E</span>
+
       <div>
         <strong>Municipio de Ensenada</strong>
         <small>Panel de periodistas</small>
@@ -26,9 +27,22 @@
       </a>
     </nav>
 
-    <a class="public-link" routerLink="/">
-      Volver al sitio público
-    </a>
+    <div class="sidebar-bottom">
+      @if (usuario) {
+        <div class="admin-user">
+          <span>{{ usuario.nombre }}</span>
+          <small>{{ usuario.email }}</small>
+        </div>
+      }
+
+      <button type="button" class="logout-button" (click)="logout()">
+        Cerrar sesión
+      </button>
+
+      <a class="public-link" routerLink="/">
+        Volver al sitio público
+      </a>
+    </div>
   </aside>
 
   <main class="admin-main">

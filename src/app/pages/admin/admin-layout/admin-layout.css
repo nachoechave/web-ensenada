@@ -65,8 +65,49 @@
   background: rgba(255, 255, 255, 0.14);
 }
 
-.public-link {
+.sidebar-bottom {
   margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.admin-user {
+  padding: 0.9rem;
+  border-radius: 0.8rem;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.admin-user span {
+  display: block;
+  font-weight: 900;
+}
+
+.admin-user small {
+  display: block;
+  margin-top: 0.2rem;
+  color: #cde7dc;
+  font-size: 0.8rem;
+  word-break: break-word;
+}
+
+.logout-button {
+  width: 100%;
+  border: 0;
+  border-radius: 0.7rem;
+  padding: 0.8rem 0.9rem;
+  background: #dc2626;
+  color: white;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #b91c1c;
+}
+
+.public-link {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 

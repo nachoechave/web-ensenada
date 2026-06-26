@@ -1,0 +1,49 @@
+<section class="login-page">
+  <div class="login-card">
+    <div class="brand">
+      <span>E</span>
+
+      <div>
+        <strong>Municipio de Ensenada</strong>
+        <small>Panel de administración</small>
+      </div>
+    </div>
+
+    <h1>Iniciar sesión</h1>
+    <p>Acceso exclusivo para personal autorizado.</p>
+
+    <form (ngSubmit)="login()" #loginForm="ngForm">
+      <label>
+        <span>Email</span>
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          autocomplete="email"
+        />
+      </label>
+
+      <label>
+        <span>Contraseña</span>
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          autocomplete="current-password"
+        />
+      </label>
+
+      @if (error) {
+        <div class="error-message">
+          {{ error }}
+        </div>
+      }
+
+      <button type="submit" [disabled]="loginForm.invalid || cargando">
+        {{ cargando ? 'Ingresando...' : 'Ingresar' }}
+      </button>
+    </form>
+  </div>
+</section>

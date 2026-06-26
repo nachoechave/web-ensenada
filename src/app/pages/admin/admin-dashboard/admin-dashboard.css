@@ -1,66 +1,229 @@
-.admin-dashboard {
-  color: #10231d;
-}
-
-.dashboard-hero {
-  background: #ffffff;
-  padding: 2rem;
-  border-radius: 1.25rem;
-  box-shadow: 0 0.5rem 1.5rem rgba(15, 61, 46, 0.08);
+.dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 1.5rem;
-
-  h1 {
-    margin: 0.25rem 0 0.75rem;
-    color: #0f3d2e;
-    font-size: 2rem;
-  }
-
-  p {
-    color: #5d6b66;
-    line-height: 1.6;
-    max-width: 45rem;
-  }
 }
 
-.eyebrow {
-  text-transform: uppercase;
+.dashboard-header span,
+.section-title span {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #258b5b;
   font-size: 0.8rem;
   font-weight: 800;
-  color: #2f8f65;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dashboard-header h2,
+.section-title h3 {
+  margin: 0;
+  color: #12382b;
+}
+
+.dashboard-header h2 {
+  font-size: 1.8rem;
+}
+
+.dashboard-header p {
+  margin: 0.5rem 0 0;
+  color: #5b6b63;
+}
+
+.primary-button {
+  background: #0f6b45;
+  color: white;
+  text-decoration: none;
+  border: 0;
+  border-radius: 0.7rem;
+  padding: 0.85rem 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .stat-card {
-  background: #ffffff;
-  padding: 1.5rem;
-  border-radius: 1.25rem;
-  box-shadow: 0 0.5rem 1.5rem rgba(15, 61, 46, 0.08);
-
-  span {
-    color: #5d6b66;
-    font-weight: 700;
-  }
-
-  strong {
-    display: block;
-    color: #0f3d2e;
-    font-size: 2.4rem;
-    margin: 0.75rem 0;
-  }
-
-  p {
-    color: #6b7773;
-  }
+  border: 1px solid #e4eee8;
+  border-radius: 1rem;
+  padding: 1.3rem;
+  background: #f8fbf9;
 }
 
-@media (max-width: 768px) {
+.stat-card span {
+  display: block;
+  color: #258b5b;
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.stat-card strong {
+  display: block;
+  margin: 0.5rem 0;
+  color: #12382b;
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.stat-card p {
+  margin: 0;
+  color: #5b6b63;
+  font-weight: 600;
+}
+
+.latest-section {
+  border: 1px solid #e4eee8;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem;
+  background: #f4f7f5;
+  border-bottom: 1px solid #e4eee8;
+}
+
+.section-title a {
+  color: #0f6b45;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.latest-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.latest-item {
+  display: grid;
+  grid-template-columns: 6rem 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid #e4eee8;
+}
+
+.latest-item:last-child {
+  border-bottom: 0;
+}
+
+.latest-item img {
+  width: 6rem;
+  height: 4.5rem;
+  object-fit: cover;
+  border-radius: 0.8rem;
+  background: #e9f4ed;
+}
+
+.latest-content h4 {
+  margin: 0.45rem 0 0.25rem;
+  color: #12382b;
+  font-size: 1rem;
+}
+
+.latest-content p {
+  margin: 0;
+  color: #6b7a72;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.latest-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.category {
+  color: #0f6b45;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.status-draft {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.edit-link {
+  color: #0f6b45;
+  text-decoration: none;
+  font-weight: 900;
+}
+
+.edit-link:hover,
+.section-title a:hover {
+  text-decoration: underline;
+}
+
+.empty-state {
+  padding: 2rem;
+  text-align: center;
+}
+
+.empty-state h4 {
+  margin: 0 0 0.5rem;
+  color: #12382b;
+}
+
+.empty-state p {
+  margin: 0;
+  color: #5b6b63;
+}
+
+@media (max-width: 48rem) {
+  .dashboard-header,
+  .section-title {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primary-button {
+    text-align: center;
+  }
+
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+
+  .latest-item {
+    grid-template-columns: 1fr;
+  }
+
+  .latest-item img {
+    width: 100%;
+    height: 12rem;
+  }
+
+  .edit-link {
+    display: inline-flex;
   }
 }

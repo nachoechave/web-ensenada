@@ -1,30 +1,77 @@
-<section class="admin-dashboard">
-  <header class="dashboard-hero">
-    <p class="eyebrow">Administración</p>
-    <h1>Panel de gestión municipal</h1>
-    <p>
-      Desde este espacio se podrán administrar noticias, agenda, áreas municipales
-      y contenido institucional del sitio web.
-    </p>
-  </header>
+<div class="dashboard-header">
+  <div>
+    <span>Resumen general</span>
+    <h2>Dashboard</h2>
+    <p>Vista rápida del estado de las noticias cargadas en el sitio.</p>
+  </div>
 
-  <div class="stats-grid">
-    <article class="stat-card">
-      <span>Noticias</span>
-      <strong>3</strong>
-      <p>Contenido cargado en el sitio.</p>
-    </article>
+  <a routerLink="/admin/noticias/nueva" class="primary-button">
+    Nueva noticia
+  </a>
+</div>
 
-    <article class="stat-card">
-      <span>Publicadas</span>
-      <strong>2</strong>
-      <p>Noticias visibles para los vecinos.</p>
-    </article>
+<div class="stats-grid">
+  <article class="stat-card">
+    <span>Total</span>
+    <strong>{{ totalNoticias }}</strong>
+    <p>Noticias cargadas</p>
+  </article>
 
-    <article class="stat-card">
-      <span>Borradores</span>
-      <strong>1</strong>
-      <p>Noticias pendientes de publicación.</p>
-    </article>
+  <article class="stat-card">
+    <span>Publicadas</span>
+    <strong>{{ noticiasPublicadas }}</strong>
+    <p>Visibles en el sitio público</p>
+  </article>
+
+  <article class="stat-card">
+    <span>Borradores</span>
+    <strong>{{ noticiasBorrador }}</strong>
+    <p>Pendientes de publicación</p>
+  </article>
+</div>
+
+<section class="latest-section">
+  <div class="section-title">
+    <div>
+      <span>Contenido reciente</span>
+      <h3>Últimas noticias</h3>
+    </div>
+
+    <a routerLink="/admin/noticias">Ver todas</a>
+  </div>
+
+  <div class="latest-list">
+    @for (noticia of ultimasNoticias; track noticia.id) {
+      <article class="latest-item">
+        <img [src]="noticia.imagen" [alt]="noticia.titulo" />
+
+        <div class="latest-content">
+          <div class="latest-meta">
+            <span class="category">{{ noticia.categoria }}</span>
+            <span
+              class="status"
+              [class.status-draft]="noticia.estado === 'Borrador'"
+            >
+              {{ noticia.estado }}
+            </span>
+          </div>
+
+          <h4>{{ noticia.titulo }}</h4>
+          <p>{{ noticia.fecha }}</p>
+        </div>
+
+        <a
+          [routerLink]="['/admin/noticias/editar', noticia.id]"
+          class="edit-link"
+        >
+          Editar
+        </a>
+      </article>
+    } @empty {
+      <div class="empty-state">
+        <h4>Todavía no hay noticias cargadas</h4>
+        <p>Creá la primera noticia desde el panel de administración.</p>
+      </div>
+    }
   </div>
 </section>

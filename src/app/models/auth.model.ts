@@ -1,0 +1,17 @@
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  token: string;
+  nombre: string;
+  email: string;
+  rol: string;
+}
+
+export interface UsuarioActual {
+  nombre: string;
+  email: string;
+  rol: string;
+}

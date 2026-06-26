@@ -1,80 +1,114 @@
 import { Injectable } from '@angular/core';
+
 import { Noticia } from '../models/noticia.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NoticiasService {
-  private noticias: Noticia[] = [
+  private readonly storageKey = 'municipio-noticias';
+
+  private readonly noticiasIniciales: Noticia[] = [
     {
       id: 1,
-      titulo: 'El Municipio avanza con nuevas obras en los barrios',
-      bajada: 'Se realizan trabajos de pavimentación, iluminación y mantenimiento urbano.',
+      titulo: 'El municipio avanza con nuevas obras en los barrios',
+      bajada: 'Se realizaron trabajos de infraestructura en distintos puntos de la ciudad.',
       contenido:
-        'La Municipalidad de Ensenada continúa ejecutando obras públicas en distintos puntos de la ciudad con el objetivo de mejorar la calidad de vida de los vecinos.',
-      imagenUrl: 'assets/noticias/obra-publica.jpg',
-      categoria: 'Obras Públicas',
-      fechaPublicacion: '2026-06-25',
-      autor: 'Prensa Municipal',
-      publicada: true,
+        'El Municipio de Ensenada continúa desarrollando obras públicas orientadas a mejorar la calidad de vida de los vecinos y vecinas.',
+      imagen: '/assets/ensenada-hero.jpg',
+      categoria: 'Obras públicas',
+      fecha: '2026-06-25',
+      estado: 'Publicada',
     },
     {
       id: 2,
-      titulo: 'Nueva jornada cultural en el centro de la ciudad',
-      bajada: 'Habrá música, feria de emprendedores y actividades para toda la familia.',
+      titulo: 'Nueva agenda de actividades culturales',
+      bajada: 'La ciudad contará con nuevas propuestas culturales durante la semana.',
       contenido:
-        'El área de Cultura invita a los vecinos a participar de una nueva jornada abierta con propuestas artísticas y recreativas.',
-      imagenUrl: 'assets/noticias/cultura.jpg',
+        'El área de Cultura presentó una nueva agenda de actividades para vecinos, vecinas e instituciones de la ciudad.',
+      imagen: '/assets/ensenada-hero.jpg',
       categoria: 'Cultura',
-      fechaPublicacion: '2026-06-24',
-      autor: 'Prensa Municipal',
-      publicada: true,
+      fecha: '2026-06-24',
+      estado: 'Publicada',
     },
     {
       id: 3,
-      titulo: 'Inscripción abierta a actividades deportivas municipales',
-      bajada: 'Los vecinos podrán anotarse a distintas disciplinas gratuitas.',
+      titulo: 'Inscripción abierta a talleres deportivos',
+      bajada: 'Ya se encuentra disponible la inscripción a nuevas actividades deportivas.',
       contenido:
-        'La Dirección de Deportes informó que ya se encuentra abierta la inscripción a las actividades deportivas municipales.',
-      imagenUrl: 'assets/noticias/deportes.jpg',
+        'El Municipio informó la apertura de inscripción a talleres deportivos destinados a distintas edades.',
+      imagen: '/assets/ensenada-hero.jpg',
       categoria: 'Deportes',
-      fechaPublicacion: '2026-06-23',
-      autor: 'Prensa Municipal',
-      publicada: false,
+      fecha: '2026-06-23',
+      estado: 'Borrador',
     },
   ];
 
-  obtenerNoticias(): Noticia[] {
-    return this.noticias;
+  private noticias: Noticia[] = this.cargarNoticias();
+
+  obtenerTodas(): Noticia[] {
+    return [...this.noticias];
   }
 
-  obtenerNoticiasPublicadas(): Noticia[] {
-    return this.noticias.filter((noticia) => noticia.publicada);
+  obtenerPublicadas(): Noticia[] {
+    return this.noticias.filter((noticia) => noticia.estado === 'Publicada');
   }
 
-  obtenerNoticiaPorId(id: number): Noticia | undefined {
+  obtenerPorId(id: number): Noticia | undefined {
     return this.noticias.find((noticia) => noticia.id === id);
   }
 
-  crearNoticia(nuevaNoticia: Omit<Noticia, 'id'>): void {
-    const nuevoId =
-      this.noticias.length > 0
-        ? Math.max(...this.noticias.map((noticia) => noticia.id)) + 1
-        : 1;
+  crear(noticia: Omit<Noticia, 'id'>): void {
+    const nuevaNoticia: Noticia = {
+      ...noticia,
+      id: this.generarId(),
+    };
 
-    this.noticias.push({
-      id: nuevoId,
-      ...nuevaNoticia,
-    });
+    this.noticias = [nuevaNoticia, ...this.noticias];
+    this.guardarNoticias();
   }
 
-  actualizarNoticia(id: number, noticiaActualizada: Partial<Noticia>): void {
+  actualizar(id: number, noticiaActualizada: Omit<Noticia, 'id'>): void {
     this.noticias = this.noticias.map((noticia) =>
-      noticia.id === id ? { ...noticia, ...noticiaActualizada } : noticia,
+      noticia.id === id ? { ...noticiaActualizada, id } : noticia,
     );
+
+    this.guardarNoticias();
   }
 
-  eliminarNoticia(id: number): void {
+  eliminar(id: number): void {
     this.noticias = this.noticias.filter((noticia) => noticia.id !== id);
+    this.guardarNoticias();
+  }
+
+  obtenerNoticiasPublicadas(): Noticia[] {
+    return this.obtenerPublicadas();
+  }
+
+  obtenerNoticiaPorId(id: number): Noticia | undefined {
+    return this.obtenerPorId(id);
+  }
+
+  private cargarNoticias(): Noticia[] {
+    const noticiasGuardadas = localStorage.getItem(this.storageKey);
+
+    if (!noticiasGuardadas) {
+      return this.noticiasIniciales;
+    }
+
+    try {
+      return JSON.parse(noticiasGuardadas) as Noticia[];
+    } catch {
+      return this.noticiasIniciales;
+    }
+  }
+
+  private guardarNoticias(): void {
+    localStorage.setItem(this.storageKey, JSON.stringify(this.noticias));
+  }
+
+  private generarId(): number {
+    const ids = this.noticias.map((noticia) => noticia.id);
+    return ids.length > 0 ? Math.max(...ids) + 1 : 1;
   }
 }

@@ -3,9 +3,8 @@ export interface Noticia {
   titulo: string;
   bajada: string;
   contenido: string;
-  imagenUrl: string;
+  imagen: string;
   categoria: string;
-  fechaPublicacion: string;
-  autor: string;
-  publicada: boolean;
+  fecha: string;
+  estado: 'Publicada' | 'Borrador';
 }

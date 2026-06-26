@@ -1,33 +1,51 @@
-<section class="detalle-noticia">
-  @if (noticia) {
-    <article class="noticia-card">
-      <div class="imagen-contenedor">
-        <img [src]="noticia.imagenUrl" [alt]="noticia.titulo" />
-      </div>
+@if (noticia) {
+  <section class="noticia-detalle-page">
+    <div class="detalle-container">
+      <a routerLink="/noticias" class="breadcrumb">
+        ← Volver a noticias
+      </a>
 
-      <div class="contenido">
-        <span class="categoria">{{ noticia.categoria }}</span>
-
-        <h1>{{ noticia.titulo }}</h1>
-
-        <p class="fecha">{{ noticia.fechaPublicacion }}</p>
-
-        <p class="bajada">{{ noticia.bajada }}</p>
-
-        <div class="texto">
-          @for (parrafo of noticia.contenido; track parrafo) {
-            <p>{{ parrafo }}</p>
-          }
+      <article class="detalle-card">
+        <div class="detalle-imagen">
+          <img [src]="noticia.imagen" [alt]="noticia.titulo" />
         </div>
 
-        <a routerLink="/noticias" class="volver">Volver a noticias</a>
-      </div>
-    </article>
-  } @else {
-    <div class="no-encontrada">
-      <h1>Noticia no encontrada</h1>
-      <p>La noticia que estás buscando no existe o fue eliminada.</p>
-      <a routerLink="/noticias">Volver a noticias</a>
+        <div class="detalle-contenido">
+          <div class="detalle-meta">
+            <span class="categoria">{{ noticia.categoria }}</span>
+            <span class="fecha">{{ noticia.fecha }}</span>
+          </div>
+
+          <h1>{{ noticia.titulo }}</h1>
+
+          <p class="bajada">
+            {{ noticia.bajada }}
+          </p>
+
+          <div class="cuerpo">
+            <p>{{ noticia.contenido }}</p>
+          </div>
+
+          <div class="detalle-actions">
+            <a routerLink="/noticias" class="volver-button">
+              Volver a noticias
+            </a>
+          </div>
+        </div>
+      </article>
     </div>
-  }
-</section>
+  </section>
+} @else {
+  <section class="noticia-detalle-page">
+    <div class="detalle-container">
+      <div class="detalle-card detalle-empty">
+        <h1>Noticia no encontrada</h1>
+        <p>La noticia solicitada no existe o ya no se encuentra disponible.</p>
+
+        <a routerLink="/noticias" class="volver-button">
+          Volver a noticias
+        </a>
+      </div>
+    </div>
+  </section>
+}

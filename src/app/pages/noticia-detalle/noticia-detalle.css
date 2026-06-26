@@ -1,143 +1,159 @@
-.detalle-noticia {
-  min-height: 100vh;
+.noticia-detalle-page {
   background: #f4f7f5;
-  padding: 3rem 1rem;
+  padding: 4rem 1rem 5rem;
 }
 
-.noticia-card {
-  max-width: 62.5rem;
+.detalle-container {
+  width: min(100%, 80rem);
   margin: 0 auto;
-  background: #ffffff;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  box-shadow: 0 1.25rem 2.5rem rgba(0, 0, 0, 0.08);
 }
 
-.imagen-contenedor {
+.breadcrumb {
+  display: inline-flex;
+  margin-bottom: 1.2rem;
+  color: #0f6b45;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.breadcrumb:hover {
+  text-decoration: underline;
+}
+
+.detalle-card {
+  background: white;
+  border-radius: 1.4rem;
+  overflow: hidden;
+  box-shadow: 0 1rem 2.5rem rgba(15, 61, 46, 0.1);
+  border: 1px solid #e4eee8;
+}
+
+.detalle-imagen {
   width: 100%;
   height: 28rem;
-  overflow: hidden;
+  background: #e9f4ed;
 }
 
-.imagen-contenedor img {
+.detalle-imagen img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.contenido {
-  padding: 2.5rem;
+.detalle-contenido {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 3rem 2rem 3.5rem;
 }
 
-.categoria {
-  display: inline-block;
-  background: #e3f3e8;
-  color: #0f6b3e;
-  padding: 0.45rem 0.9rem;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 700;
+.detalle-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
   margin-bottom: 1rem;
 }
 
-h1 {
-  color: #173b2f;
-  font-size: clamp(2rem, 4vw, 3.2rem);
-  line-height: 1.1;
-  margin: 0 0 0.8rem;
+.categoria {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .fecha {
-  color: #7a8a82;
-  font-size: 0.95rem;
-  margin-bottom: 1.5rem;
+  color: #6b7a72;
+  font-weight: 700;
+}
+
+.detalle-contenido h1 {
+  margin: 0;
+  color: #12382b;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
 }
 
 .bajada {
-  color: #315245;
+  margin: 1.5rem 0;
+  color: #315347;
   font-size: 1.3rem;
   line-height: 1.6;
-  font-weight: 500;
-  margin-bottom: 2rem;
-}
-
-.texto p {
-  color: #3d4f47;
-  font-size: 1.05rem;
-  line-height: 1.8;
-  margin-bottom: 1.3rem;
-}
-
-.volver,
-.no-encontrada a {
-  display: inline-block;
-  margin-top: 1.5rem;
-  background: #0f6b3e;
-  color: #ffffff;
-  text-decoration: none;
-  padding: 0.9rem 1.4rem;
-  border-radius: 999px;
   font-weight: 700;
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease;
 }
 
-.volver:hover,
-.no-encontrada a:hover {
-  background: #0b5130;
-  transform: translateY(-2px);
+.cuerpo {
+  border-top: 1px solid #e4eee8;
+  margin-top: 2rem;
+  padding-top: 2rem;
 }
 
-.no-encontrada {
-  max-width: 40rem;
-  margin: 5rem auto;
-  background: #ffffff;
-  border-radius: 1.2rem;
-  padding: 2.5rem;
-  text-align: center;
-  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.08);
+.cuerpo p {
+  margin: 0;
+  color: #33443d;
+  font-size: 1.08rem;
+  line-height: 1.85;
+  white-space: pre-line;
 }
 
-.no-encontrada h1 {
-  font-size: 2rem;
+.detalle-actions {
+  margin-top: 2.5rem;
 }
 
-.no-encontrada p {
-  color: #5a6d64;
+.volver-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f6b45;
+  color: white;
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 0.85rem 1.2rem;
+  font-weight: 900;
 }
 
-@media (max-width: 768px) {
-  .detalle-noticia {
-    padding: 1.5rem 1rem;
+.volver-button:hover {
+  background: #0b5536;
+}
+
+.detalle-empty {
+  padding: 3rem;
+}
+
+.detalle-empty h1 {
+  color: #12382b;
+  margin-top: 0;
+}
+
+.detalle-empty p {
+  color: #5b6b63;
+}
+
+@media (max-width: 48rem) {
+  .noticia-detalle-page {
+    padding: 2rem 1rem 3rem;
   }
 
-  .imagen-contenedor {
+  .detalle-imagen {
     height: 16rem;
   }
 
-  .contenido {
-    padding: 1.5rem;
+  .detalle-contenido {
+    padding: 2rem 1.2rem;
+  }
+
+  .detalle-contenido h1 {
+    font-size: 2.2rem;
   }
 
   .bajada {
     font-size: 1.1rem;
   }
-
-  .noticia-detalle,
-.noticia-detalle * {
-  word-break: normal;
-  overflow-wrap: normal;
-  writing-mode: horizontal-tb;
-}
-
-.noticia-contenido,
-.contenido,
-.detalle-contenido,
-article,
-p {
-  max-width: 100%;
-  white-space: normal;
-  line-height: 1.7;
-}
 }

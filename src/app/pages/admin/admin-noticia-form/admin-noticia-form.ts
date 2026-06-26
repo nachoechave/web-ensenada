@@ -2,15 +2,10 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-interface NoticiaForm {
-  titulo: string;
-  bajada: string;
-  contenido: string;
-  imagen: string;
-  categoria: string;
-  fecha: string;
-  estado: 'Publicada' | 'Borrador';
-}
+import { Noticia } from '../../../models/noticia.model';
+import { NoticiasService } from '../../../services/noticias.service';
+
+type NoticiaForm = Omit<Noticia, 'id'>;
 
 @Component({
   selector: 'app-admin-noticia-form',
@@ -22,8 +17,9 @@ export class AdminNoticiaForm {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly noticiasService = inject(NoticiasService);
 
-  noticiaId = this.route.snapshot.paramMap.get('id');
+  noticiaId = Number(this.route.snapshot.paramMap.get('id'));
   esEdicion = !!this.noticiaId;
 
   imagenPreview = '';
@@ -42,62 +38,62 @@ export class AdminNoticiaForm {
 
   constructor() {
     if (this.esEdicion) {
-      this.noticia = {
-        titulo: 'El municipio avanza con nuevas obras en los barrios',
-        bajada: 'Se realizaron trabajos de infraestructura en distintos puntos de la ciudad.',
-        contenido:
-          'El Municipio de Ensenada continúa desarrollando obras públicas orientadas a mejorar la calidad de vida de los vecinos y vecinas.',
-        imagen: '/assets/ensenada-hero.jpg',
-        categoria: 'Obras públicas',
-        fecha: '2026-06-25',
-        estado: 'Publicada',
-      };
+      const noticiaEncontrada = this.noticiasService.obtenerPorId(this.noticiaId);
 
+      if (!noticiaEncontrada) {
+        alert('La noticia no existe.');
+        this.router.navigate(['/admin/noticias']);
+        return;
+      }
+
+      const { id, ...noticiaSinId } = noticiaEncontrada;
+
+      this.noticia = noticiaSinId;
       this.imagenPreview = this.noticia.imagen;
     }
   }
 
   guardarNoticia(): void {
-    console.log('Noticia guardada:', this.noticia);
-
-    alert(
-      this.esEdicion
-        ? 'Noticia actualizada correctamente.'
-        : 'Noticia creada correctamente.',
-    );
+    if (this.esEdicion) {
+      this.noticiasService.actualizar(this.noticiaId, this.noticia);
+      alert('Noticia actualizada correctamente.');
+    } else {
+      this.noticiasService.crear(this.noticia);
+      alert('Noticia creada correctamente.');
+    }
 
     this.router.navigate(['/admin/noticias']);
   }
 
   seleccionarImagen(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  const archivo = input.files?.[0];
+    const input = event.target as HTMLInputElement;
+    const archivo = input.files?.[0];
 
-  if (!archivo) {
-    return;
-  }
-
-  if (!archivo.type.startsWith('image/')) {
-    alert('El archivo seleccionado debe ser una imagen.');
-    input.value = '';
-    return;
-  }
-
-  const lector = new FileReader();
-
-  lector.onload = () => {
-    const resultado = lector.result;
-
-    if (typeof resultado !== 'string') {
+    if (!archivo) {
       return;
     }
 
-    this.imagenPreview = resultado;
-    this.noticia.imagen = resultado;
+    if (!archivo.type.startsWith('image/')) {
+      alert('El archivo seleccionado debe ser una imagen.');
+      input.value = '';
+      return;
+    }
 
-    this.cdr.detectChanges();
-  };
+    const lector = new FileReader();
 
-  lector.readAsDataURL(archivo);
+    lector.onload = () => {
+      const resultado = lector.result;
+
+      if (typeof resultado !== 'string') {
+        return;
+      }
+
+      this.imagenPreview = resultado;
+      this.noticia.imagen = resultado;
+
+      this.cdr.detectChanges();
+    };
+
+    lector.readAsDataURL(archivo);
   }
 }

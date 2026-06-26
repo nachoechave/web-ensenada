@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NoticiasService } from '../../services/noticias.service';
+
 import { Noticia } from '../../models/noticia.model';
+import { NoticiasService } from '../../services/noticias.service';
 
 @Component({
   selector: 'app-noticias-destacadas',
@@ -12,7 +13,7 @@ import { Noticia } from '../../models/noticia.model';
 export class NoticiasDestacadas {
   private readonly noticiasService = inject(NoticiasService);
 
-  noticias: Noticia[] = this.noticiasService.obtenerNoticiasPublicadas();
+  noticias: Noticia[] = this.noticiasService.obtenerPublicadas();
 
   noticiaPrincipal: Noticia | undefined = this.noticias[0];
 

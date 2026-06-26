@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { NoticiasService } from '../../services/noticias.service';
+
 import { Noticia } from '../../models/noticia.model';
+import { NoticiasService } from '../../services/noticias.service';
 
 @Component({
   selector: 'app-noticia-detalle',
@@ -10,8 +11,8 @@ import { Noticia } from '../../models/noticia.model';
   styleUrl: './noticia-detalle.css',
 })
 export class NoticiaDetalle {
-  private route = inject(ActivatedRoute);
-  private noticiasService = inject(NoticiasService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly noticiasService = inject(NoticiasService);
 
   noticia?: Noticia;
 

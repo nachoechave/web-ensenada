@@ -1,0 +1,60 @@
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <span class="admin-logo">E</span>
+
+      <div>
+        <strong>Municipio de Ensenada</strong>
+        <small>Panel de periodistas</small>
+      </div>
+    </div>
+
+    <nav class="admin-nav">
+      <a
+        routerLink="/admin"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        Dashboard
+      </a>
+
+      <a routerLink="/admin/noticias" routerLinkActive="active">
+        Noticias
+      </a>
+
+      <a routerLink="/admin/noticias/nueva" routerLinkActive="active">
+        Nueva noticia
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      @if (usuario) {
+        <div class="admin-user">
+          <span>{{ usuario.nombre }}</span>
+          <small>{{ usuario.email }}</small>
+        </div>
+      }
+
+      <button type="button" class="logout-button" (click)="logout()">
+        Cerrar sesión
+      </button>
+
+      <a class="public-link" routerLink="/">
+        Volver al sitio público
+      </a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-header">
+      <div>
+        <h1>Panel de administración</h1>
+        <p>Gestión de contenidos para la web municipal.</p>
+      </div>
+    </header>
+
+    <section class="admin-content">
+      <router-outlet></router-outlet>
+    </section>
+  </main>
+</div>

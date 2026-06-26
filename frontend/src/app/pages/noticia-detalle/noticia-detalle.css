@@ -1,0 +1,159 @@
+.noticia-detalle-page {
+  background: #f4f7f5;
+  padding: 4rem 1rem 5rem;
+}
+
+.detalle-container {
+  width: min(100%, 80rem);
+  margin: 0 auto;
+}
+
+.breadcrumb {
+  display: inline-flex;
+  margin-bottom: 1.2rem;
+  color: #0f6b45;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.breadcrumb:hover {
+  text-decoration: underline;
+}
+
+.detalle-card {
+  background: white;
+  border-radius: 1.4rem;
+  overflow: hidden;
+  box-shadow: 0 1rem 2.5rem rgba(15, 61, 46, 0.1);
+  border: 1px solid #e4eee8;
+}
+
+.detalle-imagen {
+  width: 100%;
+  height: 28rem;
+  background: #e9f4ed;
+}
+
+.detalle-imagen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detalle-contenido {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 3rem 2rem 3.5rem;
+}
+
+.detalle-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.categoria {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.fecha {
+  color: #6b7a72;
+  font-weight: 700;
+}
+
+.detalle-contenido h1 {
+  margin: 0;
+  color: #12382b;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+.bajada {
+  margin: 1.5rem 0;
+  color: #315347;
+  font-size: 1.3rem;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.cuerpo {
+  border-top: 1px solid #e4eee8;
+  margin-top: 2rem;
+  padding-top: 2rem;
+}
+
+.cuerpo p {
+  margin: 0;
+  color: #33443d;
+  font-size: 1.08rem;
+  line-height: 1.85;
+  white-space: pre-line;
+}
+
+.detalle-actions {
+  margin-top: 2.5rem;
+}
+
+.volver-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f6b45;
+  color: white;
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 0.85rem 1.2rem;
+  font-weight: 900;
+}
+
+.volver-button:hover {
+  background: #0b5536;
+}
+
+.detalle-empty {
+  padding: 3rem;
+}
+
+.detalle-empty h1 {
+  color: #12382b;
+  margin-top: 0;
+}
+
+.detalle-empty p {
+  color: #5b6b63;
+}
+
+@media (max-width: 48rem) {
+  .noticia-detalle-page {
+    padding: 2rem 1rem 3rem;
+  }
+
+  .detalle-imagen {
+    height: 16rem;
+  }
+
+  .detalle-contenido {
+    padding: 2rem 1.2rem;
+  }
+
+  .detalle-contenido h1 {
+    font-size: 2.2rem;
+  }
+
+  .bajada {
+    font-size: 1.1rem;
+  }
+}

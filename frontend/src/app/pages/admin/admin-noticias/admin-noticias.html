@@ -1,0 +1,54 @@
+<div class="admin-page-header">
+  <div>
+    <span>Noticias</span>
+    <h2>Gestión de noticias</h2>
+    <p>Desde acá se podrán crear, editar y eliminar noticias del sitio.</p>
+  </div>
+
+  <a routerLink="/admin/noticias/nueva" class="primary-button">
+    Nueva noticia
+  </a>
+</div>
+
+<div class="table-card">
+  <table>
+    <thead>
+      <tr>
+        <th>Título</th>
+        <th>Categoría</th>
+        <th>Fecha</th>
+        <th>Estado</th>
+        <th class="actions-column">Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (noticia of noticias; track noticia.id) {
+        <tr>
+          <td>
+            <strong>{{ noticia.titulo }}</strong>
+          </td>
+          <td>{{ noticia.categoria }}</td>
+          <td>{{ noticia.fecha }}</td>
+          <td>
+            <span
+              class="status"
+              [class.status-draft]="noticia.estado === 'Borrador'"
+            >
+              {{ noticia.estado }}
+            </span>
+          </td>
+          <td class="actions">
+            <a [routerLink]="['/admin/noticias/editar', noticia.id]">
+              Editar
+            </a>
+
+            <button type="button" (click)="eliminarNoticia(noticia.id)">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

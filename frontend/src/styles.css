@@ -1,1 +1,188 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --color-primary-950: #052e16;
+  --color-primary-900: #14532d;
+  --color-primary-800: #166534;
+  --color-primary-700: #15803d;
+  --color-primary-100: #dcfce7;
+  --color-primary-50: #f0fdf4;
+  --color-surface: #ffffff;
+  --color-page: #f8fafc;
+  --color-muted: #4b5563;
+  --color-text: #111827;
+  --color-heading: #12382b;
+  --color-border: #e5e7eb;
+  --shadow-card: 0 1rem 2.5rem rgba(15, 23, 42, 0.06);
+  --shadow-card-hover: 0 1.25rem 3rem rgba(15, 23, 42, 0.1);
+  --container: 73.75rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--color-text);
+  background: var(--color-page);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+img {
+  max-width: 100%;
+}
+
+a,
+button {
+  font: inherit;
+}
+
+.page-shell {
+  min-height: 100vh;
+  background: var(--color-page);
+}
+
+.section-container {
+  width: min(100% - 2rem, var(--container));
+  margin-inline: auto;
+}
+
+.section-block {
+  padding: 5rem 0;
+}
+
+.section-header {
+  max-width: 43.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.section-header:has(.section-title-row) {
+  max-width: 100%;
+}
+
+.section-header.centered {
+  max-width: 50rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.section-kicker {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  color: var(--color-primary-700);
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: 0.06rem;
+  text-transform: uppercase;
+}
+
+.section-title-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.section-header h1,
+.section-header h2,
+.section-title-row h2 {
+  margin: 0;
+  color: var(--color-heading);
+  line-height: 1.12;
+}
+
+.section-header h1 {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+}
+
+.section-header h2,
+.section-title-row h2 {
+  font-size: clamp(1.875rem, 3vw, 2.25rem);
+}
+
+.section-header p,
+.section-title-row p {
+  max-width: 42rem;
+  margin: 1rem 0 0;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+
+.section-header.centered p {
+  margin-inline: auto;
+}
+
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.65rem 1.15rem;
+  border: 0.0625rem solid #bbf7d0;
+  border-radius: 0.5rem;
+  color: var(--color-primary-800);
+  background: var(--color-primary-50);
+  font-weight: 800;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.button-link:hover,
+.button-link:focus-visible {
+  border-color: #86efac;
+  background: var(--color-primary-100);
+  color: var(--color-primary-900);
+}
+
+.button-link.primary {
+  border-color: var(--color-primary-700);
+  background: var(--color-primary-700);
+  color: white;
+}
+
+.button-link.primary:hover,
+.button-link.primary:focus-visible {
+  border-color: var(--color-primary-800);
+  background: var(--color-primary-800);
+  color: white;
+}
+
+.content-card {
+  border: 0.0625rem solid var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+@media (max-width: 56.25rem) {
+  .section-title-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 40rem) {
+  .section-block {
+    padding: 3.5rem 0;
+  }
+
+  .section-container {
+    width: min(100% - 1.5rem, var(--container));
+  }
+
+  .button-link {
+    width: 100%;
+    white-space: normal;
+  }
+}

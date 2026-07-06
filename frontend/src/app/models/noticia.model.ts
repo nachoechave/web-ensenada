@@ -7,4 +7,5 @@ export interface Noticia {
   categoria: string;
   fecha: string;
   estado: 'Publicada' | 'Borrador';
+  destacada: boolean;
 }

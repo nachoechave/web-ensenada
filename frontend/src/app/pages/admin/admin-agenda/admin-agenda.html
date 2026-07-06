@@ -1,0 +1,99 @@
+<div class="admin-page-header">
+  <div>
+    <span>Agenda municipal</span>
+    <h2>Gestion de eventos</h2>
+    <p>Carga actividades, operativos y propuestas abiertas a la comunidad.</p>
+  </div>
+</div>
+
+@if (mensaje) {
+  <p class="admin-message">{{ mensaje }}</p>
+}
+
+<form class="admin-form" (ngSubmit)="guardar()" #formAgenda="ngForm">
+  <div class="form-grid">
+    <label class="form-field">
+      <span>Fecha</span>
+      <input type="date" name="fecha" [(ngModel)]="evento.fecha" required />
+    </label>
+
+    <label class="form-field">
+      <span>Horario</span>
+      <input type="time" name="horario" [(ngModel)]="evento.horario" required />
+    </label>
+
+    <label class="form-field">
+      <span>Categoria</span>
+      <select name="categoria" [(ngModel)]="evento.categoria" required>
+        @for (categoria of categorias; track categoria) {
+          <option [value]="categoria">{{ categoria }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="form-field full">
+      <span>Titulo</span>
+      <input name="titulo" [(ngModel)]="evento.titulo" required />
+    </label>
+
+    <label class="form-field full">
+      <span>Lugar</span>
+      <input name="lugar" [(ngModel)]="evento.lugar" required />
+    </label>
+
+    <label class="form-field full">
+      <span>Descripcion</span>
+      <textarea name="descripcion" rows="4" [(ngModel)]="evento.descripcion" required></textarea>
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" [disabled]="formAgenda.invalid || guardando">
+      {{ guardando ? 'Guardando...' : 'Guardar evento' }}
+    </button>
+  </div>
+</form>
+
+<div class="table-card">
+  <table>
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Horario</th>
+        <th>Evento</th>
+        <th>Lugar</th>
+        <th>Categoria</th>
+        <th class="actions-column">Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (evento of eventos; track evento.id) {
+        <tr>
+          <td>{{ obtenerFechaLegible(evento.fecha) }}</td>
+          <td>{{ evento.horario || '-' }}</td>
+          <td>
+            <strong>{{ evento.titulo }}</strong>
+            <p>{{ evento.descripcion }}</p>
+          </td>
+          <td>{{ evento.lugar }}</td>
+          <td>{{ evento.categoria }}</td>
+          <td class="actions">
+            <button
+              type="button"
+              class="danger-action"
+              [disabled]="eliminandoId === evento.id"
+              (click)="eliminar(evento.id)"
+            >
+              {{ eliminandoId === evento.id ? 'Eliminando...' : 'Eliminar' }}
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="6" class="empty-table">Todavia no hay eventos cargados.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

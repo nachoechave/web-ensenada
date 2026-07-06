@@ -1,5 +1,5 @@
-<section class="agenda-section">
-  <div class="agenda-container">
+<section class="agenda-section section-block">
+  <div class="agenda-container section-container">
     <div class="section-header">
       <span class="section-kicker">Actividades</span>
 
@@ -11,21 +11,24 @@
           </p>
         </div>
 
-        <a href="#" class="view-all">Ver agenda completa</a>
+        <a routerLink="/agenda" class="button-link">Ver agenda completa</a>
       </div>
     </div>
 
     <div class="agenda-grid">
       @for (evento of eventos; track evento.id) {
-        <article class="agenda-card">
+        <article class="agenda-card content-card">
           <div class="date-box">
-            <strong>{{ evento.dia }}</strong>
-            <span>{{ evento.mes }}</span>
+            <strong>{{ obtenerDia(evento.fecha) }}</strong>
+            <span>{{ obtenerMes(evento.fecha) }}</span>
           </div>
 
           <div class="event-content">
             <span class="event-category">{{ evento.categoria }}</span>
             <h3>{{ evento.titulo }}</h3>
+            @if (evento.horario) {
+              <p class="event-time">{{ evento.horario }}</p>
+            }
             <p>{{ evento.lugar }}</p>
           </div>
         </article>

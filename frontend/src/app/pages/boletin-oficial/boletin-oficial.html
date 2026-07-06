@@ -1,0 +1,60 @@
+<app-navbar></app-navbar>
+
+<main class="boletin-page">
+  <section class="boletin-hero">
+    <div class="section-container">
+      <span class="hero-kicker">Publicaciones oficiales</span>
+      <h1>Boletín Oficial Municipalidad de Ensenada</h1>
+      <p>Accedé a las publicaciones oficiales del Municipio organizadas por año.</p>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="section-container">
+      <nav class="year-filter" aria-label="Filtrar boletines por año">
+        @for (anio of anios; track anio) {
+          <button
+            type="button"
+            [class.active]="anio === anioSeleccionado"
+            (click)="seleccionarAnio(anio)"
+          >
+            {{ anio }}
+          </button>
+        }
+      </nav>
+
+      <div class="boletin-layout">
+        <aside class="authorities content-card">
+          <h2>Autoridades</h2>
+
+          <div>
+            <strong>Intendente</strong>
+            <p>Mario Carlos Secco</p>
+          </div>
+
+          <div>
+            <strong>Secretaria de Gobierno</strong>
+            <p>María Alejandra Sabio</p>
+          </div>
+        </aside>
+
+        <div class="boletin-list">
+          @for (boletin of boletines; track boletin.id) {
+            <a class="boletin-card content-card" [href]="boletin.archivoUrl" target="_blank">
+              <span>{{ boletin.tipo }}</span>
+              <h2>{{ boletin.titulo }}</h2>
+              <p>{{ boletin.descripcion }}</p>
+              <small>{{ boletin.fecha }} · {{ boletin.hora }}</small>
+            </a>
+          }
+        </div>
+      </div>
+
+      <div class="page-action">
+        <a routerLink="/" class="button-link">Volver al inicio</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

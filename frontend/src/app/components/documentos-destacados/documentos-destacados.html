@@ -1,0 +1,21 @@
+<section class="documents-section section-block">
+  <div class="section-container">
+    <div class="section-header">
+      <span class="section-kicker">Documentación pública</span>
+      <h2>Boletín Oficial y Hacienda</h2>
+      <p>
+        Accedé a publicaciones oficiales, documentación económica y archivos de
+        consulta pública.
+      </p>
+    </div>
+
+    <div class="documents-access-grid">
+      @for (acceso of accesos; track acceso.ruta) {
+        <a class="documents-access-card content-card" [routerLink]="acceso.ruta">
+          <span>{{ acceso.titulo }}</span>
+          <p>{{ acceso.descripcion }}</p>
+        </a>
+      }
+    </div>
+  </div>
+</section>

@@ -1,5 +1,5 @@
-<section class="areas-section">
-  <div class="areas-container">
+<section class="areas-section section-block">
+  <div class="areas-container section-container">
     <div class="section-header">
       <span class="section-kicker">Gestión municipal</span>
       <h2>Áreas municipales</h2>
@@ -10,9 +10,9 @@
     </div>
 
     <div class="areas-grid">
-      @for (area of areas; track area.numero) {
-        <article class="area-card">
-          <span class="area-number">{{ area.numero }}</span>
+      @for (area of areas; track area.id) {
+        <article class="area-card content-card">
+          <span class="area-number">{{ area.id.toString().padStart(2, '0') }}</span>
           <h3>{{ area.nombre }}</h3>
           <p>{{ area.descripcion }}</p>
         </article>

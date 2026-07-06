@@ -1,0 +1,50 @@
+<app-navbar></app-navbar>
+
+<main class="page-shell">
+  <section class="section-block">
+    <div class="section-container">
+      <div class="section-header centered">
+        <span class="section-kicker">Gestión municipal</span>
+        <h1>Áreas municipales</h1>
+        <p>
+          Información de referencia sobre las principales áreas de atención,
+          gestión y servicios del Municipio.
+        </p>
+      </div>
+
+      <div class="areas-list">
+        @for (area of areas; track area.id) {
+          <article class="area-detail content-card">
+            <div class="area-number">{{ area.id.toString().padStart(2, '0') }}</div>
+
+            <div class="area-content">
+              <h2>{{ area.nombre }}</h2>
+              <p>{{ area.descripcion }}</p>
+
+              <dl>
+                <div>
+                  <dt>Teléfono</dt>
+                  <dd>{{ area.telefono }}</dd>
+                </div>
+                <div>
+                  <dt>Email</dt>
+                  <dd>{{ area.email }}</dd>
+                </div>
+                <div>
+                  <dt>Horario</dt>
+                  <dd>{{ area.horario }}</dd>
+                </div>
+              </dl>
+            </div>
+          </article>
+        }
+      </div>
+
+      <div class="page-action">
+        <a routerLink="/" class="button-link">Volver al inicio</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

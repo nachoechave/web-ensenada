@@ -1,0 +1,15 @@
+<article class="noticia content-card">
+  <img [src]="noticia.imagen" [alt]="noticia.titulo" />
+
+  <div class="noticia-contenido">
+    <span class="categoria">{{ noticia.categoria }}</span>
+
+    <h2>{{ noticia.titulo }}</h2>
+
+    <p class="fecha">{{ noticia.fecha }}</p>
+
+    <p class="bajada">{{ noticia.bajada }}</p>
+
+    <a [routerLink]="['/noticias', noticia.id]">Leer noticia</a>
+  </div>
+</article>

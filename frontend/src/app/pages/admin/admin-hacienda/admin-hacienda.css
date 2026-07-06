@@ -1,0 +1,78 @@
+@import '../admin-noticia-form/admin-noticia-form.css';
+@import '../admin-noticias/admin-noticias.css';
+
+.admin-form {
+  margin-bottom: 1.5rem;
+}
+
+.admin-message {
+  border: 1px solid #cfe8da;
+  border-radius: 0.75rem;
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  color: #0f6b45;
+  background: #f0faf5;
+  font-weight: 800;
+}
+
+.document-table-card {
+  border-radius: 0.75rem;
+  background: white;
+}
+
+.document-table {
+  min-width: 56rem;
+}
+
+.document-table th {
+  background: #f6faf8;
+  color: #12382b;
+  font-size: 0.78rem;
+}
+
+.document-table td {
+  vertical-align: middle;
+}
+
+.document-table strong {
+  display: block;
+  color: #12382b;
+  line-height: 1.35;
+}
+
+.document-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #b7d8c8;
+  border-radius: 0.65rem;
+  padding: 0.55rem 0.8rem;
+  color: #0f6b45;
+  background: #f4fbf7;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.danger-action {
+  border: 1px solid #f3b5b5;
+  border-radius: 0.65rem;
+  padding: 0.55rem 0.8rem;
+  color: #b42318;
+  background: #fff5f5;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.danger-action:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.empty-table {
+  padding: 2rem 1rem;
+  color: #6b7a73;
+  text-align: center;
+}

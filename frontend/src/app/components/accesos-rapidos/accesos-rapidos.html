@@ -1,5 +1,5 @@
-<section class="quick-access">
-  <div class="quick-container">
+<section class="quick-access section-block">
+  <div class="quick-container section-container">
     <div class="section-header">
       <span class="section-kicker">Servicios municipales</span>
       <h2>Accesos rápidos</h2>
@@ -11,7 +11,11 @@
 
     <div class="quick-grid">
       @for (acceso of accesos; track acceso.numero) {
-        <article class="quick-card" [class.featured]="acceso.destacado">
+        <a
+          class="quick-card content-card"
+          [class.featured]="acceso.destacado"
+          [routerLink]="acceso.ruta"
+        >
           <div class="quick-icon">{{ acceso.numero }}</div>
 
           <div>
@@ -20,7 +24,7 @@
           </div>
 
           <span class="quick-arrow">→</span>
-        </article>
+        </a>
       }
     </div>
   </div>

@@ -1,37 +1,73 @@
 <footer class="footer">
   <div class="footer-container">
     <div class="footer-brand">
-      <div class="footer-logo">E</div>
-
       <div>
-        <h2>Municipalidad de Ensenada</h2>
+        <a routerLink="/" class="footer-brand-link" aria-label="Ir al inicio">
+          <span class="footer-logo">E</span>
+          <h2>Municipalidad de Ensenada</h2>
+        </a>
+
         <p>
-          Un municipio cerca de cada vecino, trabajando por una ciudad más
-          integrada, moderna y participativa.
+          {{ contenido.footerDescripcion }}
         </p>
+
+        <div class="social-links" aria-label="Redes sociales">
+          <a
+            href="https://twitter.com/prensaensenada"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="X de la Municipalidad de Ensenada"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M13.9 10.5 21.3 2h-1.8l-6.4 7.4L8 2H2l7.8 11.3L2 22h1.8l6.8-7.8L16 22h6l-8.1-11.5Zm-2.4 2.7-.8-1.1L4.4 3.3h2.7l5 7.1.8 1.1 6.6 9.3h-2.7l-5.3-7.6Z" />
+            </svg>
+          </a>
+
+          <a
+            href="https://www.instagram.com/prensaensenada/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram de la Municipalidad de Ensenada"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm0 2A3.8 3.8 0 0 0 4 7.8v8.4A3.8 3.8 0 0 0 7.8 20h8.4a3.8 3.8 0 0 0 3.8-3.8V7.8A3.8 3.8 0 0 0 16.2 4H7.8Zm8.7 2.2a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6ZM12 7.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8Zm0 2a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8Z" />
+            </svg>
+          </a>
+
+          <a
+            href="https://www.facebook.com/prensaensenadaok"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook de la Municipalidad de Ensenada"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M14.2 8.1V6.6c0-.8.5-1 1-1h2.2V2h-3.1c-3.4 0-4.2 2.1-4.2 4.2v1.9H7.4v3.7h2.7V22h4.1V11.8h3l.5-3.7h-3.5Z" />
+            </svg>
+          </a>
+        </div>
       </div>
     </div>
 
     <div class="footer-links">
       <div>
         <h3>Municipio</h3>
-        <a href="#">Gobierno</a>
-        <a href="#">Áreas municipales</a>
-        <a href="#">Transparencia</a>
+        <a routerLink="/">Inicio</a>
+        <a routerLink="/areas">Áreas municipales</a>
+        <a routerLink="/contacto">Información institucional</a>
       </div>
 
       <div>
-        <h3>Servicios</h3>
-        <a href="#">Trámites</a>
-        <a href="#">Turnos</a>
-        <a href="#">Reclamos</a>
+        <h3>Documentación</h3>
+        <a routerLink="/boletin-oficial">Boletín Oficial</a>
+        <a routerLink="/hacienda">Hacienda</a>
+        <a routerLink="/noticias">Noticias</a>
       </div>
 
       <div>
         <h3>Contacto</h3>
         <p>Ensenada, Buenos Aires</p>
         <p>Atención municipal</p>
-        <p>info&#64;ensenada.gob.ar</p>
+        <p>{{ contenido.emailContacto }}</p>
       </div>
     </div>
   </div>

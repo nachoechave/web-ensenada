@@ -4,6 +4,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 @Component
 public class DataInitializer implements CommandLineRunner {
 
@@ -22,21 +24,45 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         String email = "admin@ensenada.gov.ar";
 
-        if (usuarioRepository.findByEmail(email).isPresent()) {
+        var adminExistente = usuarioRepository.findByEmailIgnoreCase(email);
+
+        if (adminExistente.isPresent()) {
+            Usuario admin = adminExistente.get();
+            boolean actualizado = false;
+
+            if (!email.equals(admin.getEmail())) {
+                admin.setEmail(email);
+                actualizado = true;
+            }
+
+            if (!admin.getRoles().contains(RolUsuario.SUPER_ADMIN)) {
+                admin.setRoles(Set.of(RolUsuario.SUPER_ADMIN));
+                actualizado = true;
+            }
+
+            if (!admin.isActivo()) {
+                admin.setActivo(true);
+                actualizado = true;
+            }
+
+            if (actualizado) {
+                usuarioRepository.save(admin);
+            }
+
             return;
         }
 
         Usuario admin = new Usuario(
                 "Administrador",
-                email,
+                "admin@ensenada.gov.ar",
                 passwordEncoder.encode("admin123"),
-                "ADMIN",
+                Set.of(RolUsuario.SUPER_ADMIN),
                 true
         );
 
         usuarioRepository.save(admin);
 
-        System.out.println("Usuario admin creado:");
+        System.out.println("Usuario superadmin creado:");
         System.out.println("Email: admin@ensenada.gov.ar");
         System.out.println("Password: admin123");
     }

@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 type NavLink = {
   texto: string;
   ruta: string;
+  exacta?: boolean;
 };
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
@@ -17,34 +18,35 @@ export class Navbar {
     {
       texto: 'Inicio',
       ruta: '/',
-    },
-    {
-      texto: 'Municipio',
-      ruta: '#',
+      exacta: true,
     },
     {
       texto: 'Áreas',
-      ruta: '#',
-    },
-    {
-      texto: 'Trámites',
-      ruta: '#',
+      ruta: '/areas',
     },
     {
       texto: 'Noticias',
       ruta: '/noticias',
     },
     {
-      texto: 'Cultura',
-      ruta: '#',
+      texto: 'Agenda',
+      ruta: '/agenda',
     },
     {
-      texto: 'Deportes',
-      ruta: '#',
+      texto: 'Boletín Oficial',
+      ruta: '/boletin-oficial',
+    },
+    {
+      texto: 'Hacienda',
+      ruta: '/hacienda',
     },
     {
       texto: 'Contacto',
-      ruta: '#',
+      ruta: '/contacto',
     },
   ];
+
+  irAlInicio(): void {
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
 }

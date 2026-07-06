@@ -2,6 +2,9 @@ package ar.gov.ensenada.backend.auth;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -20,7 +23,13 @@ public class Usuario {
     private String password;
 
     @Column(nullable = false)
-    private String rol;
+    private String rol = RolUsuario.PRENSA.name();
+
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "usuario_roles", joinColumns = @JoinColumn(name = "usuario_id"))
+    @Column(name = "rol", nullable = false)
+    private Set<RolUsuario> roles = new HashSet<>();
 
     @Column(nullable = false)
     private boolean activo = true;
@@ -28,11 +37,12 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(String nombre, String email, String password, String rol, boolean activo) {
+    public Usuario(String nombre, String email, String password, Set<RolUsuario> roles, boolean activo) {
         this.nombre = nombre;
         this.email = email;
         this.password = password;
-        this.rol = rol;
+        this.roles = roles;
+        this.rol = obtenerRolPrincipal(roles);
         this.activo = activo;
     }
 
@@ -50,6 +60,14 @@ public class Usuario {
 
     public String getPassword() {
         return password;
+    }
+
+    public Set<RolUsuario> getRoles() {
+        if ((roles == null || roles.isEmpty()) && rol != null) {
+            return Set.of(normalizarRol(rol));
+        }
+
+        return roles;
     }
 
     public String getRol() {
@@ -76,11 +94,32 @@ public class Usuario {
         this.password = password;
     }
 
+    public void setRoles(Set<RolUsuario> roles) {
+        this.roles = roles;
+        this.rol = obtenerRolPrincipal(roles);
+    }
+
     public void setRol(String rol) {
         this.rol = rol;
     }
 
     public void setActivo(boolean activo) {
         this.activo = activo;
+    }
+
+    private String obtenerRolPrincipal(Set<RolUsuario> roles) {
+        if (roles == null || roles.isEmpty()) {
+            return RolUsuario.PRENSA.name();
+        }
+
+        return roles.stream().findFirst().orElse(RolUsuario.PRENSA).name();
+    }
+
+    private RolUsuario normalizarRol(String rol) {
+        if ("ADMIN".equals(rol) || "ROLE_ADMIN".equals(rol)) {
+            return RolUsuario.SUPER_ADMIN;
+        }
+
+        return RolUsuario.valueOf(rol.replace("ROLE_", ""));
     }
 }

@@ -1,0 +1,35 @@
+<app-navbar></app-navbar>
+
+<main class="hacienda-page page-shell">
+  <section class="section-block">
+    <div class="section-container">
+      <div class="section-header centered">
+        <span class="section-kicker">Hacienda</span>
+        <h1>Situaciones económico financieras</h1>
+        <p>
+          Documentación económica, ordenanzas fiscales y publicaciones financieras
+          disponibles para consulta pública.
+        </p>
+      </div>
+
+      <div class="documents-grid">
+        @for (documento of documentos; track documento.id) {
+          <a class="document-card content-card" [href]="documento.archivoUrl" target="_blank">
+            <h2>{{ documento.titulo }}</h2>
+
+            <div class="document-meta">
+              <span>{{ documento.fecha }}</span>
+              <span>{{ documento.hora }}</span>
+            </div>
+          </a>
+        }
+      </div>
+
+      <div class="page-action">
+        <a routerLink="/" class="button-link">Volver al inicio</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

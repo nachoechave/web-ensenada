@@ -1,0 +1,68 @@
+.documents-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+}
+
+.document-card {
+  display: flex;
+  min-height: 13.5rem;
+  flex-direction: column;
+  justify-content: space-between;
+  color: inherit;
+  overflow: hidden;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.document-card:hover {
+  transform: translateY(-0.25rem);
+  border-color: #86efac;
+  box-shadow: var(--shadow-card-hover);
+}
+
+.document-card h2 {
+  margin: 0;
+  padding: 1.75rem 1.75rem 1rem;
+  color: #435466;
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.document-meta {
+  display: flex;
+  gap: 0.75rem;
+  border-top: 0.0625rem solid var(--color-border);
+  padding: 1rem 1.75rem;
+  color: #89959f;
+}
+
+.document-meta span + span::before {
+  content: '•';
+  margin-right: 0.75rem;
+}
+
+.page-action {
+  margin-top: 2rem;
+}
+
+@media (max-width: 64rem) {
+  .documents-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 40rem) {
+  .documents-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .document-card {
+    min-height: 11rem;
+  }
+}

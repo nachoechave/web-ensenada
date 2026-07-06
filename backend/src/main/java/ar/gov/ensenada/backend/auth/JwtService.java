@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
 public class JwtService {
@@ -26,18 +27,18 @@ public class JwtService {
     public String generarToken(Authentication authentication) {
         Instant ahora = Instant.now();
 
-        String rol = authentication.getAuthorities()
+        List<String> roles = authentication.getAuthorities()
                 .stream()
-                .findFirst()
                 .map(Object::toString)
-                .orElse("ROLE_PERIODISTA");
+                .map(authority -> authority.replace("ROLE_", ""))
+                .toList();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("web-ensenada")
                 .issuedAt(ahora)
                 .expiresAt(ahora.plus(expirationMinutes, ChronoUnit.MINUTES))
                 .subject(authentication.getName())
-                .claim("rol", rol)
+                .claim("roles", roles)
                 .build();
 
         JwsHeader header = JwsHeader.with(MacAlgorithm.HS256).build();

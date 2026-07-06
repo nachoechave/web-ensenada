@@ -1,30 +1,24 @@
-<section class="noticias-page">
-  <div class="encabezado">
-    <span>Actualidad municipal</span>
-    <h1>Noticias de Ensenada</h1>
-    <p>
-      Conocé las últimas novedades, obras, actividades y programas impulsados
-      por el Municipio.
-    </p>
-  </div>
+<app-navbar></app-navbar>
 
-  <div class="noticias-grid">
-    @for (noticia of noticias; track noticia.id) {
-      <article class="noticia">
-        <img [src]="noticia.imagen" [alt]="noticia.titulo" />
+<main class="noticias-page page-shell">
+  <section class="section-block">
+    <div class="section-container">
+      <div class="section-header centered">
+        <span class="section-kicker">Actualidad municipal</span>
+        <h1>Noticias de Ensenada</h1>
+        <p>
+          Conocé las últimas novedades, obras, actividades y programas impulsados
+          por el Municipio.
+        </p>
+      </div>
 
-        <div class="noticia-contenido">
-          <span class="categoria">{{ noticia.categoria }}</span>
+      <div class="noticias-grid">
+        @for (noticia of noticias; track noticia.id) {
+          <app-noticia-card [noticia]="noticia"></app-noticia-card>
+        }
+      </div>
+    </div>
+  </section>
+</main>
 
-          <h2>{{ noticia.titulo }}</h2>
-
-          <p class="fecha">{{ noticia.fecha }}</p>
-
-          <p class="bajada">{{ noticia.bajada }}</p>
-
-          <a [routerLink]="['/noticias', noticia.id]">Leer noticia</a>
-        </div>
-      </article>
-    }
-  </div>
-</section>
+<app-footer></app-footer>

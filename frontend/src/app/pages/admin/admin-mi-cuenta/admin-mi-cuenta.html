@@ -1,0 +1,114 @@
+<div class="admin-page-header">
+  <div>
+    <span>Cuenta</span>
+    <h2>Mi cuenta</h2>
+    <p>Actualizá tus datos de acceso al panel administrativo.</p>
+  </div>
+</div>
+
+<div class="account-grid">
+  <form class="account-card" #perfilForm="ngForm" (ngSubmit)="guardarPerfil()">
+    <div class="card-header">
+      <h3>Datos personales</h3>
+      <p>Estos datos identifican tu usuario dentro del panel.</p>
+    </div>
+
+    @if (cargandoPerfil) {
+      <p class="status-message neutral">Cargando datos actuales...</p>
+    }
+
+    @if (mensajePerfil) {
+      <p class="status-message success">{{ mensajePerfil }}</p>
+    }
+
+    @if (errorPerfil) {
+      <p class="status-message error">{{ errorPerfil }}</p>
+    }
+
+    <label class="form-field">
+      <span>Nombre</span>
+      <input
+        type="text"
+        name="nombre"
+        [(ngModel)]="perfil.nombre"
+        required
+        minlength="3"
+        autocomplete="name"
+      />
+    </label>
+
+    <label class="form-field">
+      <span>Email</span>
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="perfil.email"
+        required
+        email
+        autocomplete="email"
+      />
+    </label>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="perfilForm.invalid || guardandoPerfil">
+        {{ guardandoPerfil ? 'Guardando...' : 'Guardar datos' }}
+      </button>
+    </div>
+  </form>
+
+  <form class="account-card" #passwordForm="ngForm" (ngSubmit)="cambiarPassword()">
+    <div class="card-header">
+      <h3>Cambiar contraseña</h3>
+      <p>Después del cambio vas a volver a ingresar con la contraseña nueva.</p>
+    </div>
+
+    @if (mensajePassword) {
+      <p class="status-message success">{{ mensajePassword }}</p>
+    }
+
+    @if (errorPassword) {
+      <p class="status-message error">{{ errorPassword }}</p>
+    }
+
+    <label class="form-field">
+      <span>Contraseña actual</span>
+      <input
+        type="password"
+        name="passwordActual"
+        [(ngModel)]="passwords.actual"
+        required
+        autocomplete="current-password"
+      />
+    </label>
+
+    <label class="form-field">
+      <span>Nueva contraseña</span>
+      <input
+        type="password"
+        name="passwordNueva"
+        [(ngModel)]="passwords.nueva"
+        required
+        minlength="6"
+        autocomplete="new-password"
+      />
+    </label>
+
+    <label class="form-field">
+      <span>Repetir nueva contraseña</span>
+      <input
+        type="password"
+        name="passwordRepetida"
+        [(ngModel)]="passwords.repetir"
+        required
+        minlength="6"
+        autocomplete="new-password"
+      />
+    </label>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="passwordForm.invalid || guardandoPassword">
+        {{ guardandoPassword ? 'Actualizando...' : 'Cambiar contraseña' }}
+      </button>
+    </div>
+  </form>
+</div>

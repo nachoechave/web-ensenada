@@ -1,0 +1,64 @@
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.contact-card {
+  padding: 1.5rem;
+}
+
+.contact-card span {
+  color: var(--color-primary-700);
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.contact-card h2 {
+  margin: 0.75rem 0;
+  color: var(--color-heading);
+  font-size: 1.35rem;
+}
+
+.contact-card p {
+  margin: 0.35rem 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.contact-card .button-link {
+  margin-top: 1.25rem;
+}
+
+.institutional-note {
+  margin-top: 1.5rem;
+  padding: 2rem;
+  background:
+    linear-gradient(135deg, rgba(20, 83, 45, 0.92), rgba(21, 128, 61, 0.86)),
+    url('/assets/ensenada-hero.jpg') center/cover;
+  color: white;
+}
+
+.institutional-note h2 {
+  margin: 0;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+}
+
+.institutional-note p {
+  max-width: 48rem;
+  margin: 1rem 0 0;
+  color: #dcfce7;
+  line-height: 1.7;
+}
+
+.institutional-note .section-kicker {
+  color: #bbf7d0;
+}
+
+@media (max-width: 56.25rem) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}

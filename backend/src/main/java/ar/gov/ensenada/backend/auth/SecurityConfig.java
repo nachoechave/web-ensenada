@@ -13,6 +13,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,10 +44,25 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/me").authenticated()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/auth/me").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/auth/me/password").authenticated()
+                        .requestMatchers("/api/admin/usuarios/**").hasRole("SUPER_ADMIN")
+                        .requestMatchers("/api/admin/noticias/**").hasAnyRole("SUPER_ADMIN", "PRENSA")
+                        .requestMatchers("/api/admin/boletin-oficial/**").hasAnyRole("SUPER_ADMIN", "BOLETIN_OFICIAL")
+                        .requestMatchers("/api/admin/hacienda/**").hasAnyRole("SUPER_ADMIN", "HACIENDA")
+                        .requestMatchers("/api/admin/contenido", "/api/admin/contenido/**").hasAnyRole("SUPER_ADMIN", "CONTENIDO")
+                        .requestMatchers("/api/admin/agenda", "/api/admin/agenda/**").hasAnyRole("SUPER_ADMIN", "CONTENIDO")
+                        .requestMatchers("/api/admin/archivos/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+                        .requestMatchers("/api/admin/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/noticias/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/agenda").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/boletin-oficial/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/hacienda/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/contenido-sitio").permitAll()
                         .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(oauth2 ->
@@ -58,18 +74,19 @@ public class SecurityConfig {
     @Bean
     UserDetailsService userDetailsService(UsuarioRepository usuarioRepository) {
         return email -> {
-            Usuario usuario = usuarioRepository.findByEmail(email)
+            Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email.trim().toLowerCase())
                     .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
             if (!usuario.isActivo()) {
                 throw new DisabledException("Usuario desactivado");
             }
 
-            return User.builder()
-                    .username(usuario.getEmail())
-                    .password(usuario.getPassword())
-                    .roles(usuario.getRol())
-                    .build();
+            List<SimpleGrantedAuthority> authorities = usuario.getRoles()
+                    .stream()
+                    .map(rol -> new SimpleGrantedAuthority("ROLE_" + rol.name()))
+                    .toList();
+
+            return new User(usuario.getEmail(), usuario.getPassword(), authorities);
         };
     }
 
@@ -114,8 +131,8 @@ public class SecurityConfig {
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        authoritiesConverter.setAuthorityPrefix("");
-        authoritiesConverter.setAuthoritiesClaimName("rol");
+        authoritiesConverter.setAuthorityPrefix("ROLE_");
+        authoritiesConverter.setAuthoritiesClaimName("roles");
 
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);

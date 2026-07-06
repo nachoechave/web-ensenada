@@ -1,0 +1,74 @@
+<div class="admin-page-header">
+  <div>
+    <span>Contenido del sitio</span>
+    <h2>Textos generales</h2>
+    <p>Modifica titulos, textos visibles y datos de contacto de la web publica.</p>
+  </div>
+</div>
+
+<form class="admin-form" (ngSubmit)="guardar()" #formContenido="ngForm">
+  <div class="form-grid">
+    <label class="form-field full">
+      <span>Titulo principal del Home</span>
+      <input name="heroTitulo" [(ngModel)]="contenido.heroTitulo" required />
+    </label>
+
+    <label class="form-field full">
+      <span>Bajada del Home</span>
+      <textarea name="heroBajada" rows="3" [(ngModel)]="contenido.heroBajada" required></textarea>
+    </label>
+
+    <label class="form-field full">
+      <span>Descripcion del footer</span>
+      <textarea
+        name="footerDescripcion"
+        rows="3"
+        [(ngModel)]="contenido.footerDescripcion"
+        required
+      ></textarea>
+    </label>
+
+    <label class="form-field full">
+      <span>Email de contacto</span>
+      <input type="email" name="emailContacto" [(ngModel)]="contenido.emailContacto" required />
+    </label>
+
+    <label class="form-field">
+      <span>Telefono de contacto</span>
+      <input name="telefonoContacto" [(ngModel)]="contenido.telefonoContacto" required />
+    </label>
+
+    <label class="form-field">
+      <span>Direccion municipal</span>
+      <input name="direccionMunicipio" [(ngModel)]="contenido.direccionMunicipio" required />
+    </label>
+
+    <label class="form-field full">
+      <span>Horario de atencion</span>
+      <input name="horarioAtencion" [(ngModel)]="contenido.horarioAtencion" required />
+    </label>
+
+    <label class="form-field full">
+      <span>Texto de tramites y reclamos</span>
+      <textarea name="textoTramites" rows="3" [(ngModel)]="contenido.textoTramites" required></textarea>
+    </label>
+
+    <label class="form-field full">
+      <span>Nota institucional de contacto</span>
+      <textarea
+        name="notaInstitucionalContacto"
+        rows="3"
+        [(ngModel)]="contenido.notaInstitucionalContacto"
+        required
+      ></textarea>
+    </label>
+  </div>
+
+  <div class="form-actions">
+    @if (mensaje) {
+      <p class="success-message">{{ mensaje }}</p>
+    }
+
+    <button type="submit" [disabled]="formContenido.invalid">Guardar cambios</button>
+  </div>
+</form>

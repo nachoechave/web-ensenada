@@ -51,6 +51,44 @@
   margin-bottom: 1.5rem;
 }
 
+.quick-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.quick-admin-card {
+  border: 1px solid #e4eee8;
+  border-radius: 1rem;
+  padding: 1.2rem;
+  color: inherit;
+  background: #ffffff;
+  text-decoration: none;
+}
+
+.quick-admin-card span {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #258b5b;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.quick-admin-card strong {
+  display: block;
+  color: #12382b;
+  font-size: 1.2rem;
+}
+
+.quick-admin-card p {
+  margin: 0.5rem 0 0;
+  color: #5b6b63;
+  line-height: 1.5;
+}
+
 .stat-card {
   border: 1px solid #e4eee8;
   border-radius: 1rem;
@@ -211,6 +249,10 @@
   }
 
   .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-admin-grid {
     grid-template-columns: 1fr;
   }
 

@@ -1,0 +1,43 @@
+<app-navbar></app-navbar>
+
+<main class="page-shell">
+  <section class="section-block">
+    <div class="section-container">
+      <div class="section-header centered">
+        <span class="section-kicker">Actividades</span>
+        <h1>Agenda municipal</h1>
+        <p>
+          Consultá las próximas actividades, operativos y propuestas abiertas a la
+          comunidad de Ensenada.
+        </p>
+      </div>
+
+      <div class="agenda-list">
+        @for (evento of eventos; track evento.id) {
+          <article class="agenda-item content-card">
+            <div class="event-date">
+              <span>{{ evento.fecha }}</span>
+              <strong>{{ evento.categoria }}</strong>
+            </div>
+
+            <div class="event-body">
+              <p class="event-readable-date">{{ obtenerFechaLegible(evento.fecha) }}</p>
+              @if (evento.horario) {
+                <p class="event-readable-time">{{ evento.horario }}</p>
+              }
+              <h2>{{ evento.titulo }}</h2>
+              <p>{{ evento.descripcion }}</p>
+              <span class="event-place">{{ evento.lugar }}</span>
+            </div>
+          </article>
+        }
+      </div>
+
+      <div class="page-action">
+        <a routerLink="/" class="button-link">Volver al inicio</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

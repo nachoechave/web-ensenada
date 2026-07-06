@@ -1,0 +1,79 @@
+@import '../admin-noticia-form/admin-noticia-form.css';
+
+.admin-form {
+  margin-bottom: 1.5rem;
+}
+
+.roles-panel {
+  margin-top: 1rem;
+}
+
+.roles-panel > span {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #315347;
+  font-weight: 800;
+}
+
+.roles-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.roles-list label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid #cfe0d7;
+  border-radius: 999rem;
+  padding: 0.5rem 0.75rem;
+  color: #12382b;
+  background: #f8fbf9;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.users-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.error-message,
+.loading-message {
+  margin: 0 0 1rem;
+  font-weight: 800;
+}
+
+.error-message {
+  color: #b42318;
+}
+
+.loading-message {
+  color: #315347;
+}
+
+.user-card {
+  display: grid;
+  grid-template-columns: 18rem 1fr;
+  gap: 1rem;
+  border: 1px solid #e4eee8;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.user-card h3 {
+  margin: 0;
+  color: #12382b;
+}
+
+.user-card p {
+  margin: 0.35rem 0 0;
+  color: #5b6b63;
+}
+
+@media (max-width: 48rem) {
+  .user-card {
+    grid-template-columns: 1fr;
+  }
+}

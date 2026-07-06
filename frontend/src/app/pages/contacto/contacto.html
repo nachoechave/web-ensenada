@@ -1,0 +1,48 @@
+<app-navbar></app-navbar>
+
+<main class="page-shell">
+  <section class="section-block">
+    <div class="section-container">
+      <div class="section-header centered">
+        <span class="section-kicker">Atencion ciudadana</span>
+        <h1>Contacto e informacion institucional</h1>
+        <p>
+          Canales de referencia para consultas, orientacion y atencion municipal.
+        </p>
+      </div>
+
+      <div class="contact-grid">
+        <article class="contact-card content-card">
+          <span>Municipio</span>
+          <h2>Palacio Municipal</h2>
+          <p>{{ contenido.direccionMunicipio }}</p>
+          <p>{{ contenido.horarioAtencion }}</p>
+        </article>
+
+        <article class="contact-card content-card">
+          <span>Consultas</span>
+          <h2>Atencion vecinal</h2>
+          <p>{{ contenido.emailContacto }}</p>
+          <p>{{ contenido.telefonoContacto }}</p>
+        </article>
+
+        <article class="contact-card content-card">
+          <span>Gestiones</span>
+          <h2>Tramites y reclamos</h2>
+          <p>{{ contenido.textoTramites }}</p>
+          <a routerLink="/areas" class="button-link">Ver areas</a>
+        </article>
+      </div>
+
+      <section class="institutional-note content-card">
+        <div>
+          <span class="section-kicker">Municipalidad de Ensenada</span>
+          <h2>Un municipio cercano, claro y accesible</h2>
+          <p>{{ contenido.notaInstitucionalContacto }}</p>
+        </div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

@@ -1,0 +1,83 @@
+<div class="admin-page-header">
+  <div>
+    <span>Usuarios y roles</span>
+    <h2>Gestión de permisos</h2>
+    <p>Asigná uno o más roles a cada usuario administrativo.</p>
+  </div>
+</div>
+
+<form class="admin-form" (ngSubmit)="guardar()" #formUsuario="ngForm">
+  <div class="form-grid">
+    <label class="form-field">
+      <span>Nombre</span>
+      <input name="nombre" [(ngModel)]="usuario.nombre" required />
+    </label>
+
+    <label class="form-field">
+      <span>Email</span>
+      <input type="email" name="email" [(ngModel)]="usuario.email" required />
+    </label>
+
+    <label class="form-field">
+      <span>Contraseña inicial</span>
+      <input
+        type="password"
+        name="password"
+        [(ngModel)]="usuario.password"
+        required
+      />
+    </label>
+  </div>
+
+  <div class="roles-panel">
+    <span>Roles</span>
+    <div class="roles-list">
+      @for (rol of rolesDisponibles; track rol) {
+        <label>
+          <input
+            type="checkbox"
+            [checked]="usuario.roles.includes(rol)"
+            (change)="alternarRolNuevo(rol)"
+          />
+          {{ rol }}
+        </label>
+      }
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" [disabled]="formUsuario.invalid">Crear usuario</button>
+  </div>
+</form>
+
+@if (error) {
+  <p class="error-message">{{ error }}</p>
+}
+
+@if (cargando) {
+  <p class="loading-message">Cargando usuarios...</p>
+}
+
+<div class="users-list">
+  @for (usuarioAdmin of usuarios; track usuarioAdmin.id) {
+    <article class="user-card">
+      <div>
+        <h3>{{ usuarioAdmin.nombre }}</h3>
+        <p>{{ usuarioAdmin.email }}</p>
+      </div>
+
+      <div class="roles-list">
+        @for (rol of rolesDisponibles; track rol) {
+          <label>
+            <input
+              type="checkbox"
+              [checked]="usuarioAdmin.roles.includes(rol)"
+              (change)="alternarRol(usuarioAdmin, rol)"
+            />
+            {{ rol }}
+          </label>
+        }
+      </div>
+    </article>
+  }
+</div>

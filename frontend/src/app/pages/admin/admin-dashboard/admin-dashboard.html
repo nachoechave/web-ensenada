@@ -2,32 +2,66 @@
   <div>
     <span>Resumen general</span>
     <h2>Dashboard</h2>
-    <p>Vista rápida del estado de las noticias cargadas en el sitio.</p>
+    <p>Vista rápida del contenido administrable del sitio municipal.</p>
   </div>
-
-  <a routerLink="/admin/noticias/nueva" class="primary-button">
-    Nueva noticia
-  </a>
 </div>
+
+@if (mensaje) {
+  <p class="admin-message">{{ mensaje }}</p>
+}
 
 <div class="stats-grid">
   <article class="stat-card">
-    <span>Total</span>
+    <span>Noticias</span>
     <strong>{{ totalNoticias }}</strong>
-    <p>Noticias cargadas</p>
+    <p>{{ noticiasPublicadas }} publicadas</p>
   </article>
 
   <article class="stat-card">
-    <span>Publicadas</span>
-    <strong>{{ noticiasPublicadas }}</strong>
-    <p>Visibles en el sitio público</p>
+    <span>Boletines</span>
+    <strong>{{ totalBoletines }}</strong>
+    <p>Publicaciones oficiales cargadas</p>
   </article>
 
   <article class="stat-card">
-    <span>Borradores</span>
-    <strong>{{ noticiasBorrador }}</strong>
-    <p>Pendientes de publicación</p>
+    <span>Hacienda</span>
+    <strong>{{ totalHacienda }}</strong>
+    <p>Documentos financieros cargados</p>
   </article>
+</div>
+
+<div class="quick-admin-grid">
+  @if (puedeGestionar(['PRENSA'])) {
+    <a routerLink="/admin/noticias/nueva" class="quick-admin-card">
+      <span>Prensa</span>
+      <strong>Nueva noticia</strong>
+      <p>Cargar una novedad para el sitio público.</p>
+    </a>
+  }
+
+  @if (puedeGestionar(['BOLETIN_OFICIAL'])) {
+    <a routerLink="/admin/boletin-oficial" class="quick-admin-card">
+      <span>Boletín Oficial</span>
+      <strong>Cargar boletín</strong>
+      <p>Administrar publicaciones oficiales por año.</p>
+    </a>
+  }
+
+  @if (puedeGestionar(['HACIENDA'])) {
+    <a routerLink="/admin/hacienda" class="quick-admin-card">
+      <span>Hacienda</span>
+      <strong>Cargar documento</strong>
+      <p>Subir situaciones económicas, ordenanzas y archivos fiscales.</p>
+    </a>
+  }
+
+  @if (puedeGestionar(['CONTENIDO'])) {
+    <a routerLink="/admin/contenido" class="quick-admin-card">
+      <span>Contenido</span>
+      <strong>Editar textos</strong>
+      <p>Modificar títulos y textos generales de la web.</p>
+    </a>
+  }
 </div>
 
 <section class="latest-section">
@@ -37,7 +71,9 @@
       <h3>Últimas noticias</h3>
     </div>
 
-    <a routerLink="/admin/noticias">Ver todas</a>
+    @if (puedeGestionar(['PRENSA'])) {
+      <a routerLink="/admin/noticias">Ver todas</a>
+    }
   </div>
 
   <div class="latest-list">
@@ -60,18 +96,15 @@
           <p>{{ noticia.fecha }}</p>
         </div>
 
-        <a
-          [routerLink]="['/admin/noticias/editar', noticia.id]"
-          class="edit-link"
-        >
-          Editar
-        </a>
+        @if (puedeGestionar(['PRENSA'])) {
+          <a
+            [routerLink]="['/admin/noticias/editar', noticia.id]"
+            class="edit-link"
+          >
+            Editar
+          </a>
+        }
       </article>
-    } @empty {
-      <div class="empty-state">
-        <h4>Todavía no hay noticias cargadas</h4>
-        <p>Creá la primera noticia desde el panel de administración.</p>
-      </div>
     }
   </div>
 </section>

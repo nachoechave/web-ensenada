@@ -1,40 +1,5 @@
 .areas-section {
-  padding: 5rem 1.5rem;
-  background-color: #f8fafc;
-}
-
-.areas-container {
-  max-width: 73.75rem;
-  margin: 0 auto;
-}
-
-.section-header {
-  max-width: 43.75rem;
-  margin-bottom: 2.5rem;
-}
-
-.section-kicker {
-  display: inline-block;
-  margin-bottom: 0.75rem;
-  color: #15803d;
-  font-size: 0.875rem;
-  font-weight: 800;
-  letter-spacing: 0.06rem;
-  text-transform: uppercase;
-}
-
-.section-header h2 {
-  margin: 0;
-  color: #111827;
-  font-size: 2.25rem;
-  line-height: 1.15;
-}
-
-.section-header p {
-  margin: 1rem 0 0;
-  color: #4b5563;
-  font-size: 1rem;
-  line-height: 1.7;
+  background-color: var(--color-page);
 }
 
 .areas-grid {
@@ -48,10 +13,6 @@
   min-height: 13rem;
   padding: 1.5rem;
   overflow: hidden;
-  border: 0.0625rem solid #e5e7eb;
-  border-radius: 1.25rem;
-  background-color: white;
-  box-shadow: 0 1rem 2.5rem rgba(15, 23, 42, 0.05);
   transition:
     transform 0.2s ease,
     border-color 0.2s ease,
@@ -66,13 +27,13 @@
   width: 8rem;
   height: 8rem;
   border-radius: 50%;
-  background-color: #dcfce7;
+  background-color: var(--color-primary-100);
 }
 
 .area-card:hover {
   transform: translateY(-0.25rem);
   border-color: #86efac;
-  box-shadow: 0 1.25rem 3rem rgba(15, 23, 42, 0.09);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .area-number {
@@ -85,7 +46,7 @@
   justify-content: center;
   margin-bottom: 1.5rem;
   border-radius: 0.875rem;
-  background-color: #14532d;
+  background-color: var(--color-primary-900);
   color: white;
   font-size: 0.875rem;
   font-weight: 800;
@@ -95,7 +56,7 @@
   position: relative;
   z-index: 1;
   margin: 0 0 0.75rem;
-  color: #111827;
+  color: var(--color-text);
   font-size: 1.25rem;
 }
 
@@ -103,7 +64,7 @@
   position: relative;
   z-index: 1;
   margin: 0;
-  color: #4b5563;
+  color: var(--color-muted);
   line-height: 1.6;
 }
 
@@ -114,14 +75,6 @@
 }
 
 @media (max-width: 40rem) {
-  .areas-section {
-    padding: 3.5rem 1rem;
-  }
-
-  .section-header h2 {
-    font-size: 1.875rem;
-  }
-
   .areas-grid {
     grid-template-columns: 1fr;
   }

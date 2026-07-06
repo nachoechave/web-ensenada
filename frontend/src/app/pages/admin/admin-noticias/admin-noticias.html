@@ -10,6 +10,10 @@
   </a>
 </div>
 
+@if (mensaje) {
+  <p class="admin-message">{{ mensaje }}</p>
+}
+
 <div class="table-card">
   <table>
     <thead>
@@ -23,7 +27,7 @@
     </thead>
 
     <tbody>
-      @for (noticia of noticias; track noticia.id) {
+      @for (noticia of noticias; track noticia.id ?? $index) {
         <tr>
           <td>
             <strong>{{ noticia.titulo }}</strong>
@@ -43,10 +47,18 @@
               Editar
             </a>
 
-            <button type="button" (click)="eliminarNoticia(noticia.id)">
-              Eliminar
+            <button
+              type="button"
+              [disabled]="!noticia.id || eliminandoId === noticia.id"
+              (click)="eliminarNoticia(noticia)"
+            >
+              {{ eliminandoId === noticia.id ? 'Eliminando...' : 'Eliminar' }}
             </button>
           </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" class="empty-table">Todavía no hay noticias cargadas.</td>
         </tr>
       }
     </tbody>

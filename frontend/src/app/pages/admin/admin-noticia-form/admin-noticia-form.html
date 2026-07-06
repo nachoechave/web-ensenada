@@ -58,6 +58,15 @@
       </select>
     </label>
 
+    <label class="form-field checkbox-field">
+      <input
+        type="checkbox"
+        name="destacada"
+        [(ngModel)]="noticia.destacada"
+      />
+      <span>Mostrar en noticias destacadas</span>
+    </label>
+
     <div class="form-field">
       <span>Imagen principal</span>
 
@@ -69,9 +78,13 @@
         (change)="seleccionarImagen($event)"
       />
 
-      <button type="button" class="file-upload" (click)="imagenInput.click()">
-        Seleccionar imagen desde el equipo
+      <button type="button" class="file-upload" (click)="imagenInput.click()" [disabled]="subiendoImagen">
+        {{ subiendoImagen ? 'Subiendo imagen...' : 'Seleccionar imagen desde el equipo' }}
       </button>
+
+      @if (errorImagen) {
+        <p class="field-error">{{ errorImagen }}</p>
+      }
 
       @if (imagenPreview) {
         <div class="image-preview">
@@ -97,7 +110,7 @@
       Cancelar
     </a>
 
-    <button type="submit" [disabled]="formNoticia.invalid">
+    <button type="submit" [disabled]="formNoticia.invalid || subiendoImagen || !noticia.imagen">
       {{ esEdicion ? 'Guardar cambios' : 'Crear noticia' }}
     </button>
   </div>

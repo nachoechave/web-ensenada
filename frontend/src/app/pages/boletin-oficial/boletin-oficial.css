@@ -1,0 +1,153 @@
+.boletin-page {
+  min-height: 100vh;
+  background: #eef8e9;
+}
+
+.boletin-hero {
+  padding: 4.5rem 0 4rem;
+  background: linear-gradient(135deg, var(--color-primary-950), #237a2f);
+  color: white;
+  text-align: center;
+}
+
+.hero-kicker {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #bbf7d0;
+  font-size: 0.875rem;
+  font-weight: 900;
+  letter-spacing: 0.08rem;
+  text-transform: uppercase;
+}
+
+.boletin-hero h1 {
+  max-width: 55rem;
+  margin: 0 auto;
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  line-height: 1.1;
+}
+
+.boletin-hero p {
+  margin: 1.25rem auto 0;
+  max-width: 42rem;
+  color: #dcfce7;
+  font-size: 1.15rem;
+  line-height: 1.6;
+}
+
+.year-filter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 3rem;
+}
+
+.year-filter button {
+  min-width: 5rem;
+  border: 0.0625rem solid #bbf7d0;
+  border-radius: 999rem;
+  padding: 0.7rem 1rem;
+  background: white;
+  color: var(--color-primary-900);
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.year-filter button.active,
+.year-filter button:hover {
+  border-color: var(--color-primary-700);
+  background: var(--color-primary-700);
+  color: white;
+}
+
+.boletin-layout {
+  display: grid;
+  grid-template-columns: 22rem 1fr;
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.authorities {
+  padding: 2rem;
+  text-align: center;
+}
+
+.authorities h2 {
+  margin: 0 0 2rem;
+  color: var(--color-primary-900);
+  font-size: 2rem;
+  text-transform: uppercase;
+}
+
+.authorities div + div {
+  margin-top: 2rem;
+}
+
+.authorities strong {
+  color: var(--color-primary-800);
+}
+
+.authorities p {
+  margin: 0.5rem 0 0;
+  color: var(--color-primary-950);
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.boletin-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.boletin-card {
+  display: block;
+  padding: 1.5rem;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.boletin-card:hover {
+  transform: translateY(-0.2rem);
+  border-color: #86efac;
+  box-shadow: var(--shadow-card-hover);
+}
+
+.boletin-card span {
+  color: var(--color-primary-700);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.boletin-card h2 {
+  margin: 0.75rem 0;
+  color: var(--color-heading);
+  font-size: 1.35rem;
+}
+
+.boletin-card p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.boletin-card small {
+  display: block;
+  margin-top: 1.25rem;
+  color: #89959f;
+}
+
+.page-action {
+  margin-top: 2rem;
+}
+
+@media (max-width: 56.25rem) {
+  .boletin-layout {
+    grid-template-columns: 1fr;
+  }
+}

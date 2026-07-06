@@ -1,22 +1,24 @@
 <header class="navbar">
   <div class="navbar-container">
-    <div class="brand">
+    <a routerLink="/" class="brand" aria-label="Ir al inicio" (click)="irAlInicio()">
       <div class="brand-icon">E</div>
 
       <div>
         <p>Municipalidad de</p>
         <strong>Ensenada</strong>
       </div>
-    </div>
+    </a>
 
     <nav class="nav-links" aria-label="Navegación principal">
       @for (link of links; track link.texto) {
-        <a [routerLink]="link.ruta">{{ link.texto }}</a>
+        <a
+          [routerLink]="link.ruta"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: link.exacta ?? false }"
+        >
+          {{ link.texto }}
+        </a>
       }
     </nav>
-
-    <button class="search-button" aria-label="Buscar">
-      🔍
-    </button>
   </div>
 </header>

@@ -1,0 +1,117 @@
+<div class="admin-page-header">
+  <div>
+    <span>Boletín Oficial</span>
+    <h2>Gestión de boletines</h2>
+    <p>Cargá publicaciones oficiales organizadas por año.</p>
+  </div>
+</div>
+
+@if (mensaje) {
+  <p class="admin-message">{{ mensaje }}</p>
+}
+
+<form class="admin-form" (ngSubmit)="guardar()" #formBoletin="ngForm">
+  <div class="form-grid">
+    <label class="form-field full">
+      <span>Título</span>
+      <input name="titulo" [(ngModel)]="boletin.titulo" required />
+    </label>
+
+    <label class="form-field">
+      <span>Año</span>
+      <input type="number" name="anio" [(ngModel)]="boletin.anio" required />
+    </label>
+
+    <label class="form-field">
+      <span>Fecha</span>
+      <input type="date" name="fecha" [(ngModel)]="boletin.fecha" required />
+    </label>
+
+    <label class="form-field">
+      <span>Hora</span>
+      <input type="time" name="hora" [(ngModel)]="boletin.hora" required />
+    </label>
+
+    <div class="form-field full">
+      <span>Archivo PDF o imagen escaneada</span>
+
+      <input
+        #archivoInput
+        class="file-input"
+        type="file"
+        accept="application/pdf,image/png,image/jpeg,image/webp"
+        (change)="seleccionarArchivo($event)"
+      />
+
+      <button type="button" class="file-upload" (click)="archivoInput.click()" [disabled]="subiendoArchivo">
+        {{ subiendoArchivo ? 'Subiendo archivo...' : 'Seleccionar archivo desde el equipo' }}
+      </button>
+
+      @if (archivoNombre) {
+        <p class="selected-file">Archivo cargado: {{ archivoNombre }}</p>
+      }
+
+      @if (errorArchivo) {
+        <p class="field-error">{{ errorArchivo }}</p>
+      }
+    </div>
+
+    <label class="form-field full">
+      <span>Descripción</span>
+      <textarea name="descripcion" rows="3" [(ngModel)]="boletin.descripcion"></textarea>
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" [disabled]="formBoletin.invalid || subiendoArchivo || !boletin.archivoUrl">
+      Guardar boletín
+    </button>
+  </div>
+</form>
+
+<div class="table-card document-table-card">
+  <table class="document-table">
+    <thead>
+      <tr>
+        <th>Título</th>
+        <th>Año</th>
+        <th>Fecha</th>
+        <th>Archivo</th>
+        <th class="actions-column">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (boletin of boletines; track boletin.id) {
+        <tr>
+          <td>
+            <strong>{{ boletin.titulo }}</strong>
+            @if (boletin.descripcion) {
+              <small>{{ boletin.descripcion }}</small>
+            }
+          </td>
+          <td>{{ boletin.anio }}</td>
+          <td>{{ boletin.fecha }} · {{ boletin.hora }}</td>
+          <td>
+            <a class="document-link" [href]="boletin.archivoUrl" target="_blank" rel="noopener">
+              Ver archivo
+            </a>
+          </td>
+          <td>
+            <button
+              type="button"
+              class="danger-action"
+              [disabled]="eliminandoId === boletin.id"
+              (click)="eliminar(boletin.id)"
+            >
+              {{ eliminandoId === boletin.id ? 'Eliminando...' : 'Eliminar' }}
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" class="empty-table">Todavía no hay boletines cargados.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

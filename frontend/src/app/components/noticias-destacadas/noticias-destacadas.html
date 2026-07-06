@@ -1,5 +1,5 @@
-<section class="news-section">
-  <div class="news-container">
+<section class="news-section section-block">
+  <div class="news-container section-container">
     <div class="section-header">
       <span class="section-kicker">Actualidad</span>
 
@@ -12,13 +12,13 @@
           </p>
         </div>
 
-        <a routerLink="/noticias" class="view-all">Ver todas</a>
+        <a routerLink="/noticias" class="button-link">Ver todas</a>
       </div>
     </div>
 
     <div class="news-grid">
       @if (noticiaPrincipal) {
-        <article class="main-news-card">
+        <article class="main-news-card content-card">
           <img
             class="news-image main-image"
             [src]="noticiaPrincipal.imagen"
@@ -36,7 +36,7 @@
 
       <div class="secondary-news">
         @for (noticia of noticiasSecundarias; track noticia.id) {
-          <article class="news-card">
+          <article class="news-card content-card">
             <img
               class="news-image small-image"
               [src]="noticia.imagen"

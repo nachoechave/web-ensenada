@@ -5,26 +5,22 @@
 
       <div>
         <strong>Municipio de Ensenada</strong>
-        <small>Panel de periodistas</small>
+        <small>Panel de contenidos</small>
       </div>
     </div>
 
     <nav class="admin-nav">
-      <a
-        routerLink="/admin"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-      >
-        Dashboard
-      </a>
-
-      <a routerLink="/admin/noticias" routerLinkActive="active">
-        Noticias
-      </a>
-
-      <a routerLink="/admin/noticias/nueva" routerLinkActive="active">
-        Nueva noticia
-      </a>
+      @for (link of links; track link.ruta) {
+        @if (puedeVer(link.roles)) {
+          <a
+            [routerLink]="link.ruta"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: link.exacta ?? false }"
+          >
+            {{ link.texto }}
+          </a>
+        }
+      }
     </nav>
 
     <div class="sidebar-bottom">
@@ -32,6 +28,11 @@
         <div class="admin-user">
           <span>{{ usuario.nombre }}</span>
           <small>{{ usuario.email }}</small>
+          <div class="role-list">
+            @for (rol of usuario.roles; track rol) {
+              <em>{{ rol }}</em>
+            }
+          </div>
         </div>
       }
 
@@ -49,7 +50,7 @@
     <header class="admin-header">
       <div>
         <h1>Panel de administración</h1>
-        <p>Gestión de contenidos para la web municipal.</p>
+        <p>Gestión de contenidos, documentos y permisos de la web municipal.</p>
       </div>
     </header>
 

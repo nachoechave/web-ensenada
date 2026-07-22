@@ -5,6 +5,7 @@ type DocumentoAcceso = {
   titulo: string;
   descripcion: string;
   ruta: string;
+  externo?: boolean;
 };
 
 @Component({
@@ -18,7 +19,8 @@ export class DocumentosDestacados {
     {
       titulo: 'Boletín Oficial',
       descripcion: 'Publicaciones oficiales del Municipio organizadas por año.',
-      ruta: '/boletin-oficial',
+      ruta: 'https://boletinoficial.ensenada.gov.ar/index.php',
+      externo: true,
     },
     {
       titulo: 'Hacienda',

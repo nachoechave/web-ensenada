@@ -4,6 +4,5 @@ public enum RolUsuario {
     SUPER_ADMIN,
     PRENSA,
     HACIENDA,
-    BOLETIN_OFICIAL,
     CONTENIDO
 }

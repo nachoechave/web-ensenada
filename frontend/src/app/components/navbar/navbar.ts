@@ -5,6 +5,8 @@ type NavLink = {
   texto: string;
   ruta: string;
   exacta?: boolean;
+  externo?: boolean;
+  hijos?: NavLink[];
 };
 
 @Component({
@@ -14,6 +16,8 @@ type NavLink = {
   styleUrl: './navbar.css',
 })
 export class Navbar {
+  menuAbierto = false;
+
   links: NavLink[] = [
     {
       texto: 'Inicio',
@@ -25,6 +29,14 @@ export class Navbar {
       ruta: '/areas',
     },
     {
+      texto: 'La ciudad',
+      ruta: '/la-ciudad/historia',
+      hijos: [
+        { texto: 'Historia', ruta: '/la-ciudad/historia' },
+        { texto: 'Teléfonos útiles', ruta: '/la-ciudad/telefonos-utiles' },
+      ],
+    },
+    {
       texto: 'Noticias',
       ruta: '/noticias',
     },
@@ -34,7 +46,8 @@ export class Navbar {
     },
     {
       texto: 'Boletín Oficial',
-      ruta: '/boletin-oficial',
+      ruta: 'https://boletinoficial.ensenada.gov.ar/index.php',
+      externo: true,
     },
     {
       texto: 'Hacienda',
@@ -46,7 +59,18 @@ export class Navbar {
     },
   ];
 
-  irAlInicio(): void {
-    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  irArriba(): void {
+    this.menuAbierto = false;
+    setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }));
+  }
+
+  alternarMenu(): void {
+    this.menuAbierto = !this.menuAbierto;
+  }
+
+  navegarDesdeMenu(event: MouseEvent): void {
+    const enlace = event.currentTarget as HTMLElement | null;
+    enlace?.closest('details')?.removeAttribute('open');
+    this.irArriba();
   }
 }

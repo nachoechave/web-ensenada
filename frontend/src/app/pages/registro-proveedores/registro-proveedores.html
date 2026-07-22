@@ -1,0 +1,42 @@
+<app-navbar></app-navbar>
+
+<main class="providers-page page-shell">
+  <section class="section-block">
+    <div class="section-container">
+      <div class="section-header centered">
+        <span class="section-kicker">Registro municipal</span>
+        <h1>Registro Municipal de Proveedores</h1>
+        <p>
+          Descargá la documentación necesaria para la inscripción y acreditación
+          en el registro municipal.
+        </p>
+      </div>
+
+      <div class="providers-grid">
+        @for (documento of documentos; track documento.archivoUrl) {
+          <a
+            class="provider-card content-card"
+            [href]="documento.archivoUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div class="document-badge" [class.pdf]="documento.tipo === 'PDF'">
+              {{ documento.tipo }}
+            </div>
+
+            <h2>{{ documento.titulo }}</h2>
+            <p>{{ documento.descripcion }}</p>
+
+            <span class="download-action">Descargar</span>
+          </a>
+        }
+      </div>
+
+      <div class="page-action">
+        <a routerLink="/" class="button-link">Volver al inicio</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

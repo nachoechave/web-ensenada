@@ -3,8 +3,8 @@ import { Routes } from '@angular/router';
 import { adminGuard } from './core/admin.guard';
 import { roleGuard } from './core/role.guard';
 import { Agenda } from './pages/agenda/agenda';
-import { AdminBoletines } from './pages/admin/admin-boletines/admin-boletines';
 import { AdminAgenda } from './pages/admin/admin-agenda/admin-agenda';
+import { AdminAreas } from './pages/admin/admin-areas/admin-areas';
 import { AdminContenido } from './pages/admin/admin-contenido/admin-contenido';
 import { AdminDashboard } from './pages/admin/admin-dashboard/admin-dashboard';
 import { AdminHacienda } from './pages/admin/admin-hacienda/admin-hacienda';
@@ -15,12 +15,14 @@ import { AdminNoticiaForm } from './pages/admin/admin-noticia-form/admin-noticia
 import { AdminNoticias } from './pages/admin/admin-noticias/admin-noticias';
 import { AdminUsuarios } from './pages/admin/admin-usuarios/admin-usuarios';
 import { Areas } from './pages/areas/areas';
-import { BoletinOficial } from './pages/boletin-oficial/boletin-oficial';
 import { Contacto } from './pages/contacto/contacto';
 import { Hacienda } from './pages/hacienda/hacienda';
 import { Home } from './pages/home/home';
+import { Historia } from './pages/historia/historia';
 import { NoticiaDetalle } from './pages/noticia-detalle/noticia-detalle';
 import { Noticias } from './pages/noticias/noticias';
+import { RegistroProveedores } from './pages/registro-proveedores/registro-proveedores';
+import { TelefonosUtiles } from './pages/telefonos-utiles/telefonos-utiles';
 
 export const routes: Routes = [
   {
@@ -44,16 +46,24 @@ export const routes: Routes = [
     component: Areas,
   },
   {
+    path: 'la-ciudad/historia',
+    component: Historia,
+  },
+  {
+    path: 'la-ciudad/telefonos-utiles',
+    component: TelefonosUtiles,
+  },
+  {
     path: 'contacto',
     component: Contacto,
   },
   {
-    path: 'boletin-oficial',
-    component: BoletinOficial,
-  },
-  {
     path: 'hacienda',
     component: Hacienda,
+  },
+  {
+    path: 'registro-proveedores',
+    component: RegistroProveedores,
   },
   {
     path: 'admin/login',
@@ -87,14 +97,14 @@ export const routes: Routes = [
         data: { roles: ['PRENSA'] },
       },
       {
-        path: 'boletin-oficial',
-        component: AdminBoletines,
-        canActivate: [roleGuard],
-        data: { roles: ['BOLETIN_OFICIAL'] },
-      },
-      {
         path: 'agenda',
         component: AdminAgenda,
+        canActivate: [roleGuard],
+        data: { roles: ['CONTENIDO'] },
+      },
+      {
+        path: 'areas',
+        component: AdminAreas,
         canActivate: [roleGuard],
         data: { roles: ['CONTENIDO'] },
       },

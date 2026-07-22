@@ -23,7 +23,6 @@ public class ArchivoUploadController {
 
     private static final Set<String> SECCIONES_PERMITIDAS = Set.of(
             "noticias",
-            "boletin-oficial",
             "hacienda"
     );
 

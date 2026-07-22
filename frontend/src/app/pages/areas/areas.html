@@ -13,9 +13,9 @@
       </div>
 
       <div class="areas-list">
-        @for (area of areas; track area.id) {
+        @for (area of areas; track area.id; let i = $index) {
           <article class="area-detail content-card">
-            <div class="area-number">{{ area.id.toString().padStart(2, '0') }}</div>
+            <div class="area-number">{{ (i + 1).toString().padStart(2, '0') }}</div>
 
             <div class="area-content">
               <h2>{{ area.nombre }}</h2>
@@ -26,9 +26,15 @@
                   <dt>Teléfono</dt>
                   <dd>{{ area.telefono }}</dd>
                 </div>
+                @if (area.email) {
+                  <div>
+                    <dt>Email</dt>
+                    <dd>{{ area.email }}</dd>
+                  </div>
+                }
                 <div>
-                  <dt>Email</dt>
-                  <dd>{{ area.email }}</dd>
+                  <dt>Direccion</dt>
+                  <dd>{{ area.direccion }}</dd>
                 </div>
                 <div>
                   <dt>Horario</dt>

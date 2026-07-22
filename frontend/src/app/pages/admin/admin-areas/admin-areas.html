@@ -1,0 +1,105 @@
+<div class="admin-page-header">
+  <div>
+    <span>Areas municipales</span>
+    <h2>Gestion de areas</h2>
+    <p>Administra las areas, datos de contacto y horarios visibles en el sitio.</p>
+  </div>
+</div>
+
+@if (mensaje) {
+  <p class="admin-message">{{ mensaje }}</p>
+}
+
+<form class="admin-form" (ngSubmit)="guardar()" #formAreas="ngForm">
+  <div class="form-grid">
+    <label class="form-field full">
+      <span>Nombre</span>
+      <input name="nombre" [(ngModel)]="area.nombre" required />
+    </label>
+
+    <label class="form-field full">
+      <span>Descripcion</span>
+      <textarea name="descripcion" rows="4" [(ngModel)]="area.descripcion" required></textarea>
+    </label>
+
+    <label class="form-field">
+      <span>Telefono</span>
+      <input name="telefono" [(ngModel)]="area.telefono" required />
+    </label>
+
+    <label class="form-field">
+      <span>Email</span>
+      <input type="email" name="email" [(ngModel)]="area.email" />
+    </label>
+
+    <label class="form-field full">
+      <span>Direccion</span>
+      <input name="direccion" [(ngModel)]="area.direccion" required />
+    </label>
+
+    <label class="form-field full">
+      <span>Horario</span>
+      <input name="horario" [(ngModel)]="area.horario" required />
+    </label>
+  </div>
+
+  <div class="form-actions">
+    @if (editandoId) {
+      <button type="button" class="secondary-action" (click)="cancelarEdicion()">
+        Cancelar
+      </button>
+    }
+
+    <button type="submit" [disabled]="formAreas.invalid || guardando">
+      {{ guardando ? 'Guardando...' : editandoId ? 'Actualizar area' : 'Guardar area' }}
+    </button>
+  </div>
+</form>
+
+<div class="table-card">
+  <table>
+    <thead>
+      <tr>
+        <th>Area</th>
+        <th>Contacto</th>
+        <th>Direccion</th>
+        <th>Horario</th>
+        <th class="actions-column">Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (area of areas; track area.id) {
+        <tr>
+          <td>
+            <strong>{{ area.nombre }}</strong>
+            <p>{{ area.descripcion }}</p>
+          </td>
+          <td>
+            <strong>{{ area.telefono }}</strong>
+            <p>{{ area.email || 'Sin email' }}</p>
+          </td>
+          <td>{{ area.direccion }}</td>
+          <td>{{ area.horario }}</td>
+          <td class="actions">
+            <button type="button" (click)="editar(area)">
+              Editar
+            </button>
+            <button
+              type="button"
+              class="danger-action"
+              [disabled]="eliminandoId === area.id"
+              (click)="eliminar(area.id)"
+            >
+              {{ eliminandoId === area.id ? 'Eliminando...' : 'Eliminar' }}
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" class="empty-table">Todavia no hay areas cargadas.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

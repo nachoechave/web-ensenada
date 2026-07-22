@@ -1,0 +1,40 @@
+<app-navbar></app-navbar>
+<main class="page-shell city-page">
+  <section class="city-hero section-block">
+    <div class="section-container">
+      <span class="section-kicker">La ciudad</span>
+      <h1>Historia de Ensenada</h1>
+      <p>Una ciudad ribereña marcada por su puerto, su industria y la construcción colectiva de su identidad.</p>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="section-container city-layout">
+      <article class="history-card content-card">
+        <h2>Reseña histórica</h2>
+        <p>La historia local está ligada a la Caleta de Ensenada, reconocida por su ubicación costera y sus condiciones portuarias. Las tierras quedaron asociadas desde el siglo XVII a la familia Barragán, origen del nombre Ensenada de Barragán.</p>
+        <p>El fuerte, el puerto y los primeros saladeros impulsaron el asentamiento. La traza urbana fue aprobada el 5 de mayo de 1801 y, desde entonces, la actividad portuaria, ferroviaria e industrial definió buena parte del desarrollo de la ciudad.</p>
+      </article>
+
+      <div class="timeline" aria-label="Cronología histórica">
+        @for (hito of hitos; track hito.fecha) {
+          <article><strong>{{ hito.fecha }}</strong><p>{{ hito.texto }}</p></article>
+        }
+      </div>
+
+      <div class="symbols-grid">
+        <article class="content-card symbol-card">
+          <span>Símbolo local</span><h2>Bandera ensenadense</h2>
+          <p>Adoptada en 1999, representa el cielo y el sol naciente, la costa de la ensenada y Punta Lara, el río y el esfuerzo solidario de sus habitantes.</p>
+        </article>
+        <article class="content-card symbol-card">
+          <span>Símbolo local</span><h2>Escudo municipal</h2>
+          <p>Su navío representa el comercio portuario y la inmigración. Las aguas y la costa evocan el accidente geográfico que dio nombre a la ciudad.</p>
+        </article>
+      </div>
+
+      <div class="page-action"><a routerLink="/la-ciudad/telefonos-utiles" class="button-link">Ver teléfonos útiles</a></div>
+    </div>
+  </section>
+</main>
+<app-footer></app-footer>

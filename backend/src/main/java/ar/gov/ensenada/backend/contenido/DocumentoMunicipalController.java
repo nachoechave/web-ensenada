@@ -17,31 +17,9 @@ public class DocumentoMunicipalController {
         this.documentoRepository = documentoRepository;
     }
 
-    @GetMapping("/boletin-oficial")
-    public List<DocumentoMunicipal> listarBoletines(@RequestParam(required = false) Integer anio) {
-        return listarPorTipo(TipoDocumentoMunicipal.BOLETIN_OFICIAL, anio);
-    }
-
     @GetMapping("/hacienda")
     public List<DocumentoMunicipal> listarHacienda() {
         return listarPorTipo(TipoDocumentoMunicipal.HACIENDA, null);
-    }
-
-    @GetMapping("/admin/boletin-oficial")
-    public List<DocumentoMunicipal> listarBoletinesAdmin() {
-        return listarPorTipo(TipoDocumentoMunicipal.BOLETIN_OFICIAL, null);
-    }
-
-    @PostMapping("/admin/boletin-oficial")
-    @ResponseStatus(HttpStatus.CREATED)
-    public DocumentoMunicipal crearBoletin(@Valid @RequestBody DocumentoMunicipalRequest request) {
-        return crear(request, TipoDocumentoMunicipal.BOLETIN_OFICIAL);
-    }
-
-    @DeleteMapping("/admin/boletin-oficial/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void eliminarBoletin(@PathVariable Long id) {
-        eliminar(id, TipoDocumentoMunicipal.BOLETIN_OFICIAL);
     }
 
     @GetMapping("/admin/hacienda")

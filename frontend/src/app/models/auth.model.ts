@@ -2,7 +2,6 @@ export type RolUsuario =
   | 'SUPER_ADMIN'
   | 'PRENSA'
   | 'HACIENDA'
-  | 'BOLETIN_OFICIAL'
   | 'CONTENIDO';
 
 export interface LoginRequest {

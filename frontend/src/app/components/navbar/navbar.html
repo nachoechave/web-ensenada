@@ -1,7 +1,7 @@
 <header class="navbar">
   <div class="navbar-container">
-    <a routerLink="/" class="brand" aria-label="Ir al inicio" (click)="irAlInicio()">
-      <div class="brand-icon">E</div>
+    <a routerLink="/" class="brand" aria-label="Ir al inicio" (click)="irArriba()">
+      <div class="brand-icon" aria-hidden="true"><span>E</span></div>
 
       <div>
         <p>Municipalidad de</p>
@@ -9,15 +9,54 @@
       </div>
     </a>
 
-    <nav class="nav-links" aria-label="Navegación principal">
+    <button
+      type="button"
+      class="menu-toggle"
+      [class.open]="menuAbierto"
+      [attr.aria-expanded]="menuAbierto"
+      aria-controls="main-navigation"
+      aria-label="Abrir o cerrar menú"
+      (click)="alternarMenu()"
+    >
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav
+      id="main-navigation"
+      class="nav-links"
+      [class.open]="menuAbierto"
+      aria-label="Navegación principal"
+    >
       @for (link of links; track link.texto) {
-        <a
-          [routerLink]="link.ruta"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: link.exacta ?? false }"
-        >
-          {{ link.texto }}
-        </a>
+        @if (link.hijos) {
+          <details class="nav-group" routerLinkActive="active-group">
+            <summary>{{ link.texto }} <span class="chevron" aria-hidden="true"></span></summary>
+            <div class="nav-submenu">
+              @for (hijo of link.hijos; track hijo.texto) {
+                <a
+                  [routerLink]="hijo.ruta"
+                  routerLinkActive="active"
+                  (click)="navegarDesdeMenu($event)"
+                >
+                  {{ hijo.texto }}
+                </a>
+              }
+            </div>
+          </details>
+        } @else if (link.externo) {
+          <a class="external-link" [href]="link.ruta" target="_blank" rel="noopener noreferrer">
+            {{ link.texto }} <span aria-hidden="true">↗</span>
+          </a>
+        } @else {
+          <a
+            [routerLink]="link.ruta"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: link.exacta ?? false }"
+            (click)="irArriba()"
+          >
+            {{ link.texto }}
+          </a>
+        }
       }
     </nav>
   </div>

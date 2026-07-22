@@ -10,9 +10,9 @@
     </div>
 
     <div class="areas-grid">
-      @for (area of areas; track area.id) {
+      @for (area of areas; track area.id; let i = $index) {
         <article class="area-card content-card">
-          <span class="area-number">{{ area.id.toString().padStart(2, '0') }}</span>
+          <span class="area-number">{{ (i + 1).toString().padStart(2, '0') }}</span>
           <h3>{{ area.nombre }}</h3>
           <p>{{ area.descripcion }}</p>
         </article>

@@ -5,4 +5,4 @@ export interface ArchivoUploadResponse {
   size: number;
 }
 
-export type SeccionArchivo = 'noticias' | 'boletin-oficial' | 'hacienda';
+export type SeccionArchivo = 'noticias' | 'hacienda';

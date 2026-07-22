@@ -4,5 +4,6 @@ export interface AreaMunicipal {
   descripcion: string;
   telefono: string;
   email: string;
+  direccion: string;
   horario: string;
 }

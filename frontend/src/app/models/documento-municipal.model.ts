@@ -4,7 +4,7 @@ export interface DocumentoMunicipal {
   fecha: string;
   hora: string;
   anio: number;
-  tipo: 'Boletín oficial' | 'Hacienda';
+  tipo: 'Hacienda';
   descripcion?: string;
   archivoUrl: string;
 }

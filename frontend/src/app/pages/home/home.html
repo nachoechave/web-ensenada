@@ -6,20 +6,53 @@
       <p class="hero-label">Municipalidad de Ensenada</p>
       <h1>Construimos juntos la ciudad que soñamos</h1>
       <p>
-        Información, servicios y novedades para estar cerca de cada vecino y vecina
-        de Ensenada.
+        Información, servicios y novedades para estar cerca de cada vecino y vecina de Ensenada.
       </p>
       <button>Conocé más</button>
     </div>
   </section>
 
-  <app-accesos-rapidos></app-accesos-rapidos>
-
   <app-noticias-destacadas></app-noticias-destacadas>
 
-  <app-agenda-municipal></app-agenda-municipal>
+  <section class="intendente-section" aria-labelledby="intendente-title">
+    <div class="intendente-content">
+      <p class="section-label">Intendente municipal</p>
+      <h2 id="intendente-title">Mario Secco</h2>
+      <p>
+        Desde 2003 acompaña el crecimiento de Ensenada con una gestión enfocada
+        en obras públicas, servicios, espacios comunitarios y cercanía con cada
+        vecino de la ciudad.
+      </p>
+      <a href="/contacto">Conocé la gestión</a>
+    </div>
 
-  <app-areas-municipales></app-areas-municipales>
+    <div class="intendente-photo">
+      <img
+        src="/assets/mario-secco.jpg"
+        alt="Mario Secco, intendente de Ensenada"
+      />
+    </div>
+  </section>
+
+  <app-accesos-rapidos></app-accesos-rapidos>
+
+  <section class="interactive-map-section" aria-labelledby="interactive-map-title">
+    <div class="interactive-map-header">
+      <h2 id="interactive-map-title">MAPA INTERACTIVO</h2>
+    </div>
+
+    <div class="interactive-map-frame">
+      <iframe
+        title="Mapa interactivo de Ensenada con puntos importantes de la ciudad"
+        src="https://www.google.com/maps?q=Ensenada,%20Buenos%20Aires,%20Argentina&output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </section>
+
+  <app-agenda-municipal></app-agenda-municipal>
 </main>
 
 <app-footer></app-footer>

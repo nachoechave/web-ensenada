@@ -18,12 +18,6 @@
   </article>
 
   <article class="stat-card">
-    <span>Boletines</span>
-    <strong>{{ totalBoletines }}</strong>
-    <p>Publicaciones oficiales cargadas</p>
-  </article>
-
-  <article class="stat-card">
     <span>Hacienda</span>
     <strong>{{ totalHacienda }}</strong>
     <p>Documentos financieros cargados</p>
@@ -39,14 +33,6 @@
     </a>
   }
 
-  @if (puedeGestionar(['BOLETIN_OFICIAL'])) {
-    <a routerLink="/admin/boletin-oficial" class="quick-admin-card">
-      <span>Boletín Oficial</span>
-      <strong>Cargar boletín</strong>
-      <p>Administrar publicaciones oficiales por año.</p>
-    </a>
-  }
-
   @if (puedeGestionar(['HACIENDA'])) {
     <a routerLink="/admin/hacienda" class="quick-admin-card">
       <span>Hacienda</span>
@@ -56,6 +42,12 @@
   }
 
   @if (puedeGestionar(['CONTENIDO'])) {
+    <a routerLink="/admin/areas" class="quick-admin-card">
+      <span>Areas</span>
+      <strong>Editar areas</strong>
+      <p>Actualizar datos de contacto y servicios municipales.</p>
+    </a>
+
     <a routerLink="/admin/contenido" class="quick-admin-card">
       <span>Contenido</span>
       <strong>Editar textos</strong>

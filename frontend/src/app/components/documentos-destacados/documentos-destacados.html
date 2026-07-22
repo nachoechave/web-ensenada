@@ -11,10 +11,22 @@
 
     <div class="documents-access-grid">
       @for (acceso of accesos; track acceso.ruta) {
-        <a class="documents-access-card content-card" [routerLink]="acceso.ruta">
-          <span>{{ acceso.titulo }}</span>
-          <p>{{ acceso.descripcion }}</p>
-        </a>
+        @if (acceso.externo) {
+          <a
+            class="documents-access-card content-card"
+            [href]="acceso.ruta"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>{{ acceso.titulo }}</span>
+            <p>{{ acceso.descripcion }}</p>
+          </a>
+        } @else {
+          <a class="documents-access-card content-card" [routerLink]="acceso.ruta">
+            <span>{{ acceso.titulo }}</span>
+            <p>{{ acceso.descripcion }}</p>
+          </a>
+        }
       }
     </div>
   </div>

@@ -20,7 +20,6 @@ export class UsuariosAdminService {
     'SUPER_ADMIN',
     'PRENSA',
     'HACIENDA',
-    'BOLETIN_OFICIAL',
     'CONTENIDO',
   ];
 

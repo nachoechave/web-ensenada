@@ -1,0 +1,13 @@
+@import '../admin-hacienda/admin-hacienda.css';
+
+.admin-form {
+  margin-bottom: 1.5rem;
+}
+
+.secondary-action {
+  background-color: #475569;
+}
+
+.secondary-action:hover {
+  background-color: #334155;
+}

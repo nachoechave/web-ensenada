@@ -7,6 +7,7 @@ type AccesoRapido = {
   descripcion: string;
   ruta: string;
   destacado: boolean;
+  externo?: boolean;
 };
 
 @Component({
@@ -19,31 +20,49 @@ export class AccesosRapidos {
   accesos: AccesoRapido[] = [
     {
       numero: '01',
-      titulo: 'Trámites municipales',
-      descripcion: 'Consultá requisitos, documentación y gestiones disponibles.',
-      ruta: '/contacto',
+      titulo: 'Boletín Oficial',
+      descripcion: 'Accedé al boletín oficial de la Municipalidad de Ensenada.',
+      ruta: 'https://boletinoficial.ensenada.gov.ar/index.php',
       destacado: true,
+      externo: true,
     },
     {
       numero: '02',
-      titulo: 'Turnos online',
-      descripcion: 'Solicitá turnos para atención en áreas municipales.',
-      ruta: '/areas',
+      titulo: 'Turnos veterinarios',
+      descripcion: 'Solicitá un turno para los servicios veterinarios municipales.',
+      ruta: 'https://www.ensenada.gov.ar/turnos/',
       destacado: false,
+      externo: true,
     },
     {
       numero: '03',
-      titulo: 'Reclamos y solicitudes',
-      descripcion: 'Informá problemas en la vía pública o en tu barrio.',
-      ruta: '/contacto',
+      titulo: 'Registro Municipal de Proveedores',
+      descripcion: 'Ingresá al registro municipal de proveedores.',
+      ruta: '/registro-proveedores',
       destacado: false,
     },
     {
       numero: '04',
-      titulo: 'Agenda municipal',
-      descripcion: 'Accedé a actividades, operativos y propuestas comunitarias.',
-      ruta: '/agenda',
+      titulo: 'Tasas Municipales',
+      descripcion: 'Accedé a tu factura desde la web oficial.',
+      ruta: 'https://pagos.ensenada.gov.ar/nuevo_index.php',
       destacado: false,
+      externo: true,
+    },
+    {
+      numero: '05',
+      titulo: 'Situación Económica Financiera',
+      descripcion: 'Consultá la información económica y financiera municipal.',
+      ruta: '/hacienda',
+      destacado: false,
+    },
+    {
+      numero: '06',
+      titulo: 'Boleta Digital',
+      descripcion: 'Información para gestionar la boleta digital.',
+      ruta: 'https://avisos.ensenada.gov.ar/',
+      destacado: false,
+      externo: true,
     },
   ];
 }

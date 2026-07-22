@@ -17,6 +17,12 @@ backend/.vscode/
 .DS_Store
 Thumbs.db
 
+# Runtime logs and generated documentation
+*.log
+backend/error-backend.txt
+tmp/
+output/
+
 # Env / secrets
 *.env
 application-local.properties

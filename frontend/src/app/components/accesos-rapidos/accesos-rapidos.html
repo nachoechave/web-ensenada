@@ -2,29 +2,47 @@
   <div class="quick-container section-container">
     <div class="section-header">
       <span class="section-kicker">Servicios municipales</span>
-      <h2>Accesos rápidos</h2>
+      <h2>Accesos directos</h2>
       <p>
-        Encontrá de forma simple los trámites, servicios y canales de atención
-        más consultados por los vecinos.
+        Encontrá de forma simple los servicios y canales más consultados por los vecinos.
       </p>
     </div>
 
     <div class="quick-grid">
       @for (acceso of accesos; track acceso.numero) {
-        <a
-          class="quick-card content-card"
-          [class.featured]="acceso.destacado"
-          [routerLink]="acceso.ruta"
-        >
-          <div class="quick-icon">{{ acceso.numero }}</div>
+        @if (acceso.externo) {
+          <a
+            class="quick-card content-card"
+            [class.featured]="acceso.destacado"
+            [href]="acceso.ruta"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div class="quick-icon">{{ acceso.numero }}</div>
 
-          <div>
-            <h3>{{ acceso.titulo }}</h3>
-            <p>{{ acceso.descripcion }}</p>
-          </div>
+            <div>
+              <h3>{{ acceso.titulo }}</h3>
+              <p>{{ acceso.descripcion }}</p>
+            </div>
 
-          <span class="quick-arrow">→</span>
-        </a>
+            <span class="quick-arrow">→</span>
+          </a>
+        } @else {
+          <a
+            class="quick-card content-card"
+            [class.featured]="acceso.destacado"
+            [routerLink]="acceso.ruta"
+          >
+            <div class="quick-icon">{{ acceso.numero }}</div>
+
+            <div>
+              <h3>{{ acceso.titulo }}</h3>
+              <p>{{ acceso.descripcion }}</p>
+            </div>
+
+            <span class="quick-arrow">→</span>
+          </a>
+        }
       }
     </div>
   </div>

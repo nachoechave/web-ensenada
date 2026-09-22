@@ -1,48 +1,20 @@
-<section class="quick-access section-block">
-  <div class="quick-container section-container">
-    <div class="section-header">
-      <span class="section-kicker">Servicios municipales</span>
-      <h2>Accesos directos</h2>
-      <p>
-        Encontrá de forma simple los servicios y canales más consultados por los vecinos.
-      </p>
-    </div>
-
+<section class="quick-access section-block" aria-label="Sistemas municipales">
+  <div class="section-container">
+    <h2>Accesos rápidos</h2>
     <div class="quick-grid">
-      @for (acceso of accesos; track acceso.numero) {
-        @if (acceso.externo) {
-          <a
-            class="quick-card content-card"
-            [class.featured]="acceso.destacado"
-            [href]="acceso.ruta"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <div class="quick-icon">{{ acceso.numero }}</div>
-
-            <div>
-              <h3>{{ acceso.titulo }}</h3>
-              <p>{{ acceso.descripcion }}</p>
-            </div>
-
-            <span class="quick-arrow">→</span>
-          </a>
-        } @else {
-          <a
-            class="quick-card content-card"
-            [class.featured]="acceso.destacado"
-            [routerLink]="acceso.ruta"
-          >
-            <div class="quick-icon">{{ acceso.numero }}</div>
-
-            <div>
-              <h3>{{ acceso.titulo }}</h3>
-              <p>{{ acceso.descripcion }}</p>
-            </div>
-
-            <span class="quick-arrow">→</span>
-          </a>
-        }
+      @for (acceso of accesos; track acceso.titulo) {
+        <article class="quick-card content-card">
+          <div>
+            <h3>{{ acceso.titulo }}</h3>
+            @if (acceso.url) {
+              <a [href]="acceso.url" target="_blank" rel="noopener noreferrer"
+                >Acceder al sistema</a
+              >
+            } @else {
+              <p>Enlace pendiente de configuración.</p>
+            }
+          </div>
+        </article>
       }
     </div>
   </div>

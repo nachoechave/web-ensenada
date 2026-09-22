@@ -1,3 +1,4 @@
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, tap } from 'rxjs';
@@ -17,26 +18,26 @@ import {
 export class AuthService {
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = 'http://localhost:8080/api/auth';
+  private readonly apiUrl = environment.apiUrl + '/auth';
   private readonly tokenKey = 'admin-token';
   private readonly userKey = 'admin-user';
 
   login(credenciales: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credenciales).pipe(
-      tap((response) => this.guardarSesion(response)),
-    );
+    return this.http
+      .post<LoginResponse>(`${this.apiUrl}/login`, credenciales)
+      .pipe(tap((response) => this.guardarSesion(response)));
   }
 
   obtenerPerfil(): Observable<UsuarioActual> {
-    return this.http.get<UsuarioActual>(`${this.apiUrl}/me`).pipe(
-      tap((usuario) => this.guardarUsuario(usuario)),
-    );
+    return this.http
+      .get<UsuarioActual>(`${this.apiUrl}/me`)
+      .pipe(tap((usuario) => this.guardarUsuario(usuario)));
   }
 
   actualizarPerfil(perfil: ActualizarPerfilRequest): Observable<LoginResponse> {
-    return this.http.put<LoginResponse>(`${this.apiUrl}/me`, perfil).pipe(
-      tap((response) => this.guardarSesion(response)),
-    );
+    return this.http
+      .put<LoginResponse>(`${this.apiUrl}/me`, perfil)
+      .pipe(tap((response) => this.guardarSesion(response)));
   }
 
   cambiarPassword(passwords: CambiarPasswordRequest): Observable<void> {
@@ -50,7 +51,14 @@ export class AuthService {
       return null;
     }
 
-    const usuario = JSON.parse(usuarioGuardado) as Partial<UsuarioActual>;
+    let usuario: Partial<UsuarioActual>;
+    try {
+      usuario = JSON.parse(usuarioGuardado);
+      if (!usuario || typeof usuario !== 'object') return null;
+    } catch {
+      this.logout();
+      return null;
+    }
 
     return {
       nombre: usuario.nombre ?? '',
@@ -91,7 +99,9 @@ export class AuthService {
     this.guardarUsuario(response);
   }
 
-  private guardarUsuario(usuario: Pick<UsuarioActual, 'nombre' | 'email' | 'rol'> & { roles?: RolUsuario[] }): void {
+  private guardarUsuario(
+    usuario: Pick<UsuarioActual, 'nombre' | 'email' | 'rol'> & { roles?: RolUsuario[] },
+  ): void {
     const roles = this.normalizarRoles(usuario.roles ?? usuario.rol ?? 'PRENSA');
 
     localStorage.setItem(
@@ -106,16 +116,16 @@ export class AuthService {
   }
 
   private normalizarRoles(roles: RolUsuario[] | string): RolUsuario[] {
-    const rolesComoArray = Array.isArray(roles)
-      ? roles
-      : roles.split(',').map((rol) => rol.trim());
+    const rolesComoArray = Array.isArray(roles) ? roles : roles.split(',').map((rol) => rol.trim());
 
-    return rolesComoArray.map((rol) => {
-      if (rol === 'ADMIN' || rol === 'ROLE_ADMIN') {
-        return 'SUPER_ADMIN';
-      }
+    return rolesComoArray
+      .map((rol) => {
+        if (rol === 'ADMIN' || rol === 'ROLE_ADMIN') {
+          return 'SUPER_ADMIN';
+        }
 
-      return rol.replace('ROLE_', '') as RolUsuario;
-    });
+        return rol.replace('ROLE_', '') as RolUsuario;
+      })
+      .filter((rol) => rol === 'SUPER_ADMIN' || rol === 'PRENSA');
   }
 }

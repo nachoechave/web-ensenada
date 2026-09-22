@@ -32,7 +32,9 @@
   line-height: 1.6;
 }
 
-.hero button {
+.hero a {
+  display: inline-block;
+  text-decoration: none;
   margin-top: 1.5rem;
   padding: 0.875rem 1.5rem;
   border: none;
@@ -43,7 +45,7 @@
   cursor: pointer;
 }
 
-.hero button:hover {
+.hero a:hover {
   background-color: #166534;
 }
 

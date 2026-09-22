@@ -4,33 +4,32 @@
   <section class="hero">
     <div class="hero-content">
       <p class="hero-label">Municipalidad de Ensenada</p>
-      <h1>Construimos juntos la ciudad que soñamos</h1>
+      <h1>{{ contenido.heroTitulo }}</h1>
       <p>
-        Información, servicios y novedades para estar cerca de cada vecino y vecina de Ensenada.
+        {{ contenido.heroBajada }}
       </p>
-      <button>Conocé más</button>
+      <a href="#informacion-institucional">Conocé más</a>
     </div>
   </section>
 
   <app-noticias-destacadas></app-noticias-destacadas>
 
-  <section class="intendente-section" aria-labelledby="intendente-title">
+  <section
+    id="informacion-institucional"
+    class="intendente-section"
+    aria-labelledby="intendente-title"
+  >
     <div class="intendente-content">
       <p class="section-label">Intendente municipal</p>
       <h2 id="intendente-title">Mario Secco</h2>
       <p>
-        Desde 2003 acompaña el crecimiento de Ensenada con una gestión enfocada
-        en obras públicas, servicios, espacios comunitarios y cercanía con cada
-        vecino de la ciudad.
+        Desde 2003 acompaña el crecimiento de Ensenada con una gestión enfocada en obras públicas,
+        servicios, espacios comunitarios y cercanía con cada vecino de la ciudad.
       </p>
-      <a href="/contacto">Conocé la gestión</a>
     </div>
 
     <div class="intendente-photo">
-      <img
-        src="/assets/mario-secco.jpg"
-        alt="Mario Secco, intendente de Ensenada"
-      />
+      <img src="/assets/mario-secco.jpg" alt="Mario Secco, intendente de Ensenada" />
     </div>
   </section>
 
@@ -51,8 +50,6 @@
       ></iframe>
     </div>
   </section>
-
-  <app-agenda-municipal></app-agenda-municipal>
 </main>
 
 <app-footer></app-footer>

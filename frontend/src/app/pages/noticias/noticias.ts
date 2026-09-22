@@ -19,6 +19,7 @@ export class Noticias {
   private readonly cdr = inject(ChangeDetectorRef);
 
   noticias: Noticia[] = [];
+  error = '';
 
   constructor() {
     this.cargarNoticias();
@@ -31,10 +32,12 @@ export class Noticias {
   private cargarNoticias(): void {
     this.noticiasService.obtenerPublicadasDesdeApi().subscribe({
       next: (noticias) => {
+        this.error = '';
         this.noticias = noticias;
         this.cdr.detectChanges();
       },
       error: () => {
+        this.error = 'No se pudieron cargar las noticias. Intentá nuevamente más tarde.';
         this.noticias = [];
         this.cdr.detectChanges();
       },

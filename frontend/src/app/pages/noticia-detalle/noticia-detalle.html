@@ -2,9 +2,7 @@
 
 <main class="noticia-detalle-page page-shell">
   <div class="detalle-container">
-    <a routerLink="/noticias" class="breadcrumb">
-      Volver a noticias
-    </a>
+    <a routerLink="/noticias" class="breadcrumb"> Volver a noticias </a>
 
     @if (noticia) {
       <article class="detalle-card content-card">
@@ -15,7 +13,7 @@
         <div class="detalle-contenido">
           <div class="detalle-meta">
             <span class="categoria">{{ noticia.categoria }}</span>
-            <span class="fecha">{{ noticia.fecha }}</span>
+            <span class="fecha">{{ noticia.fechaPublicacion }}</span>
           </div>
 
           <h1>{{ noticia.titulo }}</h1>
@@ -29,9 +27,7 @@
           </div>
 
           <div class="detalle-actions">
-            <a routerLink="/noticias" class="button-link primary">
-              Volver a noticias
-            </a>
+            <a routerLink="/noticias" class="button-link primary"> Volver a noticias </a>
           </div>
         </div>
       </article>
@@ -40,9 +36,7 @@
         <h1>Noticia no encontrada</h1>
         <p>La noticia solicitada no existe o ya no se encuentra disponible.</p>
 
-        <a routerLink="/noticias" class="button-link primary">
-          Volver a noticias
-        </a>
+        <a routerLink="/noticias" class="button-link primary"> Volver a noticias </a>
       </section>
     }
   </div>

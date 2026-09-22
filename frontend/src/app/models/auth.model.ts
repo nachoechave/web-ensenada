@@ -1,8 +1,4 @@
-export type RolUsuario =
-  | 'SUPER_ADMIN'
-  | 'PRENSA'
-  | 'HACIENDA'
-  | 'CONTENIDO';
+export type RolUsuario = 'SUPER_ADMIN' | 'PRENSA';
 
 export interface LoginRequest {
   email: string;

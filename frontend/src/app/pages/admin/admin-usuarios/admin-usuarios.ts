@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { RolUsuario } from '../../../models/auth.model';
@@ -15,6 +15,7 @@ import {
   styleUrl: './admin-usuarios.css',
 })
 export class AdminUsuarios {
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly usuariosService = inject(UsuariosAdminService);
 
   rolesDisponibles = this.usuariosService.rolesDisponibles;
@@ -40,10 +41,12 @@ export class AdminUsuarios {
 
     this.usuariosService.obtenerUsuarios().subscribe({
       next: (usuarios) => {
+        this.cdr.markForCheck();
         this.usuarios = usuarios;
         this.cargando = false;
       },
       error: () => {
+        this.cdr.markForCheck();
         this.error = 'No se pudieron cargar los usuarios.';
         this.cargando = false;
       },
@@ -53,6 +56,7 @@ export class AdminUsuarios {
   guardar(): void {
     this.usuariosService.guardar(this.usuario).subscribe({
       next: () => {
+        this.cdr.markForCheck();
         this.usuario = {
           nombre: '',
           email: '',
@@ -63,8 +67,16 @@ export class AdminUsuarios {
         this.cargarUsuarios();
       },
       error: () => {
+        this.cdr.markForCheck();
         this.error = 'No se pudo crear el usuario.';
       },
+    });
+  }
+
+  alternarActivo(usuario: UsuarioAdmin): void {
+    this.usuariosService.actualizarActivo(usuario.id, !usuario.activo).subscribe({
+      next: () => this.cargarUsuarios(),
+      error: () => (this.error = 'No se pudo cambiar el estado.'),
     });
   }
 
@@ -81,6 +93,7 @@ export class AdminUsuarios {
     this.usuariosService.actualizarRoles(usuario.id, roles).subscribe({
       next: () => this.cargarUsuarios(),
       error: () => {
+        this.cdr.markForCheck();
         this.error = 'No se pudieron actualizar los roles.';
       },
     });

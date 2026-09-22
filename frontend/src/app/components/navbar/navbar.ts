@@ -1,3 +1,4 @@
+import { externalLinks } from '../../config/external-links';
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -19,44 +20,9 @@ export class Navbar {
   menuAbierto = false;
 
   links: NavLink[] = [
-    {
-      texto: 'Inicio',
-      ruta: '/',
-      exacta: true,
-    },
-    {
-      texto: 'Áreas',
-      ruta: '/areas',
-    },
-    {
-      texto: 'La ciudad',
-      ruta: '/la-ciudad/historia',
-      hijos: [
-        { texto: 'Historia', ruta: '/la-ciudad/historia' },
-        { texto: 'Teléfonos útiles', ruta: '/la-ciudad/telefonos-utiles' },
-      ],
-    },
-    {
-      texto: 'Noticias',
-      ruta: '/noticias',
-    },
-    {
-      texto: 'Agenda',
-      ruta: '/agenda',
-    },
-    {
-      texto: 'Boletín Oficial',
-      ruta: 'https://boletinoficial.ensenada.gov.ar/index.php',
-      externo: true,
-    },
-    {
-      texto: 'Hacienda',
-      ruta: '/hacienda',
-    },
-    {
-      texto: 'Contacto',
-      ruta: '/contacto',
-    },
+    { texto: 'Inicio', ruta: '/', exacta: true },
+    { texto: 'Noticias', ruta: '/noticias' },
+    { texto: 'Boletín Oficial', ruta: externalLinks.boletinOficial, externo: true },
   ];
 
   irArriba(): void {

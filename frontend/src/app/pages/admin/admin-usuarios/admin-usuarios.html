@@ -2,7 +2,7 @@
   <div>
     <span>Usuarios y roles</span>
     <h2>Gestión de permisos</h2>
-    <p>Asigná uno o más roles a cada usuario administrativo.</p>
+    <p>Creá y activá o desactivá cuentas de prensa.</p>
   </div>
 </div>
 
@@ -23,6 +23,8 @@
       <input
         type="password"
         name="password"
+        minlength="12"
+        maxlength="72"
         [(ngModel)]="usuario.password"
         required
       />
@@ -66,12 +68,19 @@
         <p>{{ usuarioAdmin.email }}</p>
       </div>
 
+      <p>{{ usuarioAdmin.activo ? 'Activo' : 'Inactivo' }} · {{ usuarioAdmin.roles.join(', ') }}</p>
+      @if (!usuarioAdmin.roles.includes('SUPER_ADMIN')) {
+        <button type="button" (click)="alternarActivo(usuarioAdmin)">
+          {{ usuarioAdmin.activo ? 'Desactivar' : 'Activar' }}
+        </button>
+      }
       <div class="roles-list">
         @for (rol of rolesDisponibles; track rol) {
           <label>
             <input
               type="checkbox"
               [checked]="usuarioAdmin.roles.includes(rol)"
+              [disabled]="usuarioAdmin.roles.includes('SUPER_ADMIN')"
               (change)="alternarRol(usuarioAdmin, rol)"
             />
             {{ rol }}

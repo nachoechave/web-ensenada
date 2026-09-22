@@ -12,11 +12,11 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './admin-login.css',
 })
 export class AdminLogin {
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly cdr = inject(ChangeDetectorRef);
 
-  email = 'admin@ensenada.gov.ar';
+  email = '';
   password = '';
 
   cargando = false;
@@ -51,6 +51,7 @@ export class AdminLogin {
       })
       .pipe(
         finalize(() => {
+          this.cdr.markForCheck();
           this.cargando = false;
 
           if (this.timeoutLogin) {
@@ -62,9 +63,11 @@ export class AdminLogin {
       )
       .subscribe({
         next: () => {
+          this.cdr.markForCheck();
           this.router.navigate(['/admin']);
         },
         error: () => {
+          this.cdr.markForCheck();
           this.error = 'Email o contraseña incorrectos.';
           this.cdr.detectChanges();
         },

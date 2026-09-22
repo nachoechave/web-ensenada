@@ -27,7 +27,7 @@ export class AdminLayout {
     {
       texto: 'Dashboard',
       ruta: '/admin',
-      roles: ['PRENSA', 'HACIENDA', 'CONTENIDO'],
+      roles: ['PRENSA'],
       exacta: true,
     },
     {
@@ -41,26 +41,6 @@ export class AdminLayout {
       roles: ['PRENSA'],
     },
     {
-      texto: 'Hacienda',
-      ruta: '/admin/hacienda',
-      roles: ['HACIENDA'],
-    },
-    {
-      texto: 'Agenda',
-      ruta: '/admin/agenda',
-      roles: ['CONTENIDO'],
-    },
-    {
-      texto: 'Areas municipales',
-      ruta: '/admin/areas',
-      roles: ['CONTENIDO'],
-    },
-    {
-      texto: 'Contenido del sitio',
-      ruta: '/admin/contenido',
-      roles: ['CONTENIDO'],
-    },
-    {
       texto: 'Usuarios y roles',
       ruta: '/admin/usuarios',
       roles: ['SUPER_ADMIN'],
@@ -68,7 +48,7 @@ export class AdminLayout {
     {
       texto: 'Mi cuenta',
       ruta: '/admin/mi-cuenta',
-      roles: ['SUPER_ADMIN', 'PRENSA', 'HACIENDA', 'CONTENIDO'],
+      roles: ['SUPER_ADMIN', 'PRENSA'],
     },
   ];
 

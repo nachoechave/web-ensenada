@@ -17,6 +17,7 @@ export class NoticiasDestacadas {
   private readonly cdr = inject(ChangeDetectorRef);
 
   noticias: Noticia[] = [];
+  error = '';
 
   noticiaPrincipal: Noticia | undefined;
 
@@ -33,11 +34,13 @@ export class NoticiasDestacadas {
   private cargarNoticias(): void {
     this.noticiasService.obtenerDestacadasDesdeApi().subscribe({
       next: (noticias) => {
+        this.error = '';
         this.noticias = noticias;
         this.actualizarDestacadas();
         this.cdr.detectChanges();
       },
       error: () => {
+        this.error = 'No se pudieron cargar las noticias destacadas.';
         this.noticias = [];
         this.actualizarDestacadas();
         this.cdr.detectChanges();

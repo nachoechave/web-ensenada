@@ -1,69 +1,45 @@
 import { Routes } from '@angular/router';
+import { ServicioExterno } from './pages/servicio-externo/servicio-externo';
 
 import { adminGuard } from './core/admin.guard';
 import { roleGuard } from './core/role.guard';
-import { Agenda } from './pages/agenda/agenda';
-import { AdminAgenda } from './pages/admin/admin-agenda/admin-agenda';
-import { AdminAreas } from './pages/admin/admin-areas/admin-areas';
-import { AdminContenido } from './pages/admin/admin-contenido/admin-contenido';
 import { AdminDashboard } from './pages/admin/admin-dashboard/admin-dashboard';
-import { AdminHacienda } from './pages/admin/admin-hacienda/admin-hacienda';
 import { AdminLayout } from './pages/admin/admin-layout/admin-layout';
 import { AdminLogin } from './pages/admin/admin-login/admin-login';
 import { AdminMiCuenta } from './pages/admin/admin-mi-cuenta/admin-mi-cuenta';
 import { AdminNoticiaForm } from './pages/admin/admin-noticia-form/admin-noticia-form';
 import { AdminNoticias } from './pages/admin/admin-noticias/admin-noticias';
 import { AdminUsuarios } from './pages/admin/admin-usuarios/admin-usuarios';
-import { Areas } from './pages/areas/areas';
-import { Contacto } from './pages/contacto/contacto';
-import { Hacienda } from './pages/hacienda/hacienda';
 import { Home } from './pages/home/home';
-import { Historia } from './pages/historia/historia';
 import { NoticiaDetalle } from './pages/noticia-detalle/noticia-detalle';
 import { Noticias } from './pages/noticias/noticias';
-import { RegistroProveedores } from './pages/registro-proveedores/registro-proveedores';
-import { TelefonosUtiles } from './pages/telefonos-utiles/telefonos-utiles';
 
 export const routes: Routes = [
   {
+    path: 'hacienda',
+    component: ServicioExterno,
+    data: { servicio: 'hacienda', nombre: 'Hacienda' },
+    title: 'Hacienda | Municipalidad de Ensenada',
+  },
+  {
+    path: 'registro-proveedores',
+    component: ServicioExterno,
+    data: { servicio: 'proveedores', nombre: 'Registro Municipal de Proveedores' },
+    title: 'Proveedores | Municipalidad de Ensenada',
+  },
+  {
     path: '',
     component: Home,
+    title: 'Municipalidad de Ensenada',
   },
   {
     path: 'noticias',
     component: Noticias,
+    title: 'Noticias | Municipalidad de Ensenada',
   },
   {
     path: 'noticias/:id',
     component: NoticiaDetalle,
-  },
-  {
-    path: 'agenda',
-    component: Agenda,
-  },
-  {
-    path: 'areas',
-    component: Areas,
-  },
-  {
-    path: 'la-ciudad/historia',
-    component: Historia,
-  },
-  {
-    path: 'la-ciudad/telefonos-utiles',
-    component: TelefonosUtiles,
-  },
-  {
-    path: 'contacto',
-    component: Contacto,
-  },
-  {
-    path: 'hacienda',
-    component: Hacienda,
-  },
-  {
-    path: 'registro-proveedores',
-    component: RegistroProveedores,
   },
   {
     path: 'admin/login',
@@ -73,6 +49,7 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminLayout,
     canActivate: [adminGuard],
+    canActivateChild: [() => adminGuard({} as never, {} as never)],
     children: [
       {
         path: '',
@@ -95,30 +72,6 @@ export const routes: Routes = [
         component: AdminNoticiaForm,
         canActivate: [roleGuard],
         data: { roles: ['PRENSA'] },
-      },
-      {
-        path: 'agenda',
-        component: AdminAgenda,
-        canActivate: [roleGuard],
-        data: { roles: ['CONTENIDO'] },
-      },
-      {
-        path: 'areas',
-        component: AdminAreas,
-        canActivate: [roleGuard],
-        data: { roles: ['CONTENIDO'] },
-      },
-      {
-        path: 'hacienda',
-        component: AdminHacienda,
-        canActivate: [roleGuard],
-        data: { roles: ['HACIENDA'] },
-      },
-      {
-        path: 'contenido',
-        component: AdminContenido,
-        canActivate: [roleGuard],
-        data: { roles: ['CONTENIDO'] },
       },
       {
         path: 'usuarios',

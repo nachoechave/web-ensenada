@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ContenidoSitioService } from '../../services/contenido-sitio.service';
-
+import { siteContent } from '../../config/site-content';
+import { externalLinks } from '../../config/external-links';
 @Component({
   selector: 'app-footer',
   imports: [RouterLink],
@@ -9,19 +9,6 @@ import { ContenidoSitioService } from '../../services/contenido-sitio.service';
   styleUrl: './footer.css',
 })
 export class Footer {
-  private readonly contenidoSitioService = inject(ContenidoSitioService);
-
-  contenido = this.contenidoSitioService.obtenerContenido();
-
-  constructor() {
-    this.contenidoSitioService.obtenerContenidoDesdeApi().subscribe({
-      next: (contenido) => {
-        this.contenido = contenido;
-        this.contenidoSitioService.guardarContenido(contenido);
-      },
-      error: () => {
-        this.contenido = this.contenidoSitioService.obtenerContenido();
-      },
-    });
-  }
+  readonly contenido = siteContent;
+  readonly externalLinks = externalLinks;
 }

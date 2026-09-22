@@ -1,3 +1,4 @@
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -9,7 +10,7 @@ import { ArchivoUploadResponse, SeccionArchivo } from '../models/archivo-upload.
 })
 export class ArchivoUploadService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8080/api/admin/archivos';
+  private readonly apiUrl = environment.apiUrl + '/admin/archivos';
 
   subir(seccion: SeccionArchivo, archivo: File): Observable<ArchivoUploadResponse> {
     const formData = new FormData();

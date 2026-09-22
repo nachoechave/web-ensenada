@@ -19,8 +19,29 @@ export class AdminNoticias {
   private readonly cdr = inject(ChangeDetectorRef);
 
   noticias: Noticia[] = [];
+  filtro = 'Todas';
+  get filtradas(): Noticia[] {
+    return this.noticias.filter(
+      (n) =>
+        this.filtro === 'Todas' ||
+        (this.filtro === 'Destacadas' ? n.destacada : n.estado === this.filtro),
+    );
+  }
+  cambiarEstado(noticia: Noticia): void {
+    this.noticiasService
+      .actualizarDesdeApi(noticia.id, {
+        ...noticia,
+        estado: noticia.estado === 'PUBLICADA' ? 'BORRADOR' : 'PUBLICADA',
+      })
+      .subscribe({
+        error: () => {
+          this.mensaje = 'No se pudo cambiar el estado.';
+          this.cdr.markForCheck();
+        },
+      });
+  }
   mensaje = '';
-  eliminandoId: number | null = null;
+  archivandoId: number | null = null;
 
   constructor() {
     this.cargarNoticias();
@@ -42,48 +63,53 @@ export class AdminNoticias {
       },
       error: (error) => {
         this.noticias = [];
-        this.mensaje = this.obtenerMensajeError(error, 'No se pudieron cargar las noticias desde el backend.');
+        this.mensaje = this.obtenerMensajeError(
+          error,
+          'No se pudieron cargar las noticias desde el backend.',
+        );
         this.cdr.detectChanges();
       },
     });
   }
 
-  eliminarNoticia(noticia: Noticia): void {
+  archivarNoticia(noticia: Noticia): void {
     const id = noticia.id;
 
     if (typeof id !== 'number' || Number.isNaN(id)) {
-      this.mensaje = 'No se pudo eliminar la noticia porque no tiene un id valido.';
+      this.mensaje = 'No se pudo archivar la noticia porque no tiene un id valido.';
       return;
     }
 
-    if (!confirm('Seguro que queres eliminar esta noticia?')) {
+    if (!confirm('Seguro que queres archivar esta noticia?')) {
       return;
     }
 
     this.mensaje = '';
-    this.eliminandoId = id;
+    this.archivandoId = id;
     this.cdr.detectChanges();
 
-    this.noticiasService.eliminarDesdeApi(id).pipe(
-      timeout(15000),
-      finalize(() => {
-        this.eliminandoId = null;
-        this.cdr.detectChanges();
-      }),
-    ).subscribe({
-      next: () => {
-        this.mensaje = 'Noticia eliminada correctamente.';
-        this.noticiasService.notificarCambioNoticias();
-        this.cargarNoticias(false);
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        const mensaje = this.obtenerMensajeError(error, 'No se pudo eliminar la noticia.');
-        alert(mensaje);
-        this.mensaje = mensaje;
-        this.cdr.detectChanges();
-      },
-    });
+    this.noticiasService
+      .archivarDesdeApi(id)
+      .pipe(
+        timeout(15000),
+        finalize(() => {
+          this.archivandoId = null;
+          this.cdr.detectChanges();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.mensaje = 'Noticia archivada correctamente.';
+          this.noticiasService.notificarCambioNoticias();
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          const mensaje = this.obtenerMensajeError(error, 'No se pudo archivar la noticia.');
+          alert(mensaje);
+          this.mensaje = mensaje;
+          this.cdr.detectChanges();
+        },
+      });
   }
 
   private obtenerMensajeError(error: { status?: number }, mensajePorDefecto: string): string {
@@ -95,7 +121,7 @@ export class AdminNoticias {
     }
 
     if (error.status === 404) {
-      return 'La noticia no existe o ya fue eliminada.';
+      return 'La noticia no existe o ya fue archivada.';
     }
 
     return `${mensajePorDefecto} Revisa que el backend este levantado.`;

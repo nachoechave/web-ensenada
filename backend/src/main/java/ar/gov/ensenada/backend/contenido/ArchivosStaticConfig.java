@@ -15,7 +15,7 @@ public class ArchivosStaticConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String ubicacion = Path.of(uploadsDir).toAbsolutePath().normalize().toUri().toString();
-        registry.addResourceHandler("/uploads/**").addResourceLocations(ubicacion);
+        String ubicacion = Path.of(uploadsDir, "noticias").toAbsolutePath().normalize().toUri().toString();
+        registry.addResourceHandler("/uploads/noticias/**").addResourceLocations(ubicacion.endsWith("/") ? ubicacion : ubicacion + "/");
     }
 }

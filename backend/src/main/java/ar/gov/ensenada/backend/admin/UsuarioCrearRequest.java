@@ -3,6 +3,7 @@ package ar.gov.ensenada.backend.admin;
 import ar.gov.ensenada.backend.auth.RolUsuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.util.Set;
@@ -16,7 +17,7 @@ public record UsuarioCrearRequest(
         String email,
 
         @NotBlank(message = "La contraseña es obligatoria")
-        String password,
+        @Size(min=12, max=72) String password,
 
         @NotEmpty(message = "Debe asignarse al menos un rol")
         Set<RolUsuario> roles,

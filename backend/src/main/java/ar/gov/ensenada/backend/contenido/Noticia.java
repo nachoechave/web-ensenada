@@ -26,11 +26,12 @@ public class Noticia {
     private String categoria;
 
     @Column(nullable = false)
-    private String fecha;
+    private java.time.LocalDate fechaPublicacion;
 
     @Enumerated(EnumType.STRING)
+    @org.hibernate.annotations.JdbcTypeCode(java.sql.Types.VARCHAR)
     @Column(nullable = false)
-    private EstadoPublicacion estado = EstadoPublicacion.Borrador;
+    private EstadoPublicacion estado = EstadoPublicacion.BORRADOR;
 
     @Column(nullable = false)
     private boolean destacada = false;
@@ -59,8 +60,8 @@ public class Noticia {
         return categoria;
     }
 
-    public String getFecha() {
-        return fecha;
+    public java.time.LocalDate getFechaPublicacion() {
+        return fechaPublicacion;
     }
 
     public EstadoPublicacion getEstado() {
@@ -95,8 +96,8 @@ public class Noticia {
         this.categoria = categoria;
     }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+    public void setFechaPublicacion(java.time.LocalDate fechaPublicacion) {
+        this.fechaPublicacion = fechaPublicacion;
     }
 
     public void setEstado(EstadoPublicacion estado) {

@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.*;
 
@@ -35,8 +34,11 @@ public class SecurityConfig {
     @Value("${app.jwt.secret}")
     private String jwtSecret;
 
+    @Value("${app.cors.allowed-origins}")
+    private List<String> allowedOrigins;
+
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http, UsuarioRepository repository) throws Exception {
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
@@ -51,22 +53,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/auth/me/password").authenticated()
                         .requestMatchers("/api/admin/usuarios/**").hasRole("SUPER_ADMIN")
                         .requestMatchers("/api/admin/noticias/**").hasAnyRole("SUPER_ADMIN", "PRENSA")
-                        .requestMatchers("/api/admin/hacienda/**").hasAnyRole("SUPER_ADMIN", "HACIENDA")
-                        .requestMatchers("/api/admin/contenido", "/api/admin/contenido/**").hasAnyRole("SUPER_ADMIN", "CONTENIDO")
-                        .requestMatchers("/api/admin/agenda", "/api/admin/agenda/**").hasAnyRole("SUPER_ADMIN", "CONTENIDO")
-                        .requestMatchers("/api/admin/areas", "/api/admin/areas/**").hasAnyRole("SUPER_ADMIN", "CONTENIDO")
-                        .requestMatchers("/api/admin/archivos/**").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
-                        .requestMatchers("/api/admin/**").authenticated()
+                        .requestMatchers("/api/admin/archivos/noticias").hasAnyRole("SUPER_ADMIN", "PRENSA")
+                        .requestMatchers(HttpMethod.GET, "/uploads/noticias/*.png", "/uploads/noticias/*.jpg").permitAll()
+                        .requestMatchers("/api/admin/**").denyAll()
                         .requestMatchers(HttpMethod.GET, "/api/noticias/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/agenda").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/areas").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/hacienda/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/contenido-sitio").permitAll()
-                        .anyRequest().permitAll()
+                        .anyRequest().denyAll()
                 )
                 .oauth2ResourceServer(oauth2 ->
-                        oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter(repository)))
                 )
                 .build();
     }
@@ -122,20 +116,22 @@ public class SecurityConfig {
                 "HmacSHA256"
         );
 
-        return NimbusJwtDecoder
-                .withSecretKey(secretKey)
-                .macAlgorithm(MacAlgorithm.HS256)
-                .build();
+        if (jwtSecret.getBytes(StandardCharsets.UTF_8).length < 32) throw new IllegalArgumentException("JWT_SECRET requiere al menos 32 bytes");
+        NimbusJwtDecoder decoder = NimbusJwtDecoder.withSecretKey(secretKey).macAlgorithm(MacAlgorithm.HS256).build();
+        decoder.setJwtValidator(JwtValidators.createDefaultWithIssuer("web-ensenada"));
+        return decoder;
     }
 
     @Bean
-    JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        authoritiesConverter.setAuthorityPrefix("ROLE_");
-        authoritiesConverter.setAuthoritiesClaimName("roles");
-
+    JwtAuthenticationConverter jwtAuthenticationConverter(UsuarioRepository repository) {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
+        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            Usuario usuario = repository.findByEmailIgnoreCase(jwt.getSubject())
+                .filter(Usuario::isActivo)
+                .orElseThrow(() -> new org.springframework.security.oauth2.core.OAuth2AuthenticationException("invalid_token"));
+            return usuario.getRoles().stream()
+                .map(rol -> (org.springframework.security.core.GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + rol.name())).toList();
+        });
 
         return converter;
     }
@@ -144,7 +140,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedOrigins(allowedOrigins);
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(false);

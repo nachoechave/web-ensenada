@@ -40,32 +40,10 @@ public class DataInitializer implements CommandLineRunner {
 
         var adminExistente = usuarioRepository.findByEmailIgnoreCase(adminEmail);
 
-        if (adminExistente.isPresent()) {
-            Usuario admin = adminExistente.get();
-            boolean actualizado = false;
-
-            if (!adminEmail.equals(admin.getEmail())) {
-                admin.setEmail(adminEmail);
-                actualizado = true;
-            }
-
-            if (!admin.getRoles().contains(RolUsuario.SUPER_ADMIN)) {
-                admin.setRoles(Set.of(RolUsuario.SUPER_ADMIN));
-                actualizado = true;
-            }
-
-            if (!admin.isActivo()) {
-                admin.setActivo(true);
-                actualizado = true;
-            }
-
-            if (actualizado) {
-                usuarioRepository.save(admin);
-            }
-
-            return;
+        if (adminExistente.isPresent()) { return; }
+        if (adminPassword.length() < 12 || adminPassword.length() > 72) {
+            throw new IllegalArgumentException("APP_ADMIN_PASSWORD debe tener entre 12 y 72 caracteres");
         }
-
         Usuario admin = new Usuario(
                 "Administrador",
                 adminEmail,

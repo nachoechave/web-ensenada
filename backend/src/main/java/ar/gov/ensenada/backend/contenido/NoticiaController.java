@@ -19,12 +19,12 @@ public class NoticiaController {
 
     @GetMapping("/noticias")
     public List<Noticia> listarPublicadas() {
-        return noticiaRepository.findByEstadoOrderByIdDesc(EstadoPublicacion.Publicada);
+        return noticiaRepository.findByEstadoOrderByIdDesc(EstadoPublicacion.PUBLICADA);
     }
 
     @GetMapping("/noticias/destacadas")
     public List<Noticia> listarDestacadas() {
-        return noticiaRepository.findByEstadoAndDestacadaTrueOrderByIdDesc(EstadoPublicacion.Publicada);
+        return noticiaRepository.findByEstadoAndDestacadaTrueOrderByIdDesc(EstadoPublicacion.PUBLICADA);
     }
 
     @GetMapping("/noticias/{id}")
@@ -32,7 +32,7 @@ public class NoticiaController {
         Noticia noticia = noticiaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Noticia no encontrada"));
 
-        if (noticia.getEstado() != EstadoPublicacion.Publicada) {
+        if (noticia.getEstado() != EstadoPublicacion.PUBLICADA) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Noticia no encontrada");
         }
 
@@ -70,11 +70,9 @@ public class NoticiaController {
     @DeleteMapping("/admin/noticias/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Long id) {
-        if (!noticiaRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Noticia no encontrada");
-        }
-
-        noticiaRepository.deleteById(id);
+        Noticia noticia = obtenerAdmin(id);
+        noticia.setEstado(EstadoPublicacion.ARCHIVADA);
+        noticiaRepository.save(noticia);
     }
 
     private void completar(Noticia noticia, NoticiaRequest request) {
@@ -83,7 +81,7 @@ public class NoticiaController {
         noticia.setContenido(request.contenido());
         noticia.setImagen(request.imagen());
         noticia.setCategoria(request.categoria());
-        noticia.setFecha(request.fecha());
+        noticia.setFechaPublicacion(request.fechaPublicacion());
         noticia.setEstado(request.estado());
         noticia.setDestacada(request.destacada());
     }

@@ -26,3 +26,11 @@ output/
 # Env / secrets
 *.env
 application-local.properties
+
+.env
+.env.*
+!.env.example
+**/uploads/
+**/target/
+**/dist/
+**/node_modules/

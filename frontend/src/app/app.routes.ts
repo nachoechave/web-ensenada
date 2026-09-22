@@ -49,7 +49,7 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminLayout,
     canActivate: [adminGuard],
-    canActivateChild: [() => adminGuard({} as never, {} as never)],
+    canActivateChild: [adminGuard],
     children: [
       {
         path: '',

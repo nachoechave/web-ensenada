@@ -76,7 +76,10 @@ export class AdminUsuarios {
   alternarActivo(usuario: UsuarioAdmin): void {
     this.usuariosService.actualizarActivo(usuario.id, !usuario.activo).subscribe({
       next: () => this.cargarUsuarios(),
-      error: () => (this.error = 'No se pudo cambiar el estado.'),
+      error: () => {
+        this.error = 'No se pudo cambiar el estado.';
+        this.cdr.markForCheck();
+      },
     });
   }
 

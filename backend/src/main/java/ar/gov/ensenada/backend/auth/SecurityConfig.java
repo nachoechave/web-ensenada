@@ -37,9 +37,15 @@ public class SecurityConfig {
     @Value("${app.cors.allowed-origins}")
     private List<String> allowedOrigins;
 
+    @Value("${app.login-rate-limit.attempts}") private int loginAttempts;
+    @Value("${app.login-rate-limit.window-seconds}") private long loginWindowSeconds;
+    @Value("${app.login-rate-limit.max-ips}") private int loginMaxIps;
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, UsuarioRepository repository) throws Exception {
         return http
+                .addFilterBefore(new LoginRateLimitFilter(new LoginRateLimiter(loginAttempts, loginWindowSeconds, loginMaxIps, java.time.Clock.systemUTC())),
+                    org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session ->
@@ -52,6 +58,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/auth/me").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/auth/me/password").authenticated()
                         .requestMatchers("/api/admin/usuarios/**").hasRole("SUPER_ADMIN")
+                        .requestMatchers("/api/admin/hacienda/**").hasAnyRole("SUPER_ADMIN", "HACIENDA")
+                        .requestMatchers(HttpMethod.GET, "/api/hacienda/**", "/uploads/hacienda/*").permitAll()
                         .requestMatchers("/api/admin/noticias/**").hasAnyRole("SUPER_ADMIN", "PRENSA")
                         .requestMatchers("/api/admin/archivos/noticias").hasAnyRole("SUPER_ADMIN", "PRENSA")
                         .requestMatchers(HttpMethod.GET, "/uploads/noticias/*.png", "/uploads/noticias/*.jpg").permitAll()

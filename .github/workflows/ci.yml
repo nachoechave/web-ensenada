@@ -22,6 +22,20 @@ jobs:
       - run: npm run build
   backend:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          MYSQL_ROOT_HOST: '%'
+          MYSQL_DATABASE: web_ensenada_validation
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
     defaults:
       run:
         working-directory: backend
@@ -35,3 +49,10 @@ jobs:
       - run: chmod +x mvnw
       - run: ./mvnw test
       - run: ./mvnw package
+      - name: Validate Flyway V1 and V2 on isolated MySQL
+        run: ./mvnw -Dtest=MySqlMigrationTests test
+        env:
+          MYSQL_VALIDATION: 'true'
+          MYSQL_TEST_URL: jdbc:mysql://127.0.0.1:3306/web_ensenada_validation
+          MYSQL_TEST_USER: root
+          MYSQL_TEST_PASSWORD: ''

@@ -1,11 +1,7 @@
 <header class="navbar">
   <div class="navbar-container">
     <a routerLink="/" class="brand" aria-label="Ir al inicio" (click)="irArriba()">
-      <span class="brand-seal" aria-hidden="true"></span>
-      <span class="brand-copy">
-        <strong>Municipalidad de Ensenada</strong>
-        <small>Portal oficial de información y servicios</small>
-      </span>
+      <span class="brand-logo" aria-hidden="true"></span>
     </a>
 
     <button type="button" class="menu-toggle" [class.open]="menuAbierto" [attr.aria-expanded]="menuAbierto" aria-controls="main-navigation" aria-label="Abrir o cerrar menú" (click)="alternarMenu()">

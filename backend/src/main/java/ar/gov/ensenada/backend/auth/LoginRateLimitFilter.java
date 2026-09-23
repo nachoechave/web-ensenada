@@ -9,7 +9,8 @@ public class LoginRateLimitFilter extends OncePerRequestFilter {
     private final LoginRateLimiter limiter;
     public LoginRateLimitFilter(LoginRateLimiter limiter){this.limiter=limiter;}
     @Override protected boolean shouldNotFilter(HttpServletRequest request){
-        return !"POST".equals(request.getMethod()) || !"/api/auth/login".equals(request.getRequestURI().substring(request.getContextPath().length()));
+        String path=org.springframework.web.util.UrlPathHelper.defaultInstance.getPathWithinApplication(request);
+        return !"POST".equals(request.getMethod()) || !"/api/auth/login".equals(path);
     }
     @Override protected void doFilterInternal(HttpServletRequest request,HttpServletResponse response,FilterChain chain) throws ServletException,IOException {
         long retry=limiter.intentar(request.getRemoteAddr());

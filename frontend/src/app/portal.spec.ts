@@ -34,11 +34,29 @@ const news: Noticia = {
 };
 describe('Portal de prensa', () => {
   it('las rutas conservan noticias y accesos externos sin módulos CMS', () => {
-    expect(routes.map(route => route.path)).toEqual([
-      'hacienda', 'registro-proveedores', '', 'noticias', 'noticias/:id', 'admin/login', 'admin', '**',
+    expect(routes.map((route) => route.path)).toEqual([
+      'hacienda/:id',
+      'hacienda',
+      'registro-proveedores',
+      '',
+      'noticias',
+      'noticias/:id',
+      'admin/login',
+      'admin',
+      '**',
     ]);
-    const admin = routes.find(route => route.path === 'admin')!;
-    expect(admin.children?.map(route => route.path)).toEqual(['', 'noticias', 'noticias/nueva', 'noticias/editar/:id', 'usuarios', 'mi-cuenta']);
+    const admin = routes.find((route) => route.path === 'admin')!;
+    expect(admin.children?.map((route) => route.path)).toEqual([
+      'hacienda',
+      'hacienda/nueva',
+      'hacienda/editar/:id',
+      '',
+      'noticias',
+      'noticias/nueva',
+      'noticias/editar/:id',
+      'usuarios',
+      'mi-cuenta',
+    ]);
     expect(admin.canActivateChild).toContain(adminGuard);
   });
   let http: HttpTestingController;
@@ -94,7 +112,7 @@ describe('Portal de prensa', () => {
     session();
     const fixture = TestBed.createComponent(AdminLayout);
     fixture.detectChanges();
-    const text = fixture.nativeElement.textContent;
+    const text = fixture.nativeElement.querySelector('nav').textContent;
     expect(text).toContain('Noticias');
     expect(text).toContain('Mi cuenta');
     expect(text).not.toContain('Usuarios y roles');

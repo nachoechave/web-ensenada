@@ -1,0 +1,1 @@
+Navbar logo update branch marker.

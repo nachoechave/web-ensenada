@@ -20,47 +20,10 @@ export type MunicipalLink = {
 };
 
 export const municipalLinks: MunicipalLink[] = [
-  {
-    titulo: 'Boletín Oficial',
-    descripcion: 'Normativa, decretos y publicaciones oficiales del Municipio.',
-    codigo: 'BO',
-    cta: 'Consultar',
-    url: externalLinks.boletinOficial,
-  },
-  {
-    titulo: 'Hacienda',
-    descripcion: 'Publicaciones, información fiscal y documentación del área.',
-    codigo: 'HA',
-    cta: 'Ver publicaciones',
-    url: '/hacienda',
-    interno: true,
-  },
-  {
-    titulo: 'Registro de Proveedores',
-    descripcion: 'Acceso al registro y a la información para proveedores municipales.',
-    codigo: 'RP',
-    cta: 'Acceder',
-    url: externalLinks.proveedores,
-  },
-  {
-    titulo: 'Turnos veterinarios',
-    descripcion: 'Solicitud de turnos para los servicios veterinarios municipales.',
-    codigo: 'TV',
-    cta: 'Solicitar turno',
-    url: externalLinks.turnos,
-  },
-  {
-    titulo: 'Tasas municipales',
-    descripcion: 'Consulta y pago online de tasas municipales.',
-    codigo: 'TM',
-    cta: 'Consultar tasas',
-    url: externalLinks.tasas,
-  },
-  {
-    titulo: 'Boleta digital',
-    descripcion: 'Gestión de avisos y documentación tributaria digital.',
-    codigo: 'BD',
-    cta: 'Ingresar',
-    url: externalLinks.boletaDigital,
-  },
+  { titulo: 'Hacienda', descripcion: 'Publicaciones e información fiscal del área.', codigo: 'HA', cta: 'Ver publicaciones', url: '/hacienda', interno: true },
+  { titulo: 'Boletín Oficial', descripcion: 'Normativa y publicaciones oficiales del Municipio.', codigo: 'BO', cta: 'Consultar', url: externalLinks.boletinOficial },
+  { titulo: 'Turnos veterinarios', descripcion: 'Solicitud de turnos para servicios veterinarios.', codigo: 'TV', cta: 'Solicitar turno', url: externalLinks.turnos },
+  { titulo: 'Registro de Proveedores', descripcion: 'Información y acceso para proveedores municipales.', codigo: 'RP', cta: 'Acceder', url: externalLinks.proveedores },
+  { titulo: 'Tasas municipales', descripcion: 'Consulta y pago online de tasas municipales.', codigo: 'TM', cta: 'Consultar tasas', url: externalLinks.tasas },
+  { titulo: 'Boleta digital', descripcion: 'Gestión de avisos y documentación tributaria digital.', codigo: 'BD', cta: 'Ingresar', url: externalLinks.boletaDigital },
 ];

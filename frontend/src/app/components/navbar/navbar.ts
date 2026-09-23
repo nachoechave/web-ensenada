@@ -7,7 +7,7 @@ type NavLink = {
   ruta: string;
   exacta?: boolean;
   externo?: boolean;
-  hijos?: NavLink[];
+  fragmento?: string;
 };
 
 @Component({
@@ -21,23 +21,18 @@ export class Navbar {
 
   links: NavLink[] = [
     { texto: 'Inicio', ruta: '/', exacta: true },
+    { texto: 'Intendente', ruta: '/', fragmento: 'intendente' },
+    { texto: 'Servicios', ruta: '/', fragmento: 'servicios' },
     { texto: 'Noticias', ruta: '/noticias' },
-    {texto:'Hacienda',ruta:'/hacienda'},
+    { texto: 'Hacienda', ruta: '/hacienda' },
     { texto: 'Boletín Oficial', ruta: externalLinks.boletinOficial, externo: true },
   ];
 
   irArriba(): void {
     this.menuAbierto = false;
-    setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }));
   }
 
   alternarMenu(): void {
     this.menuAbierto = !this.menuAbierto;
-  }
-
-  navegarDesdeMenu(event: MouseEvent): void {
-    const enlace = event.currentTarget as HTMLElement | null;
-    enlace?.closest('details')?.removeAttribute('open');
-    this.irArriba();
   }
 }

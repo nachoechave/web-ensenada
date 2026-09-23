@@ -1,0 +1,40 @@
+<app-navbar />
+<main class="section-block">
+  <div class="section-container">
+    <a routerLink="/hacienda">Volver a Hacienda</a>
+    @if (cargando()) {
+      <p role="status">Cargando publicación…</p>
+    } @else if (error()) {
+      <h1>Publicación no disponible</h1>
+      <p role="alert">{{ error() }}</p>
+    } @else if (publicacion(); as p) {
+      <article>
+        <header>
+          <p>{{ tipos[p.tipo] }}</p>
+          <h1>{{ p.titulo }}</h1>
+          <time [attr.datetime]="p.fechaPublicacion">{{ p.fechaPublicacion }}</time>
+        </header>
+        <p class="description">{{ p.descripcion }}</p>
+        <h2>Documentos</h2>
+        @for (a of p.archivos; track a.id) {
+          <section class="document content-card" [attr.aria-label]="a.nombreOriginal">
+            <h3>{{ a.nombreOriginal }}</h3>
+            @if (a.tipoMime === 'application/pdf') {
+              <p>Documento PDF</p>
+              <a [href]="a.url" target="_blank" rel="noopener noreferrer">Ver documento PDF</a>
+              <a [href]="a.url + '?descargar=true'">Descargar documento</a>
+            } @else {
+              <img
+                [src]="a.url"
+                [alt]="'Documento escaneado: ' + a.nombreOriginal"
+                loading="lazy"
+              />
+              <a [href]="a.url + '?descargar=true'">Descargar imagen</a>
+            }
+          </section>
+        }
+      </article>
+    }
+  </div>
+</main>
+<app-footer />

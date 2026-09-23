@@ -1,0 +1,22 @@
+.description {
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+.document {
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-wrap: anywhere;
+}
+.document img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1rem auto;
+}
+.document a {
+  display: inline-block;
+  margin: 0.5rem 1.5rem 0.5rem 0;
+}
+.document h3 {
+  font-size: 1.1rem;
+}

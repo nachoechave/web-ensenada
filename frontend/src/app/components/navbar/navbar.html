@@ -1,22 +1,27 @@
 <header class="navbar">
   <div class="navbar-container">
-    <div class="brand">
-      <div class="brand-icon">E</div>
+    <a routerLink="/" class="brand" aria-label="Ir al inicio" (click)="irArriba()">
+      <span class="brand-seal" aria-hidden="true"></span>
+      <span class="brand-copy">
+        <strong>Municipalidad de Ensenada</strong>
+        <small>Portal oficial de información y servicios</small>
+      </span>
+    </a>
 
-      <div>
-        <p>Municipalidad de</p>
-        <strong>Ensenada</strong>
-      </div>
-    </div>
+    <button type="button" class="menu-toggle" [class.open]="menuAbierto" [attr.aria-expanded]="menuAbierto" aria-controls="main-navigation" aria-label="Abrir o cerrar menú" (click)="alternarMenu()">
+      <span></span><span></span><span></span>
+    </button>
 
-    <nav class="nav-links" aria-label="Navegación principal">
+    <nav id="main-navigation" class="nav-links" [class.open]="menuAbierto" aria-label="Navegación principal">
       @for (link of links; track link.texto) {
-        <a [routerLink]="link.ruta">{{ link.texto }}</a>
+        @if (link.externo) {
+          <a class="external-link" [href]="link.ruta" target="_blank" rel="noopener noreferrer">{{ link.texto }}</a>
+        } @else if (link.fragmento) {
+          <a [routerLink]="link.ruta" [fragment]="link.fragmento" (click)="irArriba()">{{ link.texto }}</a>
+        } @else {
+          <a [routerLink]="link.ruta" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: link.exacta ?? false }" (click)="irArriba()">{{ link.texto }}</a>
+        }
       }
     </nav>
-
-    <button class="search-button" aria-label="Buscar">
-      🔍
-    </button>
   </div>
 </header>

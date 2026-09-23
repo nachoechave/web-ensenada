@@ -1,1 +1,43 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+:root {
+  --color-primary-950: #043426;
+  --color-primary-900: #064b37;
+  --color-primary-800: #086348;
+  --color-primary-700: #0b7c55;
+  --color-primary-600: #119567;
+  --color-primary-100: #def3e9;
+  --color-primary-50: #f2f8f5;
+  --color-surface: #ffffff;
+  --color-page: #f7f9f8;
+  --color-muted: #66736e;
+  --color-text: #17221f;
+  --color-heading: #123d31;
+  --color-border: #dfe8e4;
+  --shadow-card: 0 1rem 2.8rem rgba(3, 45, 35, .07);
+  --shadow-card-hover: 0 1.25rem 3rem rgba(3, 45, 35, .11);
+  --container: 78rem;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 6.5rem; }
+body { margin: 0; color: var(--color-text); background: var(--color-page); font-family: 'Montserrat', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-weight: 400; -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; }
+a, button, input { font: inherit; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: .18rem solid #6fd3a4; outline-offset: .18rem; }
+.page-shell { min-height: 100vh; background: var(--color-page); }
+.section-container { width: min(100% - 3rem, var(--container)); margin-inline: auto; }
+.section-block { padding: 5.25rem 0; }
+.section-header { max-width: 46rem; margin-bottom: 2.25rem; }
+.section-header:has(.section-title-row) { max-width: 100%; }
+.section-title-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; }
+.section-kicker { display: inline-flex; align-items: center; gap: .55rem; margin-bottom: .72rem; color: var(--color-primary-700); font-size: .7rem; font-weight: 650; letter-spacing: .15rem; text-transform: uppercase; }
+.section-kicker::before { width: 1.65rem; height: .12rem; border-radius: 999rem; content: ''; background: var(--color-primary-600); }
+.section-header h1, .section-header h2, .section-title-row h2 { margin: 0; color: var(--color-heading); font-size: clamp(2rem, 3.2vw, 2.8rem); font-weight: 620; letter-spacing: -.04em; line-height: 1.08; }
+.section-header p, .section-title-row p { max-width: 42rem; margin: .75rem 0 0; color: var(--color-muted); font-size: .92rem; line-height: 1.7; }
+.button-link { min-height: 2.75rem; display: inline-flex; align-items: center; justify-content: center; gap: .45rem; padding: .7rem 1.1rem; border: 1px solid #b9dfcb; border-radius: 999rem; color: var(--color-primary-800); background: white; font-size: .78rem; font-weight: 650; line-height: 1.2; text-decoration: none; white-space: nowrap; transition: transform .2s ease, background-color .2s ease, border-color .2s ease; }
+.button-link:hover, .button-link:focus-visible { transform: translateY(-.08rem); border-color: #86c7a7; background: var(--color-primary-50); }
+.button-link.primary { border-color: var(--color-primary-700); color: white; background: var(--color-primary-700); }
+.button-link.primary:hover, .button-link.primary:focus-visible { border-color: var(--color-primary-800); background: var(--color-primary-800); }
+.content-card { border: 1px solid var(--color-border); border-radius: 1.1rem; background: white; box-shadow: var(--shadow-card); }
+@media (max-width: 56rem) { .section-title-row { align-items: flex-start; flex-direction: column; } }
+@media (max-width: 40rem) { .section-block { padding: 3.75rem 0; } .section-container { width: min(100% - 1.5rem, var(--container)); } .button-link { white-space: normal; } }

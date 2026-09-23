@@ -5,6 +5,7 @@ export interface Noticia {
   contenido: string;
   imagen: string;
   categoria: string;
-  fecha: string;
-  estado: 'Publicada' | 'Borrador';
+  fechaPublicacion: string;
+  estado: 'PUBLICADA' | 'BORRADOR' | 'ARCHIVADA';
+  destacada: boolean;
 }

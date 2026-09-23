@@ -2,16 +2,15 @@
   <div>
     <span>{{ esEdicion ? 'Editar noticia' : 'Nueva noticia' }}</span>
     <h2>{{ esEdicion ? 'Editar contenido' : 'Crear noticia' }}</h2>
-    <p>
-      Completá la información de la noticia para publicarla en el sitio municipal.
-    </p>
+    <p>Completá la información de la noticia para publicarla en el sitio municipal.</p>
   </div>
 
-  <a routerLink="/admin/noticias" class="secondary-button">
-    Volver al listado
-  </a>
+  <a routerLink="/admin/noticias" class="secondary-button"> Volver al listado </a>
 </div>
 
+@if (errorGuardado) {
+  <p role="alert" class="field-error">{{ errorGuardado }}</p>
+}
 <form class="news-form" (ngSubmit)="guardarNoticia()" #formNoticia="ngForm">
   <div class="form-grid">
     <label class="form-field full">
@@ -19,6 +18,7 @@
       <input
         type="text"
         name="titulo"
+        maxlength="255"
         [(ngModel)]="noticia.titulo"
         required
         placeholder="Ej: El municipio inauguró nuevas obras"
@@ -29,6 +29,7 @@
       <span>Bajada</span>
       <textarea
         name="bajada"
+        maxlength="500"
         [(ngModel)]="noticia.bajada"
         rows="3"
         required
@@ -46,16 +47,22 @@
     </label>
 
     <label class="form-field">
-      <span>Fecha</span>
-      <input type="date" name="fecha" [(ngModel)]="noticia.fecha" required />
+      <span>Fecha de publicación</span>
+      <input type="date" name="fechaPublicacion" [(ngModel)]="noticia.fechaPublicacion" required />
     </label>
 
     <label class="form-field">
       <span>Estado</span>
       <select name="estado" [(ngModel)]="noticia.estado" required>
-        <option value="Borrador">Borrador</option>
-        <option value="Publicada">Publicada</option>
+        <option value="BORRADOR">Borrador</option>
+        <option value="PUBLICADA">Publicada</option>
+        <option value="ARCHIVADA">Archivada</option>
       </select>
+    </label>
+
+    <label class="form-field checkbox-field">
+      <input type="checkbox" name="destacada" [(ngModel)]="noticia.destacada" />
+      <span>Mostrar en noticias destacadas</span>
     </label>
 
     <div class="form-field">
@@ -65,13 +72,22 @@
         #imagenInput
         class="file-input"
         type="file"
-        accept="image/png, image/jpeg, image/webp"
+        accept="image/png, image/jpeg"
         (change)="seleccionarImagen($event)"
       />
 
-      <button type="button" class="file-upload" (click)="imagenInput.click()">
-        Seleccionar imagen desde el equipo
+      <button
+        type="button"
+        class="file-upload"
+        (click)="imagenInput.click()"
+        [disabled]="subiendoImagen"
+      >
+        {{ subiendoImagen ? 'Subiendo imagen...' : 'Seleccionar imagen desde el equipo' }}
       </button>
+
+      @if (errorImagen) {
+        <p class="field-error">{{ errorImagen }}</p>
+      }
 
       @if (imagenPreview) {
         <div class="image-preview">
@@ -84,6 +100,7 @@
       <span>Contenido</span>
       <textarea
         name="contenido"
+        maxlength="60000"
         [(ngModel)]="noticia.contenido"
         rows="8"
         required
@@ -93,11 +110,12 @@
   </div>
 
   <div class="form-actions">
-    <a routerLink="/admin/noticias" class="cancel-button">
-      Cancelar
-    </a>
+    <a routerLink="/admin/noticias" class="cancel-button"> Cancelar </a>
 
-    <button type="submit" [disabled]="formNoticia.invalid">
+    <button
+      type="submit"
+      [disabled]="formNoticia.invalid || guardando || subiendoImagen || !noticia.imagen"
+    >
       {{ esEdicion ? 'Guardar cambios' : 'Crear noticia' }}
     </button>
   </div>

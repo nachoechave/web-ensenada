@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable, Subject, tap } from 'rxjs';
 
 import { Noticia } from '../models/noticia.model';
 
@@ -6,109 +9,53 @@ import { Noticia } from '../models/noticia.model';
   providedIn: 'root',
 })
 export class NoticiasService {
-  private readonly storageKey = 'municipio-noticias';
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = environment.apiUrl;
+  private readonly cambiosNoticiasSubject = new Subject<void>();
 
-  private readonly noticiasIniciales: Noticia[] = [
-    {
-      id: 1,
-      titulo: 'El municipio avanza con nuevas obras en los barrios',
-      bajada: 'Se realizaron trabajos de infraestructura en distintos puntos de la ciudad.',
-      contenido:
-        'El Municipio de Ensenada continúa desarrollando obras públicas orientadas a mejorar la calidad de vida de los vecinos y vecinas.',
-      imagen: '/assets/ensenada-hero.jpg',
-      categoria: 'Obras públicas',
-      fecha: '2026-06-25',
-      estado: 'Publicada',
-    },
-    {
-      id: 2,
-      titulo: 'Nueva agenda de actividades culturales',
-      bajada: 'La ciudad contará con nuevas propuestas culturales durante la semana.',
-      contenido:
-        'El área de Cultura presentó una nueva agenda de actividades para vecinos, vecinas e instituciones de la ciudad.',
-      imagen: '/assets/ensenada-hero.jpg',
-      categoria: 'Cultura',
-      fecha: '2026-06-24',
-      estado: 'Publicada',
-    },
-    {
-      id: 3,
-      titulo: 'Inscripción abierta a talleres deportivos',
-      bajada: 'Ya se encuentra disponible la inscripción a nuevas actividades deportivas.',
-      contenido:
-        'El Municipio informó la apertura de inscripción a talleres deportivos destinados a distintas edades.',
-      imagen: '/assets/ensenada-hero.jpg',
-      categoria: 'Deportes',
-      fecha: '2026-06-23',
-      estado: 'Borrador',
-    },
-  ];
+  readonly cambiosNoticias$ = this.cambiosNoticiasSubject.asObservable();
 
-  private noticias: Noticia[] = this.cargarNoticias();
-
-  obtenerTodas(): Noticia[] {
-    return [...this.noticias];
+  obtenerPublicadasDesdeApi(): Observable<Noticia[]> {
+    return this.http.get<Noticia[]>(`${this.apiUrl}/noticias`);
   }
 
-  obtenerPublicadas(): Noticia[] {
-    return this.noticias.filter((noticia) => noticia.estado === 'Publicada');
+  obtenerDestacadasDesdeApi(): Observable<Noticia[]> {
+    return this.http.get<Noticia[]>(`${this.apiUrl}/noticias/destacadas`);
   }
 
-  obtenerPorId(id: number): Noticia | undefined {
-    return this.noticias.find((noticia) => noticia.id === id);
+  obtenerTodasDesdeApi(): Observable<Noticia[]> {
+    return this.http.get<Noticia[]>(`${this.apiUrl}/admin/noticias`);
   }
 
-  crear(noticia: Omit<Noticia, 'id'>): void {
-    const nuevaNoticia: Noticia = {
-      ...noticia,
-      id: this.generarId(),
-    };
-
-    this.noticias = [nuevaNoticia, ...this.noticias];
-    this.guardarNoticias();
+  obtenerPublicaPorIdDesdeApi(id: number): Observable<Noticia> {
+    return this.http.get<Noticia>(`${this.apiUrl}/noticias/${id}`);
   }
 
-  actualizar(id: number, noticiaActualizada: Omit<Noticia, 'id'>): void {
-    this.noticias = this.noticias.map((noticia) =>
-      noticia.id === id ? { ...noticiaActualizada, id } : noticia,
-    );
-
-    this.guardarNoticias();
+  obtenerAdminPorIdDesdeApi(id: number): Observable<Noticia> {
+    return this.http.get<Noticia>(`${this.apiUrl}/admin/noticias/${id}`);
   }
 
-  eliminar(id: number): void {
-    this.noticias = this.noticias.filter((noticia) => noticia.id !== id);
-    this.guardarNoticias();
+  crearDesdeApi(noticia: Omit<Noticia, 'id'>): Observable<Noticia> {
+    return this.http
+      .post<Noticia>(`${this.apiUrl}/admin/noticias`, noticia)
+      .pipe(tap(() => this.notificarCambio()));
   }
 
-  obtenerNoticiasPublicadas(): Noticia[] {
-    return this.obtenerPublicadas();
+  actualizarDesdeApi(id: number, noticia: Omit<Noticia, 'id'>): Observable<Noticia> {
+    return this.http
+      .put<Noticia>(`${this.apiUrl}/admin/noticias/${id}`, noticia)
+      .pipe(tap(() => this.notificarCambio()));
   }
 
-  obtenerNoticiaPorId(id: number): Noticia | undefined {
-    return this.obtenerPorId(id);
+  archivarDesdeApi(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/admin/noticias/${id}`);
   }
 
-  private cargarNoticias(): Noticia[] {
-    const noticiasGuardadas = localStorage.getItem(this.storageKey);
-
-    if (!noticiasGuardadas) {
-      return this.noticiasIniciales;
-    }
-
-    try {
-      return JSON.parse(noticiasGuardadas) as Noticia[];
-    } catch {
-      return this.noticiasIniciales;
-    }
+  notificarCambioNoticias(): void {
+    this.notificarCambio();
   }
 
-  private guardarNoticias(): void {
-    localStorage.setItem(this.storageKey, JSON.stringify(this.noticias));
-  }
-
-  private generarId(): number {
-    const ids = this.noticias.map((noticia) => noticia.id);
-    return ids.length > 0 ? Math.max(...ids) + 1 : 1;
+  private notificarCambio(): void {
+    this.cambiosNoticiasSubject.next();
   }
 }

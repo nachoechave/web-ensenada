@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-
-import { Noticia } from '../../../models/noticia.model';
 import { NoticiasService } from '../../../services/noticias.service';
-
+import { AuthService } from '../../../services/auth.service';
+import { HaciendaService } from '../../../services/hacienda.service';
+import { PublicacionHacienda } from '../../../models/hacienda.model';
+import { Noticia } from '../../../models/noticia.model';
 @Component({
   selector: 'app-admin-dashboard',
   imports: [RouterLink],
@@ -11,19 +12,27 @@ import { NoticiasService } from '../../../services/noticias.service';
   styleUrl: './admin-dashboard.css',
 })
 export class AdminDashboard {
-  private readonly noticiasService = inject(NoticiasService);
-
-  noticias: Noticia[] = this.noticiasService.obtenerTodas();
-
-  totalNoticias = this.noticias.length;
-
-  noticiasPublicadas = this.noticias.filter(
-    (noticia) => noticia.estado === 'Publicada',
-  ).length;
-
-  noticiasBorrador = this.noticias.filter(
-    (noticia) => noticia.estado === 'Borrador',
-  ).length;
-
-  ultimasNoticias = this.noticias.slice(0, 4);
+  noticias = signal<Noticia[]>([]);
+  error = signal('');
+  readonly auth = inject(AuthService);
+  publicaciones = signal<PublicacionHacienda[]>([]);
+  constructor() {
+    const noticiasService = inject(NoticiasService);
+    const haciendaService = inject(HaciendaService);
+    if (this.auth.tieneRol(['HACIENDA']))
+      haciendaService
+        .listar(false)
+        .subscribe({
+          next: (p) => this.publicaciones.set(p),
+          error: () => this.error.set('No se pudo cargar Hacienda.'),
+        });
+    if (this.auth.tieneRol(['PRENSA']))
+      noticiasService.obtenerTodasDesdeApi().subscribe({
+        next: (n) => this.noticias.set(n),
+        error: () => this.error.set('No se pudo cargar el resumen.'),
+      });
+  }
+  contar(estado: string) {
+    return this.noticias().filter((n) => n.estado === estado).length;
+  }
 }

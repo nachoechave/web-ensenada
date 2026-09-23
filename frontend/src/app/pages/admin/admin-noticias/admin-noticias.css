@@ -39,6 +39,16 @@
   white-space: nowrap;
 }
 
+.admin-message {
+  border: 1px solid #cfe8da;
+  border-radius: 0.75rem;
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  color: #0f6b45;
+  background: #f0faf5;
+  font-weight: 800;
+}
+
 .table-card {
   overflow-x: auto;
   border: 1px solid #e4eee8;
@@ -114,6 +124,17 @@ tbody tr:last-child td {
 
 .actions button {
   color: #b42318;
+}
+
+.actions button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.empty-table {
+  padding: 2rem 1rem;
+  color: #6b7a73;
+  text-align: center;
 }
 
 @media (max-width: 48rem) {

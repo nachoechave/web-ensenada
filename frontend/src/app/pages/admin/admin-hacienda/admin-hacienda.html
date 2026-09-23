@@ -1,0 +1,70 @@
+<div class="admin-page-header">
+  <div>
+    <span>Hacienda</span>
+    <h2>Publicaciones de Hacienda</h2>
+    <p>Administrá la documentación económica y financiera.</p>
+  </div>
+  <a routerLink="/admin/hacienda/nueva" class="primary-button">Nueva publicación</a>
+</div>
+<label
+  >Estado
+  <select (change)="filtro.set($any($event.target).value)">
+    <option value="TODAS">Todas</option>
+    <option value="PUBLICADA">Publicadas</option>
+    <option value="BORRADOR">Borradores</option>
+    <option value="ARCHIVADA">Archivadas</option>
+  </select></label
+>
+@if (error()) {
+  <p role="alert">{{ error() }}</p>
+}
+@if (cargando()) {
+  <p role="status">Cargando publicaciones…</p>
+} @else {
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Tipo</th>
+          <th>Fecha</th>
+          <th>Estado</th>
+          <th>Archivos</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (p of filtradas(); track p.id) {
+          <tr>
+            <td>{{ p.titulo }}</td>
+            <td>{{ tipos[p.tipo] }}</td>
+            <td>{{ p.fechaPublicacion }}</td>
+            <td>{{ p.estado }}</td>
+            <td>{{ p.archivos.length }}</td>
+            <td class="actions">
+              <a [routerLink]="['/admin/hacienda/editar', p.id]">Editar</a>
+              <button
+                type="button"
+                (click)="cambiarEstado(p)"
+                [disabled]="ocupado() || !p.archivos.length"
+              >
+                {{ p.estado === 'PUBLICADA' ? 'Despublicar' : 'Publicar' }}
+              </button>
+              <button
+                type="button"
+                (click)="archivar(p)"
+                [disabled]="ocupado() || p.estado === 'ARCHIVADA'"
+              >
+                Archivar
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6">No hay publicaciones para este filtro.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

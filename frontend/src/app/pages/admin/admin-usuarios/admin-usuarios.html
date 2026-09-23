@@ -1,0 +1,84 @@
+<div class="admin-page-header">
+  <div>
+    <span>Usuarios y roles</span>
+    <h2>Gestión de permisos</h2>
+    <p>Creá y activá o desactivá cuentas de Prensa o Hacienda.</p>
+  </div>
+</div>
+
+<form class="admin-form" (ngSubmit)="guardar()" #formUsuario="ngForm">
+  <div class="form-grid">
+    <label class="form-field">
+      <span>Nombre</span>
+      <input name="nombre" [(ngModel)]="usuario.nombre" required />
+    </label>
+
+    <label class="form-field">
+      <span>Email</span>
+      <input type="email" name="email" [(ngModel)]="usuario.email" required />
+    </label>
+
+    <label class="form-field">
+      <span>Contraseña inicial</span>
+      <input
+        type="password"
+        name="password"
+        minlength="12"
+        maxlength="72"
+        [(ngModel)]="usuario.password"
+        required
+      />
+    </label>
+  </div>
+
+  <label
+    >Rol operativo
+    <select name="rol" [ngModel]="usuario.roles[0]" (ngModelChange)="alternarRolNuevo($event)">
+      @for (rol of rolesDisponibles; track rol) {
+        <option [value]="rol">{{ rol }}</option>
+      }
+    </select></label
+  >
+  <div class="form-actions">
+    <button type="submit" [disabled]="formUsuario.invalid">Crear usuario</button>
+  </div>
+</form>
+
+@if (error) {
+  <p class="error-message">{{ error }}</p>
+}
+
+@if (cargando) {
+  <p class="loading-message">Cargando usuarios...</p>
+}
+
+<div class="users-list">
+  @for (usuarioAdmin of usuarios; track usuarioAdmin.id) {
+    <article class="user-card">
+      <div>
+        <h3>{{ usuarioAdmin.nombre }}</h3>
+        <p>{{ usuarioAdmin.email }}</p>
+      </div>
+
+      <p>{{ usuarioAdmin.activo ? 'Activo' : 'Inactivo' }} · {{ usuarioAdmin.roles.join(', ') }}</p>
+      @if (!usuarioAdmin.roles.includes('SUPER_ADMIN')) {
+        <button type="button" (click)="alternarActivo(usuarioAdmin)">
+          {{ usuarioAdmin.activo ? 'Desactivar' : 'Activar' }}
+        </button>
+      }
+      @if (!usuarioAdmin.roles.includes('SUPER_ADMIN')) {
+        <label
+          >Rol de {{ usuarioAdmin.nombre }}
+          <select
+            [ngModel]="usuarioAdmin.roles[0]"
+            (ngModelChange)="alternarRol(usuarioAdmin, $event)"
+          >
+            @for (rol of rolesDisponibles; track rol) {
+              <option [value]="rol">{{ rol }}</option>
+            }
+          </select></label
+        >
+      }
+    </article>
+  }
+</div>

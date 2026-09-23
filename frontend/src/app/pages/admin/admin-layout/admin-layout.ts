@@ -1,7 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
+import { RolUsuario } from '../../../models/auth.model';
 import { AuthService } from '../../../services/auth.service';
+
+type AdminNavItem = {
+  texto: string;
+  ruta: string;
+  roles: RolUsuario[];
+  exacta?: boolean;
+};
 
 @Component({
   selector: 'app-admin-layout',
@@ -14,6 +22,41 @@ export class AdminLayout {
   private readonly router = inject(Router);
 
   usuario = this.authService.obtenerUsuarioActual();
+
+  links: AdminNavItem[] = [
+    {texto:'Hacienda',ruta:'/admin/hacienda',roles:['HACIENDA']},
+    {texto:'Nueva publicación',ruta:'/admin/hacienda/nueva',roles:['HACIENDA']},
+    {
+      texto: 'Dashboard',
+      ruta: '/admin',
+      roles: ['PRENSA', 'HACIENDA'],
+      exacta: true,
+    },
+    {
+      texto: 'Noticias',
+      ruta: '/admin/noticias',
+      roles: ['PRENSA'],
+    },
+    {
+      texto: 'Nueva noticia',
+      ruta: '/admin/noticias/nueva',
+      roles: ['PRENSA'],
+    },
+    {
+      texto: 'Usuarios y roles',
+      ruta: '/admin/usuarios',
+      roles: ['SUPER_ADMIN'],
+    },
+    {
+      texto: 'Mi cuenta',
+      ruta: '/admin/mi-cuenta',
+      roles: ['SUPER_ADMIN', 'PRENSA', 'HACIENDA'],
+    },
+  ];
+
+  puedeVer(roles: RolUsuario[]): boolean {
+    return this.authService.tieneRol(roles);
+  }
 
   logout(): void {
     this.authService.logout();

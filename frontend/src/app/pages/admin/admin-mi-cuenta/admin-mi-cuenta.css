@@ -1,0 +1,61 @@
+@import '../admin-noticia-form/admin-noticia-form.css';
+
+.account-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.account-card {
+  border: 1px solid #e4eee8;
+  border-radius: 1rem;
+  padding: 1.35rem;
+  background: white;
+}
+
+.card-header {
+  margin-bottom: 1.2rem;
+}
+
+.card-header h3 {
+  margin: 0;
+  color: #12382b;
+  font-size: 1.25rem;
+}
+
+.card-header p {
+  margin: 0.45rem 0 0;
+  color: #5b6b63;
+}
+
+.account-card .form-field + .form-field {
+  margin-top: 1rem;
+}
+
+.status-message {
+  border-radius: 0.75rem;
+  margin: 0 0 1rem;
+  padding: 0.8rem 1rem;
+  font-weight: 700;
+}
+
+.status-message.success {
+  color: #0f6b45;
+  background: #e8f6ef;
+}
+
+.status-message.error {
+  color: #9b1c1c;
+  background: #fdecec;
+}
+
+.status-message.neutral {
+  color: #315347;
+  background: #f4f7f5;
+}
+
+@media (max-width: 56rem) {
+  .account-grid {
+    grid-template-columns: 1fr;
+  }
+}

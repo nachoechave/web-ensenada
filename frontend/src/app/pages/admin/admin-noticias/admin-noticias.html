@@ -2,51 +2,75 @@
   <div>
     <span>Noticias</span>
     <h2>Gestión de noticias</h2>
-    <p>Desde acá se podrán crear, editar y eliminar noticias del sitio.</p>
+    <p>Desde acá se podrán crear, editar y archivar noticias del sitio.</p>
   </div>
 
-  <a routerLink="/admin/noticias/nueva" class="primary-button">
-    Nueva noticia
-  </a>
+  <a routerLink="/admin/noticias/nueva" class="primary-button"> Nueva noticia </a>
 </div>
 
+@if (mensaje) {
+  <p class="admin-message">{{ mensaje }}</p>
+}
+
+<label
+  >Filtrar
+  <select (change)="filtro = $any($event.target).value">
+    <option>Todas</option>
+    <option value="PUBLICADA">Publicadas</option>
+    <option value="BORRADOR">Borradores</option>
+    <option value="ARCHIVADA">Archivadas</option>
+    <option>Destacadas</option>
+  </select></label
+>
 <div class="table-card">
   <table>
     <thead>
       <tr>
+        <th>Imagen</th>
         <th>Título</th>
         <th>Categoría</th>
         <th>Fecha</th>
         <th>Estado</th>
+        <th>Destacada</th>
         <th class="actions-column">Acciones</th>
       </tr>
     </thead>
 
     <tbody>
-      @for (noticia of noticias; track noticia.id) {
+      @for (noticia of filtradas; track noticia.id ?? $index) {
         <tr>
+          <td>
+            <img [src]="noticia.imagen" alt="" width="80" height="55" style="object-fit: cover" />
+          </td>
           <td>
             <strong>{{ noticia.titulo }}</strong>
           </td>
           <td>{{ noticia.categoria }}</td>
-          <td>{{ noticia.fecha }}</td>
+          <td>{{ noticia.fechaPublicacion }}</td>
           <td>
-            <span
-              class="status"
-              [class.status-draft]="noticia.estado === 'Borrador'"
-            >
+            <span class="status" [class.status-draft]="noticia.estado === 'BORRADOR'">
               {{ noticia.estado }}
             </span>
           </td>
+          <td>{{ noticia.destacada ? 'Sí' : 'No' }}</td>
           <td class="actions">
-            <a [routerLink]="['/admin/noticias/editar', noticia.id]">
-              Editar
-            </a>
+            <button type="button" (click)="cambiarEstado(noticia)">
+              {{ noticia.estado === 'PUBLICADA' ? 'Despublicar' : 'Publicar' }}
+            </button>
+            <a [routerLink]="['/admin/noticias/editar', noticia.id]"> Editar </a>
 
-            <button type="button" (click)="eliminarNoticia(noticia.id)">
-              Eliminar
+            <button
+              type="button"
+              [disabled]="!noticia.id || archivandoId === noticia.id"
+              (click)="archivarNoticia(noticia)"
+            >
+              {{ archivandoId === noticia.id ? 'Archivando...' : 'Archivar' }}
             </button>
           </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="7" class="empty-table">Todavía no hay noticias cargadas.</td>
         </tr>
       }
     </tbody>

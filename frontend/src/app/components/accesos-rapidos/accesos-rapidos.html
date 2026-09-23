@@ -1,21 +1,37 @@
-<section class="quick-access section-block" aria-label="Sistemas municipales">
+<section id="servicios" class="quick-access section-block" aria-labelledby="quick-access-title">
   <div class="section-container">
-    <h2>Accesos rápidos</h2>
+    <div class="section-header">
+      <span class="section-kicker">Servicios para vos</span>
+      <div class="section-title-row">
+        <div>
+          <h2 id="quick-access-title">Gestioná, informate y accedé</h2>
+          <p>Entradas directas a los principales sistemas y publicaciones municipales.</p>
+        </div>
+      </div>
+    </div>
+
     <div class="quick-grid">
       @for (acceso of accesos; track acceso.titulo) {
         <article class="quick-card content-card">
-          <div>
+          <span class="quick-icon" aria-hidden="true">{{ acceso.codigo }}</span>
+          <div class="quick-copy">
             <h3>{{ acceso.titulo }}</h3>
-            @if (acceso.interno) {
-              <a [routerLink]="acceso.url">Ver publicaciones</a>
-            } @else if (acceso.url) {
-              <a [href]="acceso.url" target="_blank" rel="noopener noreferrer"
-                >Acceder al sistema</a
-              >
-            } @else {
-              <p>Enlace pendiente de configuración.</p>
-            }
+            <p>{{ acceso.descripcion }}</p>
           </div>
+
+          @if (acceso.interno) {
+            <a class="quick-link" [routerLink]="acceso.url">{{ acceso.cta }} <span>→</span></a>
+          } @else if (acceso.url) {
+            <a
+              class="quick-link"
+              [href]="acceso.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              >{{ acceso.cta }} <span>→</span></a
+            >
+          } @else {
+            <span class="quick-pending">Enlace pendiente</span>
+          }
         </article>
       }
     </div>

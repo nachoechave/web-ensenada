@@ -1,221 +1,588 @@
+main {
+  overflow: hidden;
+  background: var(--color-page);
+}
+
 .hero {
-  min-height: 32.5rem;
+  position: relative;
+  min-height: 38rem;
+  display: grid;
+  align-items: stretch;
+  isolation: isolate;
+  overflow: hidden;
+  color: white;
+  background:
+    linear-gradient(90deg, rgba(3, 45, 35, 0.97) 0%, rgba(3, 45, 35, 0.93) 42%, rgba(3, 45, 35, 0.22) 72%, rgba(3, 45, 35, 0.04) 100%),
+    url('/assets/ensenada-hero.jpg') center 48% / cover no-repeat;
+}
+
+.hero::after {
+  position: absolute;
+  inset: auto -9rem -14rem auto;
+  z-index: -1;
+  width: 38rem;
+  height: 38rem;
+  border: 8rem solid rgba(167, 243, 208, 0.08);
+  border-radius: 50%;
+  content: '';
+}
+
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent 52%);
+}
+
+.hero-inner {
+  position: relative;
+  width: min(100% - 3rem, var(--container));
+  min-height: 38rem;
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  padding: 5rem 8%;
-  background:
-    linear-gradient(rgba(5, 46, 22, 0.65), rgba(5, 46, 22, 0.65)),
-    url('/assets/ensenada-hero.jpg');
-  background-size: cover;
-  background-position: center;
-  color: white;
+  justify-content: space-between;
+  gap: 3rem;
+  padding: 5.5rem 0 4.5rem;
 }
 
 .hero-content {
-  max-width: 38.75rem;
+  width: min(100%, 43rem);
 }
 
 .hero-label {
-  margin-bottom: 0.75rem;
-  font-weight: 600;
-  color: #bbf7d0;
+  margin: 0 0 1rem;
+  color: #a7f3d0;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.13rem;
+  text-transform: uppercase;
 }
 
 .hero h1 {
-  margin: 0 0 1.25rem;
-  font-size: 3rem;
-  line-height: 1.1;
-}
-
-.hero p {
-  font-size: 1.125rem;
-  line-height: 1.6;
-}
-
-.hero a {
-  display: inline-block;
-  text-decoration: none;
-  margin-top: 1.5rem;
-  padding: 0.875rem 1.5rem;
-  border: none;
-  border-radius: 0.5rem;
-  background-color: #15803d;
-  color: white;
+  max-width: 41rem;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3.3rem, 6vw, 5.7rem);
   font-weight: 600;
-  cursor: pointer;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
 }
 
-.hero a:hover {
-  background-color: #166534;
+.hero-description {
+  max-width: 36rem;
+  margin: 1.45rem 0 0;
+  color: #d8eee5;
+  font-size: 1.1rem;
+  line-height: 1.72;
 }
 
-main {
-  background-color: #f8fafc;
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
 }
 
-.intendente-section {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(10rem, 16rem);
-  gap: 2rem;
+.hero-button {
+  min-height: 3.15rem;
+  display: inline-flex;
   align-items: center;
-  padding: 3rem 8%;
-  background-color: #ffffff;
+  justify-content: center;
+  padding: 0.8rem 1.35rem;
+  border: 0.0625rem solid rgba(255, 255, 255, 0.24);
+  border-radius: 999rem;
+  color: white;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.hero-button:hover {
+  transform: translateY(-0.12rem);
+}
+
+.hero-button.primary {
+  border-color: #28b779;
+  background: #159662;
+}
+
+.hero-button.primary:hover {
+  background: #0f7d53;
+}
+
+.hero-button.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(0.7rem);
+}
+
+.hero-button.secondary:hover {
+  background: rgba(255, 255, 255, 0.17);
+}
+
+.hero-shortcuts {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1.5rem;
+  color: #d8eee5;
+  font-size: 0.82rem;
+}
+
+.hero-shortcuts > span {
+  margin-right: 0.25rem;
+  font-weight: 750;
+}
+
+.hero-shortcuts a {
+  padding: 0.43rem 0.75rem;
+  border: 0.0625rem solid rgba(255, 255, 255, 0.17);
+  border-radius: 999rem;
+  color: #eafff5;
+  background: rgba(255, 255, 255, 0.08);
+  text-decoration: none;
+}
+
+.hero-shortcuts a:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.hero-place-card {
+  position: absolute;
+  right: 0;
+  bottom: 2rem;
+  max-width: 20rem;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1rem 1.15rem;
+  border: 0.0625rem solid rgba(255, 255, 255, 0.16);
+  border-radius: 1rem;
+  background: rgba(3, 45, 35, 0.78);
+  box-shadow: 0 1rem 2.2rem rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(0.8rem);
+}
+
+.place-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 0.8rem;
+  color: #052e16;
+  background: #a7f3d0;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.hero-place-card strong,
+.hero-place-card span {
+  display: block;
+}
+
+.hero-place-card strong {
+  font-size: 0.92rem;
+}
+
+.hero-place-card div span {
+  margin-top: 0.25rem;
+  color: #cce7db;
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.civic-strip {
+  position: relative;
+  z-index: 2;
+  background: white;
+  border-bottom: 0.0625rem solid var(--color-border);
+  box-shadow: 0 0.8rem 2rem rgba(3, 45, 35, 0.035);
+}
+
+.civic-strip-inner {
+  width: min(100% - 3rem, var(--container));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.civic-strip article {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-height: 6.5rem;
+  padding: 1.35rem 1.5rem;
+  border-right: 0.0625rem solid var(--color-border);
+}
+
+.civic-strip article:first-child {
+  padding-left: 0;
+}
+
+.civic-strip article:last-child {
+  border-right: 0;
+}
+
+.civic-strip article > span {
+  color: var(--color-primary-600);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+}
+
+.civic-strip strong,
+.civic-strip small {
+  display: block;
+}
+
+.civic-strip strong {
+  color: var(--color-heading);
+  font-size: 0.94rem;
+}
+
+.civic-strip small {
+  margin-top: 0.25rem;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.city-feature {
+  padding-top: 0.75rem;
+  background: white;
+}
+
+.city-feature-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 3rem;
+  align-items: center;
+  overflow: hidden;
+  padding: 3.75rem;
+  border-radius: 1.5rem;
+  color: white;
+  background:
+    linear-gradient(90deg, rgba(3, 45, 35, 0.98), rgba(6, 78, 59, 0.9)),
+    url('/assets/ensenada-hero.jpg') center 58% / cover;
+  box-shadow: 0 1.7rem 4rem rgba(3, 45, 35, 0.18);
+}
+
+.city-feature-card::after {
+  position: absolute;
+  top: -7rem;
+  right: -5rem;
+  width: 22rem;
+  height: 22rem;
+  border: 5rem solid rgba(255, 255, 255, 0.06);
+  border-radius: 50%;
+  content: '';
+}
+
+.city-feature-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.city-feature .section-kicker {
+  color: #a7f3d0;
+}
+
+.city-feature .section-kicker::before {
+  background: #6ee7b7;
+}
+
+.city-feature h2 {
+  max-width: 42rem;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.2rem, 4vw, 3.35rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.04;
+}
+
+.city-feature p {
+  max-width: 42rem;
+  margin: 1rem 0 1.5rem;
+  color: #d6eee3;
+  line-height: 1.7;
+}
+
+.city-feature .button-link.primary {
+  border-color: white;
+  color: var(--color-primary-950);
+  background: white;
+}
+
+.city-feature-points {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.city-feature-points span {
+  min-height: 5.5rem;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  border: 0.0625rem solid rgba(255, 255, 255, 0.16);
+  border-radius: 1rem;
+  color: #eafff5;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-align: center;
+  backdrop-filter: blur(0.5rem);
+}
+
+.institutional {
+  background: linear-gradient(180deg, #f5f8f7, #eef7f2);
+}
+
+.institutional-card {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr) minmax(12rem, 18rem);
+  gap: 2.5rem;
+  align-items: center;
+  padding: 2rem;
+  border: 0.0625rem solid #d8e7df;
+  border-radius: 1.35rem;
+  background: white;
+  box-shadow: var(--shadow-card);
 }
 
 .intendente-photo {
   width: 100%;
-  max-width: 16rem;
-  justify-self: end;
   overflow: hidden;
-  border-radius: 0.5rem;
-  box-shadow: 0 1rem 2rem rgba(15, 23, 42, 0.14);
+  border-radius: 1rem;
+  background: var(--color-primary-100);
 }
 
 .intendente-photo img {
-  display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 4 / 4.2;
+  display: block;
   object-fit: cover;
   object-position: center;
 }
 
-.intendente-content {
-  max-width: 42rem;
+.intendente-content h2 {
+  margin: 0;
+  color: var(--color-heading);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.2rem, 4vw, 3.25rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
 }
 
-.section-label {
-  margin: 0 0 0.5rem;
-  color: #15803d;
-  font-size: 0.875rem;
-  font-weight: 700;
+.intendente-content p {
+  max-width: 42rem;
+  margin: 1rem 0 0;
+  color: var(--color-muted);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.institutional-note {
+  padding: 1.5rem 0 1.5rem 2rem;
+  border-left: 0.0625rem solid #d9e6e0;
+}
+
+.institutional-note span,
+.institutional-note strong,
+.institutional-note p {
+  display: block;
+}
+
+.institutional-note span {
+  color: var(--color-primary-700);
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.1rem;
   text-transform: uppercase;
 }
 
-.intendente-content h2 {
-  margin: 0 0 1rem;
-  color: #052e16;
-  font-size: 2.25rem;
-  line-height: 1.1;
+.institutional-note strong {
+  margin-top: 0.45rem;
+  color: var(--color-heading);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
 }
 
-.intendente-content p:last-of-type {
+.institutional-note p {
+  margin: 0.35rem 0 0;
+  color: var(--color-muted);
+}
+
+.map-section {
+  padding-top: 0;
+  background: #eef7f2;
+}
+
+.map-card {
+  display: grid;
+  grid-template-columns: minmax(18rem, 0.65fr) minmax(0, 1.35fr);
+  overflow: hidden;
+  border: 0.0625rem solid #cfe2d8;
+  border-radius: 1.35rem;
+  background: white;
+  box-shadow: var(--shadow-card);
+}
+
+.map-copy {
+  padding: 3rem;
+}
+
+.map-copy h2 {
   margin: 0;
-  color: #334155;
-  font-size: 1.075rem;
+  color: var(--color-heading);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.map-copy p {
+  margin: 1rem 0 1.5rem;
+  color: var(--color-muted);
   line-height: 1.7;
 }
 
-.intendente-content a {
-  display: inline-flex;
-  margin-top: 1.25rem;
-  padding: 0.8rem 1.2rem;
-  border-radius: 0.5rem;
-  background-color: #15803d;
-  color: #ffffff;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.intendente-content a:hover {
-  background-color: #166534;
-}
-
-.interactive-map-section {
-  padding: 3rem 2.25rem 4.5rem;
-  background-color: #f8fafc;
-}
-
-.interactive-map-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 4.25rem;
-  margin: 0 auto 0.75rem;
-  max-width: 87.5rem;
-  border-radius: 0 2rem 0 2rem;
-  background:
-    linear-gradient(90deg, #064e3b 0 2.25rem, #059669 2.25rem 3.75rem, transparent 3.75rem),
-    linear-gradient(90deg, #08c968 0 calc(100% - 3.75rem), #047857 calc(100% - 3.75rem));
-  color: #ffffff;
-}
-
-.interactive-map-header h2 {
-  margin: 0;
-  font-size: 2rem;
-  font-weight: 500;
-  letter-spacing: 0;
-  text-align: center;
-}
-
 .interactive-map-frame {
-  max-width: 87.5rem;
-  height: clamp(24rem, 52vw, 38.5rem);
-  margin: 0 auto;
-  overflow: hidden;
-  border: 0.35rem solid #059669;
-  border-radius: 0.25rem;
-  background-color: #dcfce7;
+  min-height: 26rem;
+  background: var(--color-primary-100);
 }
 
 .interactive-map-frame iframe {
-  display: block;
   width: 100%;
   height: 100%;
+  min-height: 26rem;
+  display: block;
   border: 0;
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 64rem) {
   .hero {
-    min-height: 28.75rem;
-    padding: 3.75rem 1.5rem;
+    background:
+      linear-gradient(90deg, rgba(3, 45, 35, 0.96), rgba(3, 45, 35, 0.82) 65%, rgba(3, 45, 35, 0.58)),
+      url('/assets/ensenada-hero.jpg') center / cover no-repeat;
+  }
+
+  .hero-place-card {
+    display: none;
+  }
+
+  .civic-strip-inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .civic-strip article:nth-child(2) {
+    border-right: 0;
+  }
+
+  .civic-strip article:nth-child(-n + 2) {
+    border-bottom: 0.0625rem solid var(--color-border);
+  }
+
+  .city-feature-card {
+    grid-template-columns: 1fr;
+  }
+
+  .institutional-card {
+    grid-template-columns: 12rem 1fr;
+  }
+
+  .institutional-note {
+    grid-column: 1 / -1;
+    padding: 1.5rem;
+    border-top: 0.0625rem solid #d9e6e0;
+    border-left: 0;
+    background: var(--color-primary-50);
+    border-radius: 0.9rem;
+  }
+}
+
+@media (max-width: 48rem) {
+  .hero,
+  .hero-inner {
+    min-height: 34rem;
+  }
+
+  .hero-inner {
+    width: min(100% - 2rem, var(--container));
+    padding: 4rem 0;
   }
 
   .hero h1 {
-    font-size: 2.125rem;
+    font-size: clamp(2.75rem, 13vw, 4rem);
   }
 
-  .hero p {
-    font-size: 1rem;
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .intendente-section {
+  .hero-button {
+    width: 100%;
+  }
+
+  .civic-strip-inner {
+    width: min(100% - 2rem, var(--container));
+    grid-template-columns: 1fr;
+    padding: 0.5rem 0;
+  }
+
+  .civic-strip article,
+  .civic-strip article:first-child {
+    min-height: auto;
+    padding: 1rem 0;
+    border-right: 0;
+    border-bottom: 0.0625rem solid var(--color-border);
+  }
+
+  .civic-strip article:last-child {
+    border-bottom: 0;
+  }
+
+  .city-feature-card {
+    padding: 2rem;
+    border-radius: 1rem;
+  }
+
+  .city-feature-points {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .institutional-card {
     grid-template-columns: 1fr;
     gap: 1.5rem;
-    padding: 2.5rem 1.5rem;
+    padding: 1.25rem;
   }
 
   .intendente-photo {
-    max-width: 13rem;
-    justify-self: start;
+    max-width: 12rem;
   }
 
-  .intendente-photo img {
-    aspect-ratio: 4 / 5;
+  .institutional-note {
+    grid-column: auto;
   }
 
-  .intendente-content h2 {
-    font-size: 1.9rem;
+  .map-card {
+    grid-template-columns: 1fr;
   }
 
-  .intendente-content p:last-of-type {
-    font-size: 1rem;
+  .map-copy {
+    padding: 2rem;
   }
 
-  .interactive-map-section {
-    padding: 2rem 1rem 3rem;
-  }
-
-  .interactive-map-header {
-    min-height: 3.5rem;
-    border-radius: 0 1.25rem 0 1.25rem;
-  }
-
-  .interactive-map-header h2 {
-    font-size: 1.35rem;
-  }
-
-  .interactive-map-frame {
-    height: 25rem;
-    border-width: 0.25rem;
+  .interactive-map-frame,
+  .interactive-map-frame iframe {
+    min-height: 22rem;
   }
 }

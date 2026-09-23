@@ -1,53 +1,137 @@
 <app-navbar></app-navbar>
 
 <main>
-  <section class="hero">
-    <div class="hero-content">
-      <p class="hero-label">Municipalidad de Ensenada</p>
-      <h1>{{ contenido.heroTitulo }}</h1>
-      <p>
-        {{ contenido.heroBajada }}
-      </p>
-      <a href="#informacion-institucional">Conocé más</a>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-shade" aria-hidden="true"></div>
+
+    <div class="hero-inner">
+      <div class="hero-content">
+        <p class="hero-label">Portal oficial · Municipalidad de Ensenada</p>
+        <h1 id="hero-title">{{ contenido.heroTitulo }}</h1>
+        <p class="hero-description">{{ contenido.heroBajada }}</p>
+
+        <div class="hero-actions">
+          <a class="hero-button primary" href="#servicios">Ver servicios</a>
+          <a class="hero-button secondary" routerLink="/noticias">Últimas noticias</a>
+        </div>
+
+        <div class="hero-shortcuts" aria-label="Accesos frecuentes">
+          <span>Accesos frecuentes</span>
+          <a [href]="externalLinks.tasas" target="_blank" rel="noopener noreferrer">Tasas</a>
+          <a [href]="externalLinks.boletinOficial" target="_blank" rel="noopener noreferrer"
+            >Boletín Oficial</a
+          >
+          <a routerLink="/hacienda">Hacienda</a>
+        </div>
+      </div>
+
+      <div class="hero-place-card">
+        <span class="place-icon" aria-hidden="true">⌖</span>
+        <div>
+          <strong>Ensenada, Buenos Aires</strong>
+          <span>Información y servicios municipales</span>
+        </div>
+      </div>
     </div>
   </section>
 
-  <app-noticias-destacadas></app-noticias-destacadas>
-
-  <section
-    id="informacion-institucional"
-    class="intendente-section"
-    aria-labelledby="intendente-title"
-  >
-    <div class="intendente-content">
-      <p class="section-label">Intendente municipal</p>
-      <h2 id="intendente-title">Mario Secco</h2>
-      <p>
-        Desde 2003 acompaña el crecimiento de Ensenada con una gestión enfocada en obras públicas,
-        servicios, espacios comunitarios y cercanía con cada vecino de la ciudad.
-      </p>
-    </div>
-
-    <div class="intendente-photo">
-      <img src="/assets/mario-secco.jpg" alt="Mario Secco, intendente de Ensenada" />
+  <section class="civic-strip" aria-label="Ejes del portal municipal">
+    <div class="civic-strip-inner">
+      <article>
+        <span aria-hidden="true">01</span>
+        <div><strong>Información pública</strong><small>Noticias y comunicaciones oficiales</small></div>
+      </article>
+      <article>
+        <span aria-hidden="true">02</span>
+        <div><strong>Servicios en línea</strong><small>Accesos rápidos desde un solo lugar</small></div>
+      </article>
+      <article>
+        <span aria-hidden="true">03</span>
+        <div><strong>Documentación</strong><small>Boletín Oficial y publicaciones de Hacienda</small></div>
+      </article>
+      <article>
+        <span aria-hidden="true">04</span>
+        <div><strong>Atención ciudadana</strong><small>Canales y recursos municipales</small></div>
+      </article>
     </div>
   </section>
 
   <app-accesos-rapidos></app-accesos-rapidos>
 
-  <section class="interactive-map-section" aria-labelledby="interactive-map-title">
-    <div class="interactive-map-header">
-      <h2 id="interactive-map-title">MAPA INTERACTIVO</h2>
-    </div>
+  <app-noticias-destacadas></app-noticias-destacadas>
 
-    <div class="interactive-map-frame">
-      <iframe
-        title="Mapa interactivo de Ensenada con puntos importantes de la ciudad"
-        src="https://www.google.com/maps?q=Ensenada,%20Buenos%20Aires,%20Argentina&output=embed"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        allowfullscreen
-      ></iframe>
+  <section class="city-feature section-block" aria-labelledby="city-feature-title">
+    <div class="section-container city-feature-card">
+      <div class="city-feature-copy">
+        <span class="section-kicker">Ciudad y servicios</span>
+        <h2 id="city-feature-title">Información municipal organizada para encontrarla más rápido</h2>
+        <p>
+          El portal reúne novedades, documentación pública y accesos a sistemas municipales sin
+          reemplazar los servicios especializados que ya funcionan.
+        </p>
+        <a class="button-link primary" routerLink="/noticias">Ver novedades</a>
+      </div>
+
+      <div class="city-feature-points" aria-label="Contenido disponible">
+        <span>Noticias</span>
+        <span>Hacienda</span>
+        <span>Boletín Oficial</span>
+        <span>Servicios</span>
+      </div>
+    </div>
+  </section>
+
+  <section
+    id="informacion-institucional"
+    class="institutional section-block"
+    aria-labelledby="intendente-title"
+  >
+    <div class="section-container institutional-card">
+      <div class="intendente-photo">
+        <img src="/assets/mario-secco.jpg" alt="Mario Secco, intendente de Ensenada" />
+      </div>
+
+      <div class="intendente-content">
+        <span class="section-kicker">Intendencia municipal</span>
+        <h2 id="intendente-title">Mario Secco</h2>
+        <p>
+          Información institucional del Departamento Ejecutivo y acceso a los principales canales
+          públicos del Municipio de Ensenada.
+        </p>
+      </div>
+
+      <aside class="institutional-note" aria-label="Información institucional">
+        <span>Municipio</span>
+        <strong>Ensenada</strong>
+        <p>Provincia de Buenos Aires</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="map-section section-block" aria-labelledby="interactive-map-title">
+    <div class="section-container map-card">
+      <div class="map-copy">
+        <span class="section-kicker">Ubicación</span>
+        <h2 id="interactive-map-title">Encontrá Ensenada en el mapa</h2>
+        <p>Consultá la ubicación general de la ciudad y accedé al mapa interactivo.</p>
+        <a
+          class="button-link"
+          href="https://www.google.com/maps?q=Ensenada,%20Buenos%20Aires,%20Argentina"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Abrir en Google Maps</a
+        >
+      </div>
+
+      <div class="interactive-map-frame">
+        <iframe
+          title="Mapa interactivo de Ensenada, Buenos Aires"
+          src="https://www.google.com/maps?q=Ensenada,%20Buenos%20Aires,%20Argentina&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+      </div>
     </div>
   </section>
 </main>

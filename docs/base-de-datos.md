@@ -1,5 +1,15 @@
 # Transición a Flyway
 
+## Ampliación Hacienda (V2)
+
+V1 permanece intacta. `V2__hacienda_publicaciones.sql` agrega únicamente `publicaciones_hacienda` y `archivos_hacienda`, con FK, índices y restricciones. Una instalación que ya tiene V1 aplica V2 automáticamente y Hibernate valida el esquema. No se modifican Noticias ni usuarios: la colección de roles admite HACIENDA sin alterar V1.
+
+Se ejecutó V1 → V2 sobre una base MySQL 8.4.11 vacía y efímera, con `ddl-auto=validate` y arranque Spring exitoso. El job backend de CI incorpora la misma prueba `MySqlMigrationTests`. Esto no equivale a validar una migración de datos reales; ensayarla con backup antes de producción.
+
+El procedimiento histórico que sigue corresponde a la retirada del CMS anterior. No importa automáticamente sus documentos de Hacienda al nuevo dominio: cualquier transferencia necesita un mapeo revisado, revalidación de archivos y asignación explícita de roles. Los nuevos usuarios operativos pueden tener PRENSA o HACIENDA, exactamente uno.
+
+## Procedimiento histórico de transición a V1
+
 V1 describe una base nueva. No ejecuta DROP ni intenta adivinar cómo transformar datos existentes. Flyway rechazará por diseño una base no vacía sin historial. No activar `baseline-on-migrate=true` para ocultar esa situación: la base antigua no coincide con V1.
 
 Procedimiento para una instalación existente (requiere revisión operativa, no fue ejecutado en esta tarea):
@@ -23,4 +33,4 @@ El campo `rol` de usuarios se conserva por compatibilidad con cuentas anteriores
 
 Las URLs absolutas de imágenes antiguas pueden requerir ajuste al origen final; solo JPEG/PNG se publican en la nueva ruta de uploads. Revalidar y recodificar imágenes antiguas antes de copiarlas. Los archivos activos como SVG quedan fuera del servidor de uploads.
 
-Las pruebas automatizadas ejecutan V1 en H2 modo MySQL y `ddl-auto=validate`. Falta ensayar este procedimiento con una copia real de MySQL y sus datos antes de producción. Ninguna base externa fue modificada.
+Las pruebas actuales ejecutan V1 y V2 en H2 modo MySQL y `ddl-auto=validate`, más una validación separada sobre MySQL real vacío. Falta ensayar este procedimiento con una copia de los datos reales antes de producción. Ninguna base externa fue modificada.

@@ -1,6 +1,6 @@
-# Web Ensenada — portal de prensa
+# Web Ensenada — portal editorial
 
-Home institucional, noticias públicas y panel de prensa. Angular 21 + Spring Boot 4 / Java 21. Hacienda, Boletín Oficial y Proveedores son sistemas externos: este repositorio no administra sus datos.
+Home institucional, noticias y publicaciones de Hacienda, con administración por roles. Angular 21 + Spring Boot 4 / Java 21. Boletín Oficial sigue siendo externo y Proveedores mantiene su acceso pendiente. Hacienda tiene un dominio propio de publicaciones y documentos; no es un CMS municipal genérico.
 
 ## Desarrollo
 
@@ -38,17 +38,17 @@ En Windows usar `mvnw.cmd`. El adaptador de tests traduce `--run` a `ng test --w
 ## Configuración institucional
 
 - Textos de Home/footer: `frontend/src/app/config/site-content.ts`. Se quitó el CMS general que no alimentaba el hero.
-- Sistemas externos: `frontend/src/app/config/external-links.ts`. Hacienda y Proveedores están explícitamente pendientes: completar sus URLs oficiales antes de publicar. Todos los enlaces externos abren otra pestaña con `noopener noreferrer`.
-- Las rutas antiguas `/hacienda` y `/registro-proveedores` conservan una página informativa de acceso externo, sin documentos ni CRUD.
+- Sistemas externos: `frontend/src/app/config/external-links.ts`. Completar la URL oficial de Proveedores antes de habilitar ese acceso. Los enlaces externos abren otra pestaña con `noopener noreferrer`.
+- Hacienda es un acceso interno a `/hacienda`, con detalle en `/hacienda/:id`. `/registro-proveedores` conserva la página informativa de acceso pendiente.
 - `Conocé más` lleva a la información institucional de Home.
 
 ## Roles y publicación
 
-`PRENSA` administra noticias y su propia cuenta. `SUPER_ADMIN` además lista, crea, activa/desactiva periodistas. No se pueden crear, degradar ni desactivar superadministradores desde el panel, evitando bloqueos o escalamiento accidental. Las respuestas de usuarios nunca contienen hashes. El cambio de contraseña propio pide la contraseña actual; no hay infraestructura de recuperación por correo ni reset administrativo.
+`PRENSA` administra noticias y su propia cuenta. `HACIENDA` administra publicaciones de Hacienda y su propia cuenta. `SUPER_ADMIN` administra ambos dominios y usuarios. Las altas y los cambios de rol admiten exactamente un rol operativo: PRENSA o HACIENDA. No se pueden crear, degradar ni desactivar superadministradores desde el panel. Las respuestas de usuarios nunca contienen hashes. El cambio de contraseña propio pide la contraseña actual; no hay infraestructura de recuperación por correo ni reset administrativo.
 
 La noticia se guarda con `BORRADOR`, `PUBLICADA` o `ARCHIVADA`. Publicar/despublicar y destacar se guardan en la API. `DELETE /api/admin/noticias/{id}` archiva, no destruye. Para recuperar una archivada se cambia su estado en el formulario. Solo `PUBLICADA` aparece en endpoints públicos y solo `PUBLICADA + destacada` en Home. La fecha es editorial, no programa publicación automática.
 
-Imágenes: JPEG/PNG, máximo 5 MB y 20 megapíxeles. Se decodifican, verifican y vuelven a codificar; nombres UUID generados por servidor. SVG/WebP no se aceptan (WebP requiere incorporar un decodificador y pruebas). Configurar `UPLOADS_DIR` con almacenamiento persistente y backup; publicar únicamente `/uploads/noticias/*.jpg` y `*.png`.
+Imágenes: JPEG/PNG, máximo 5 MB y 20 megapíxeles. Se decodifican, verifican y vuelven a codificar; nombres UUID generados por servidor. SVG/WebP no se aceptan. Configurar `UPLOADS_DIR` con almacenamiento persistente y backup. Hacienda admite además PDF hasta 20 MB. Sus documentos se sirven mediante el backend, que verifica el estado PUBLICADA: no configurar una ruta estática del proxy para `/uploads/hacienda`. Ver [operación y API de Hacienda](docs/hacienda.md).
 
 ## Endpoints
 
@@ -61,18 +61,25 @@ Imágenes: JPEG/PNG, máximo 5 MB y 20 megapíxeles. Se decodifican, verifican y
 | GET / POST | `/admin/noticias` | PRENSA / SUPER_ADMIN |
 | GET / PUT / DELETE | `/admin/noticias/{id}` | PRENSA / SUPER_ADMIN; DELETE archiva |
 | POST multipart (`archivo`) | `/admin/archivos/noticias` | PRENSA / SUPER_ADMIN |
-| GET / POST | `/admin/usuarios` | SUPER_ADMIN; altas solo PRENSA |
-| PUT | `/admin/usuarios/{id}/roles` | SUPER_ADMIN; solo PRENSA, sin modificar administradores |
-| PUT | `/admin/usuarios/{id}/activo` | SUPER_ADMIN; solo cuentas de prensa |
+| GET / POST | `/admin/usuarios` | SUPER_ADMIN; altas PRENSA o HACIENDA |
+| PUT | `/admin/usuarios/{id}/roles` | SUPER_ADMIN; un rol operativo, sin modificar administradores |
+| PUT | `/admin/usuarios/{id}/activo` | SUPER_ADMIN; sin modificar superadministradores |
+| GET | `/hacienda`, `/hacienda/{id}` | Público; solo publicadas |
+| GET / POST | `/admin/hacienda` | HACIENDA / SUPER_ADMIN |
+| GET / PUT / DELETE | `/admin/hacienda/{id}` | HACIENDA / SUPER_ADMIN; DELETE archiva |
+| POST multipart (`archivo`) | `/admin/hacienda/{id}/archivos` | HACIENDA / SUPER_ADMIN |
+| DELETE | `/admin/hacienda/{id}/archivos/{archivoId}` | HACIENDA / SUPER_ADMIN |
+| PUT | `/admin/hacienda/{id}/archivos/orden` | HACIENDA / SUPER_ADMIN; body `{ "ids": [1, 2] }` |
+| GET | `/admin/hacienda/{id}/archivos/{archivoId}/contenido` | HACIENDA / SUPER_ADMIN; descarga privada |
 
-Rutas públicas: `/`, `/noticias`, `/noticias/:id`, `/hacienda`, `/registro-proveedores`.
-Rutas administrativas: `/admin/login`, `/admin` (dashboard), `/admin/noticias`, `/admin/noticias/nueva`, `/admin/noticias/editar/:id`, `/admin/mi-cuenta`, `/admin/usuarios`.
+Rutas públicas: `/`, `/noticias`, `/noticias/:id`, `/hacienda`, `/hacienda/:id`, `/registro-proveedores`.
+Rutas administrativas: `/admin/login`, `/admin` (dashboard), `/admin/noticias`, `/admin/noticias/nueva`, `/admin/noticias/editar/:id`, `/admin/hacienda`, `/admin/hacienda/nueva`, `/admin/hacienda/editar/:id`, `/admin/mi-cuenta`, `/admin/usuarios`.
 
 ## Base de datos y producción
 
-Flyway V1 crea únicamente usuarios, roles y noticias. `ddl-auto=validate` en todos los perfiles; no hay `update` ni baseline automático. Leer [la transición de bases existentes](docs/base-de-datos.md) antes de usar una base anterior.
+Flyway V1 crea usuarios, roles y noticias y permanece sin cambios. V2 agrega publicaciones y archivos de Hacienda. `ddl-auto=validate` en todos los perfiles; no hay `update` ni baseline automático. Leer [la transición de bases existentes](docs/base-de-datos.md) antes de usar una base anterior. CI incluye una validación separada de V1 + V2 y arranque Spring sobre MySQL 8.4 efímero.
 
-Antes de desplegar: configurar secretos nuevos, cuenta inicial, MySQL, backup y almacenamiento de imágenes; completar URLs pendientes; validar migración en copia de la base real; configurar HTTPS, reverse proxy SPA (`index.html` para rutas frontend), límites de upload, rate limiting del login y orígenes permitidos. No usar el perfil de memoria `dev` en producción.
+Antes de desplegar: configurar secretos nuevos, cuenta inicial, MySQL, backup y almacenamiento; completar URLs pendientes; validar migración en copia de la base real; configurar HTTPS, reverse proxy SPA (`index.html` para rutas frontend), límites de upload y orígenes permitidos. No usar el perfil de memoria `dev` en producción. El login tiene rate limiting configurable por IP (10 intentos / 300 segundos por defecto); revisar la política de proxy y los límites por instancia en [la guía operativa](docs/hacienda.md).
 
 Deuda: paginación para noticias, auditoría editorial, limpieza programada de imágenes huérfanas, revocación de tokens al cambiar contraseña, recuperación de cuentas, y eventual uso de cookies HttpOnly. Actualmente tokens tienen 120 minutos de vida; desactivar una cuenta revoca acceso inmediatamente porque el backend consulta sus roles/estado en cada petición. Cambiar contraseña cierra la sesión del navegador pero no revoca otros JWT ya emitidos.
 

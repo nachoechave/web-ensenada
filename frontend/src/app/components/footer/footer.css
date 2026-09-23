@@ -1,7 +1,7 @@
 .footer { color: white; background: #063c2e; }
 .footer-container { width: min(100% - 3rem, var(--container)); margin: 0 auto; padding: 3.5rem 0 3rem; display: grid; grid-template-columns: 1.15fr 1.85fr; gap: 5rem; }
 .footer-brand-link { display: inline-flex; align-items: center; gap: .85rem; color: white; text-decoration: none; }
-.footer-brand-link img { width: 3.1rem; height: 3.7rem; object-fit: contain; }
+.footer-seal { width: 3.1rem; height: 3.7rem; flex: 0 0 auto; display: block; background: url('/assets/escudo-ensenada.png') center / contain no-repeat; }
 .footer-brand-link span, .footer-brand-link strong, .footer-brand-link small { display: block; }
 .footer-brand-link strong { font-size: .98rem; font-weight: 650; text-transform: uppercase; }
 .footer-brand-link small { margin-top: .18rem; color: #b9d9cb; font-size: .68rem; }

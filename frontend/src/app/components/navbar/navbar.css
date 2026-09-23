@@ -19,7 +19,7 @@
 }
 
 .brand { min-width: 19rem; display: flex; align-items: center; gap: .95rem; color: var(--color-heading); text-decoration: none; }
-.brand-seal { width: 3.75rem; height: 4.5rem; flex: 0 0 auto; object-fit: contain; }
+.brand-seal { width: 3.75rem; height: 4.5rem; flex: 0 0 auto; display: block; background: url('/assets/escudo-ensenada.png') center / contain no-repeat; }
 .brand-copy { display: grid; gap: .18rem; }
 .brand-copy strong { color: var(--color-primary-700); font-size: 1.12rem; font-weight: 700; letter-spacing: -.02rem; text-transform: uppercase; }
 .brand-copy small { color: #7a8581; font-size: .68rem; font-weight: 450; line-height: 1.25; }

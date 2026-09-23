@@ -116,10 +116,6 @@ main {
   backdrop-filter: blur(0.7rem);
 }
 
-.hero-button.secondary:hover {
-  background: rgba(255, 255, 255, 0.17);
-}
-
 .hero-shortcuts {
   display: flex;
   align-items: center;
@@ -142,10 +138,6 @@ main {
   color: #eafff5;
   background: rgba(255, 255, 255, 0.08);
   text-decoration: none;
-}
-
-.hero-shortcuts a:hover {
-  background: rgba(255, 255, 255, 0.15);
 }
 
 .hero-place-card {
@@ -190,62 +182,6 @@ main {
   margin-top: 0.25rem;
   color: #cce7db;
   font-size: 0.76rem;
-  line-height: 1.4;
-}
-
-.civic-strip {
-  position: relative;
-  z-index: 2;
-  background: white;
-  border-bottom: 0.0625rem solid var(--color-border);
-  box-shadow: 0 0.8rem 2rem rgba(3, 45, 35, 0.035);
-}
-
-.civic-strip-inner {
-  width: min(100% - 3rem, var(--container));
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.civic-strip article {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  min-height: 6.5rem;
-  padding: 1.35rem 1.5rem;
-  border-right: 0.0625rem solid var(--color-border);
-}
-
-.civic-strip article:first-child {
-  padding-left: 0;
-}
-
-.civic-strip article:last-child {
-  border-right: 0;
-}
-
-.civic-strip article > span {
-  color: var(--color-primary-600);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.45rem;
-  font-weight: 700;
-}
-
-.civic-strip strong,
-.civic-strip small {
-  display: block;
-}
-
-.civic-strip strong {
-  color: var(--color-heading);
-  font-size: 0.94rem;
-}
-
-.civic-strip small {
-  margin-top: 0.25rem;
-  color: var(--color-muted);
-  font-size: 0.78rem;
   line-height: 1.4;
 }
 
@@ -478,18 +414,6 @@ main {
     display: none;
   }
 
-  .civic-strip-inner {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .civic-strip article:nth-child(2) {
-    border-right: 0;
-  }
-
-  .civic-strip article:nth-child(-n + 2) {
-    border-bottom: 0.0625rem solid var(--color-border);
-  }
-
   .city-feature-card {
     grid-template-columns: 1fr;
   }
@@ -503,8 +427,8 @@ main {
     padding: 1.5rem;
     border-top: 0.0625rem solid #d9e6e0;
     border-left: 0;
-    background: var(--color-primary-50);
     border-radius: 0.9rem;
+    background: var(--color-primary-50);
   }
 }
 
@@ -532,31 +456,9 @@ main {
     width: 100%;
   }
 
-  .civic-strip-inner {
-    width: min(100% - 2rem, var(--container));
-    grid-template-columns: 1fr;
-    padding: 0.5rem 0;
-  }
-
-  .civic-strip article,
-  .civic-strip article:first-child {
-    min-height: auto;
-    padding: 1rem 0;
-    border-right: 0;
-    border-bottom: 0.0625rem solid var(--color-border);
-  }
-
-  .civic-strip article:last-child {
-    border-bottom: 0;
-  }
-
   .city-feature-card {
     padding: 2rem;
     border-radius: 1rem;
-  }
-
-  .city-feature-points {
-    grid-template-columns: 1fr 1fr;
   }
 
   .institutional-card {

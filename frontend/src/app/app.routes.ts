@@ -1,3 +1,7 @@
+import { Hacienda } from './pages/hacienda/hacienda';
+import { HaciendaDetalle } from './pages/hacienda-detalle/hacienda-detalle';
+import { AdminHacienda } from './pages/admin/admin-hacienda/admin-hacienda';
+import { AdminHaciendaForm } from './pages/admin/admin-hacienda-form/admin-hacienda-form';
 import { Routes } from '@angular/router';
 import { ServicioExterno } from './pages/servicio-externo/servicio-externo';
 
@@ -15,10 +19,10 @@ import { NoticiaDetalle } from './pages/noticia-detalle/noticia-detalle';
 import { Noticias } from './pages/noticias/noticias';
 
 export const routes: Routes = [
+  { path: 'hacienda/:id', component: HaciendaDetalle },
   {
     path: 'hacienda',
-    component: ServicioExterno,
-    data: { servicio: 'hacienda', nombre: 'Hacienda' },
+    component: Hacienda,
     title: 'Hacienda | Municipalidad de Ensenada',
   },
   {
@@ -51,6 +55,24 @@ export const routes: Routes = [
     canActivate: [adminGuard],
     canActivateChild: [adminGuard],
     children: [
+      {
+        path: 'hacienda',
+        component: AdminHacienda,
+        canActivate: [roleGuard],
+        data: { roles: ['HACIENDA'] },
+      },
+      {
+        path: 'hacienda/nueva',
+        component: AdminHaciendaForm,
+        canActivate: [roleGuard],
+        data: { roles: ['HACIENDA'] },
+      },
+      {
+        path: 'hacienda/editar/:id',
+        component: AdminHaciendaForm,
+        canActivate: [roleGuard],
+        data: { roles: ['HACIENDA'] },
+      },
       {
         path: '',
         component: AdminDashboard,

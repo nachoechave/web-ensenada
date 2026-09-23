@@ -126,6 +126,6 @@ export class AuthService {
 
         return rol.replace('ROLE_', '') as RolUsuario;
       })
-      .filter((rol) => rol === 'SUPER_ADMIN' || rol === 'PRENSA');
+      .filter((rol) => rol === 'SUPER_ADMIN' || rol === 'PRENSA' || rol === 'HACIENDA');
   }
 }

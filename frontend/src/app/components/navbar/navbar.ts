@@ -22,6 +22,7 @@ export class Navbar {
   links: NavLink[] = [
     { texto: 'Inicio', ruta: '/', exacta: true },
     { texto: 'Noticias', ruta: '/noticias' },
+    {texto:'Hacienda',ruta:'/hacienda'},
     { texto: 'Boletín Oficial', ruta: externalLinks.boletinOficial, externo: true },
   ];
 

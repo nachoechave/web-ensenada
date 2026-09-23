@@ -1,0 +1,52 @@
+.editor {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  margin: 1.5rem 0;
+}
+.editor fieldset {
+  border: 0;
+  padding: 0;
+}
+.editor label {
+  display: grid;
+  gap: 0.4rem;
+  margin: 1rem 0;
+}
+.editor input,
+.editor select,
+.editor textarea {
+  padding: 0.7rem;
+  border: 1px solid #9ca3af;
+  border-radius: 0.4rem;
+  font: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+.editor li {
+  padding: 1rem 0;
+  border-bottom: 1px solid #ddd;
+  overflow-wrap: anywhere;
+}
+.document-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}
+.error-message {
+  color: #991b1b;
+}
+.editor button {
+  padding: 0.5rem 0.8rem;
+}
+.editor button:disabled {
+  opacity: 0.6;
+}
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible {
+  outline: 3px solid #166534;
+  outline-offset: 2px;
+}

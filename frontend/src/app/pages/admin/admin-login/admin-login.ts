@@ -66,9 +66,11 @@ export class AdminLogin {
           this.cdr.markForCheck();
           this.router.navigate(['/admin']);
         },
-        error: () => {
+        error: (error) => {
           this.cdr.markForCheck();
-          this.error = 'Email o contraseña incorrectos.';
+          this.error = error.status === 429
+            ? 'Demasiados intentos. Esperá unos minutos antes de volver a iniciar sesión.'
+            : 'Email o contraseña incorrectos.';
           this.cdr.detectChanges();
         },
       });

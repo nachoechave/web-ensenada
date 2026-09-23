@@ -17,7 +17,7 @@ export class UsuariosAdminService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl + '/admin/usuarios';
 
-  readonly rolesDisponibles: RolUsuario[] = ['PRENSA'];
+  readonly rolesDisponibles: RolUsuario[] = ['PRENSA', 'HACIENDA'];
 
   obtenerUsuarios(): Observable<UsuarioAdmin[]> {
     return this.http.get<UsuarioAdmin[]>(this.apiUrl);

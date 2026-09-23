@@ -24,10 +24,12 @@ export class AdminLayout {
   usuario = this.authService.obtenerUsuarioActual();
 
   links: AdminNavItem[] = [
+    {texto:'Hacienda',ruta:'/admin/hacienda',roles:['HACIENDA']},
+    {texto:'Nueva publicación',ruta:'/admin/hacienda/nueva',roles:['HACIENDA']},
     {
       texto: 'Dashboard',
       ruta: '/admin',
-      roles: ['PRENSA'],
+      roles: ['PRENSA', 'HACIENDA'],
       exacta: true,
     },
     {
@@ -48,7 +50,7 @@ export class AdminLayout {
     {
       texto: 'Mi cuenta',
       ruta: '/admin/mi-cuenta',
-      roles: ['SUPER_ADMIN', 'PRENSA'],
+      roles: ['SUPER_ADMIN', 'PRENSA', 'HACIENDA'],
     },
   ];
 

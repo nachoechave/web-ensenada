@@ -1,11 +1,28 @@
-<h2>Panel de prensa</h2>
-<p>Creá y administrá las noticias del municipio.</p>
+<h2>Panel editorial</h2>
+<p>Noticias, publicaciones de Hacienda y usuarios.</p>
 @if (error()) {
   <p role="alert">{{ error() }}</p>
 }
-<p>
-  Total: {{ noticias().length }} · Publicadas: {{ contar('PUBLICADA') }} · Borradores:
-  {{ contar('BORRADOR') }} · Archivadas: {{ contar('ARCHIVADA') }}
-</p>
-<a routerLink="/admin/noticias">Ver noticias</a> ·
-<a routerLink="/admin/noticias/nueva">Crear noticia</a>
+@if (auth.tieneRol(['PRENSA'])) {
+  <section>
+    <h3>Noticias</h3>
+    <p>
+      Total: {{ noticias().length }} · Publicadas: {{ contar('PUBLICADA') }} · Borradores:
+      {{ contar('BORRADOR') }}
+    </p>
+    <a routerLink="/admin/noticias">Noticias</a> ·
+    <a routerLink="/admin/noticias/nueva">Nueva noticia</a>
+  </section>
+}
+@if (auth.tieneRol(['HACIENDA'])) {
+  <section>
+    <h3>Hacienda</h3>
+    <p>Total: {{ publicaciones().length }}</p>
+    <a routerLink="/admin/hacienda">Hacienda</a> ·
+    <a routerLink="/admin/hacienda/nueva">Nueva publicación</a>
+  </section>
+}
+@if (auth.tieneRol(['SUPER_ADMIN'])) {
+  <p><a routerLink="/admin/usuarios">Usuarios</a></p>
+}
+<p><a routerLink="/admin/mi-cuenta">Mi cuenta</a></p>

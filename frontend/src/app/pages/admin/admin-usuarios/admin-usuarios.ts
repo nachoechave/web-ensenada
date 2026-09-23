@@ -84,16 +84,7 @@ export class AdminUsuarios {
   }
 
   alternarRol(usuario: UsuarioAdmin, rol: RolUsuario): void {
-    const tieneRol = usuario.roles.includes(rol);
-    const roles = tieneRol
-      ? usuario.roles.filter((rolActual) => rolActual !== rol)
-      : [...usuario.roles, rol];
-
-    if (roles.length === 0) {
-      return;
-    }
-
-    this.usuariosService.actualizarRoles(usuario.id, roles).subscribe({
+    this.usuariosService.actualizarRoles(usuario.id, [rol]).subscribe({
       next: () => this.cargarUsuarios(),
       error: () => {
         this.cdr.markForCheck();
@@ -103,14 +94,6 @@ export class AdminUsuarios {
   }
 
   alternarRolNuevo(rol: RolUsuario): void {
-    const tieneRol = this.usuario.roles.includes(rol);
-
-    this.usuario.roles = tieneRol
-      ? this.usuario.roles.filter((rolActual) => rolActual !== rol)
-      : [...this.usuario.roles, rol];
-
-    if (this.usuario.roles.length === 0) {
-      this.usuario.roles = ['PRENSA'];
-    }
+    this.usuario.roles = [rol];
   }
 }

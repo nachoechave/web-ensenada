@@ -6,7 +6,9 @@
         <article class="quick-card content-card">
           <div>
             <h3>{{ acceso.titulo }}</h3>
-            @if (acceso.url) {
+            @if (acceso.interno) {
+              <a [routerLink]="acceso.url">Ver publicaciones</a>
+            } @else if (acceso.url) {
               <a [href]="acceso.url" target="_blank" rel="noopener noreferrer"
                 >Acceder al sistema</a
               >

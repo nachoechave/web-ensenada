@@ -1,7 +1,6 @@
 // URLs existentes en el repositorio. Completar las pendientes con destinos oficiales verificados.
 export const externalLinks = {
   boletinOficial: 'https://boletinoficial.ensenada.gov.ar/index.php',
-  hacienda: null as string | null, // PENDIENTE: URL oficial de Hacienda
   proveedores: null as string | null, // PENDIENTE: URL oficial del registro
   turnos: 'https://www.ensenada.gov.ar/turnos/',
   tasas: 'https://pagos.ensenada.gov.ar/nuevo_index.php',
@@ -10,9 +9,9 @@ export const externalLinks = {
   instagram: 'https://www.instagram.com/prensaensenada/',
   facebook: 'https://www.facebook.com/prensaensenadaok',
 };
-export const municipalLinks = [
+export const municipalLinks: { titulo: string; url: string | null; interno?: boolean }[] = [
   { titulo: 'Boletín Oficial', url: externalLinks.boletinOficial },
-  { titulo: 'Hacienda', url: externalLinks.hacienda },
+  { titulo: 'Hacienda', url: '/hacienda', interno: true },
   { titulo: 'Registro Municipal de Proveedores', url: externalLinks.proveedores },
   { titulo: 'Turnos veterinarios', url: externalLinks.turnos },
   { titulo: 'Tasas municipales', url: externalLinks.tasas },

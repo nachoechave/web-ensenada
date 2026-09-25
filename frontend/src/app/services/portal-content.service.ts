@@ -1,7 +1,7 @@
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, of, shareReplay, tap } from 'rxjs';
+import { Observable, catchError, map, of, shareReplay, tap, timeout } from 'rxjs';
 
 import { cloneDefaultPortalContent } from '../config/site-content';
 import { PortalContent } from '../models/portal-content.model';
@@ -22,6 +22,7 @@ export class PortalContentService {
   obtenerPublico(force = false): Observable<PortalContent> {
     if (!this.publicContent$ || force) {
       this.publicContent$ = this.http.get<Partial<PortalContent>>(`${this.apiUrl}/site-content`).pipe(
+        timeout({ first: 8000 }),
         map((contenido) => this.normalizar(contenido)),
         catchError(() => of(cloneDefaultPortalContent())),
         shareReplay({ bufferSize: 1, refCount: false }),
@@ -31,13 +32,15 @@ export class PortalContentService {
   }
 
   obtenerAdmin(): Observable<PortalContent> {
-    return this.http
-      .get<Partial<PortalContent>>(`${this.apiUrl}/admin/site-content`)
-      .pipe(map((contenido) => this.normalizar(contenido)));
+    return this.http.get<Partial<PortalContent>>(`${this.apiUrl}/admin/site-content`).pipe(
+      timeout({ first: 8000 }),
+      map((contenido) => this.normalizar(contenido)),
+    );
   }
 
   guardar(contenido: PortalContent): Observable<PortalContent> {
     return this.http.put<PortalContent>(`${this.apiUrl}/admin/site-content`, contenido).pipe(
+      timeout({ first: 10000 }),
       map((respuesta) => this.normalizar(respuesta)),
       tap(() => {
         this.publicContent$ = undefined;
@@ -69,8 +72,6 @@ export class PortalContentService {
       footer: { ...base.footer, ...contenido.footer },
     } as PortalContent;
 
-    // El Boletín Oficial tiene un destino institucional único. Esto también corrige
-    // configuraciones antiguas guardadas en la base con la URL del portal anterior.
     combinado.navbar.boletinUrl = base.navbar.boletinUrl;
 
     const accesosGuardados = contenido.accesos ?? [];

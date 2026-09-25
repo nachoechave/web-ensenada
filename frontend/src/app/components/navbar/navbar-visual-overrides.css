@@ -1,0 +1,80 @@
+.navbar-container {
+  min-height: 8rem;
+  gap: 1rem;
+}
+
+.brand {
+  min-width: 34rem;
+}
+
+.brand-logo {
+  width: 34rem;
+  height: 7rem;
+  max-width: none;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.nav-links {
+  gap: .08rem;
+}
+
+@media (max-width: 78rem) {
+  .navbar-container {
+    min-height: 7rem;
+  }
+
+  .brand {
+    min-width: 27rem;
+  }
+
+  .brand-logo {
+    width: 27rem;
+    height: 5.9rem;
+  }
+
+  .nav-links > a:not(.boletin-button) {
+    padding-inline: .35rem;
+  }
+}
+
+@media (max-width: 68rem) {
+  .brand {
+    min-width: 23rem;
+  }
+
+  .brand-logo {
+    width: 23rem;
+    height: 5.2rem;
+  }
+}
+
+@media (max-width: 62rem) {
+  .navbar-container {
+    min-height: 5.8rem;
+  }
+
+  .brand {
+    min-width: 19rem;
+  }
+
+  .brand-logo {
+    width: 19rem;
+    height: 4.6rem;
+  }
+}
+
+@media (max-width: 38rem) {
+  .navbar-container {
+    min-height: 5.3rem;
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .brand-logo {
+    width: 15.5rem;
+    height: 4rem;
+  }
+}

@@ -1,8 +1,22 @@
 <app-navbar></app-navbar>
 
 <main>
-  <section class="portal-hero" aria-labelledby="hero-title">
-    <div class="hero-photo-strip" [style.background-image]="'url(' + contenido.hero.imagen + ')'" aria-hidden="true"></div>
+  <section
+    class="portal-hero"
+    aria-labelledby="hero-title"
+    (mouseenter)="pausarCarousel()"
+    (mouseleave)="reanudarCarousel()"
+  >
+    <div class="hero-slides" aria-hidden="true">
+      @for (imagen of contenido.hero.imagenes; track imagen; let i = $index) {
+        <div
+          class="hero-slide"
+          [class.active]="i === heroIndex"
+          [style.background-image]="'url(' + imagen + ')'"
+        ></div>
+      }
+    </div>
+    <div class="hero-shade" aria-hidden="true"></div>
 
     <div class="hero-grid">
       <div class="hero-copy">
@@ -20,58 +34,77 @@
         </div>
       </div>
 
-      <div class="quick-panel" aria-label="Accesos rápidos">
-        <div class="quick-heading">
-          <h2>{{ contenido.accesosTitulo }}</h2>
-          <a href="#tramites">Ver todos los servicios <span aria-hidden="true">→</span></a>
-        </div>
-
-        <div class="quick-grid">
-          @for (item of contenido.accesos; track $index) {
-            @if (esInterno(item.url)) {
-              <a class="quick-card" [routerLink]="item.url">
-                <span class="icon-box"><app-portal-icon [name]="item.icono"></app-portal-icon></span>
-                <span class="quick-text"><strong>{{ item.titulo }}</strong><small>{{ item.descripcion }}</small></span>
-                <span class="circle-arrow" aria-hidden="true">→</span>
-              </a>
-            } @else {
-              <a class="quick-card" [href]="item.url" target="_blank" rel="noopener noreferrer">
-                <span class="icon-box"><app-portal-icon [name]="item.icono"></app-portal-icon></span>
-                <span class="quick-text"><strong>{{ item.titulo }}</strong><small>{{ item.descripcion }}</small></span>
-                <span class="circle-arrow" aria-hidden="true">→</span>
-              </a>
-            }
+      @if (contenido.hero.imagenes.length > 1) {
+        <div class="hero-dots" aria-label="Imágenes del encabezado">
+          @for (imagen of contenido.hero.imagenes; track imagen; let i = $index) {
+            <button
+              type="button"
+              [class.active]="i === heroIndex"
+              [attr.aria-label]="'Mostrar imagen ' + (i + 1)"
+              [attr.aria-current]="i === heroIndex ? 'true' : null"
+              (click)="seleccionarHero(i)"
+            ></button>
           }
         </div>
-      </div>
+      }
     </div>
   </section>
 
-  <section id="tramites" class="portal-section services-section" aria-labelledby="tramites-title">
+  <section id="accesos" class="portal-section quick-access-section" aria-labelledby="accesos-title">
     <div class="section-shell">
-      <div class="section-intro centered-intro">
-        <span class="section-kicker">{{ contenido.tramites.kicker }}</span>
-        <h2 id="tramites-title">{{ contenido.tramites.titulo }}</h2>
-        <p>{{ contenido.tramites.bajada }}</p>
+      <div class="quick-access-heading">
+        <div>
+          <span class="section-kicker">Servicios destacados</span>
+          <h2 id="accesos-title">{{ contenido.accesosTitulo }}</h2>
+        </div>
+        <a class="section-link" href="#areas">Ver todas las áreas <span aria-hidden="true">→</span></a>
       </div>
 
-      <div class="service-grid">
-        @for (item of contenido.tramites.items; track $index) {
+      <div class="quick-access-grid">
+        @for (item of contenido.accesos; track $index) {
           @if (esInterno(item.url)) {
-            <a class="service-card" [routerLink]="item.url">
+            <a class="quick-access-card" [routerLink]="item.url">
               <span class="icon-box"><app-portal-icon [name]="item.icono"></app-portal-icon></span>
-              <span><strong>{{ item.titulo }}</strong><small>{{ item.descripcion }}</small></span>
+              <span class="quick-text"><strong>{{ item.titulo }}</strong><small>{{ item.descripcion }}</small></span>
               <span class="circle-arrow" aria-hidden="true">→</span>
             </a>
           } @else {
-            <a class="service-card" [href]="item.url" target="_blank" rel="noopener noreferrer">
+            <a class="quick-access-card" [href]="item.url" target="_blank" rel="noopener noreferrer">
               <span class="icon-box"><app-portal-icon [name]="item.icono"></app-portal-icon></span>
-              <span><strong>{{ item.titulo }}</strong><small>{{ item.descripcion }}</small></span>
+              <span class="quick-text"><strong>{{ item.titulo }}</strong><small>{{ item.descripcion }}</small></span>
               <span class="circle-arrow" aria-hidden="true">→</span>
             </a>
           }
         }
       </div>
+    </div>
+  </section>
+
+  <section id="municipio" class="portal-section mayor-section" aria-labelledby="municipio-title">
+    <div class="section-shell mayor-feature">
+      <div class="mayor-photo">
+        <img [src]="contenido.intendencia.imagen" [alt]="contenido.intendencia.nombre" />
+      </div>
+
+      <div class="mayor-copy">
+        <span class="section-kicker">{{ contenido.intendencia.kicker }}</span>
+        <h2 id="municipio-title">{{ contenido.intendencia.nombre }}</h2>
+        <p>{{ contenido.intendencia.descripcion }}</p>
+        <div class="mayor-actions">
+          <a class="button primary" [href]="contenido.intendencia.botonUrl" target="_blank" rel="noopener noreferrer">
+            {{ contenido.intendencia.botonTexto }} <span>→</span>
+          </a>
+          <a class="button secondary" [href]="contenido.intendencia.secundarioUrl" target="_blank" rel="noopener noreferrer">
+            {{ contenido.intendencia.secundarioTexto }} <span>→</span>
+          </a>
+        </div>
+      </div>
+
+      <blockquote class="mayor-quote">
+        <span class="quote-mark">“</span>
+        <p>{{ contenido.intendencia.cita }}</p>
+        <footer><strong>{{ contenido.intendencia.nombre }}</strong><small>Intendente de Ensenada</small></footer>
+      </blockquote>
     </div>
   </section>
 
@@ -102,30 +135,6 @@
           }
         }
       </div>
-    </div>
-  </section>
-
-  <section id="municipio" class="portal-section mayor-section" aria-labelledby="municipio-title">
-    <div class="section-shell mayor-grid">
-      <div class="mayor-photo">
-        <img [src]="contenido.intendencia.imagen" [alt]="contenido.intendencia.nombre" />
-      </div>
-
-      <div class="mayor-copy">
-        <span class="section-kicker">{{ contenido.intendencia.kicker }}</span>
-        <h2 id="municipio-title">{{ contenido.intendencia.nombre }}</h2>
-        <p>{{ contenido.intendencia.descripcion }}</p>
-        <div class="mayor-actions">
-          <a class="button primary" [href]="contenido.intendencia.botonUrl" target="_blank" rel="noopener noreferrer">{{ contenido.intendencia.botonTexto }} <span>→</span></a>
-          <a class="button secondary" [href]="contenido.intendencia.secundarioUrl" target="_blank" rel="noopener noreferrer">{{ contenido.intendencia.secundarioTexto }} <span>→</span></a>
-        </div>
-      </div>
-
-      <blockquote class="mayor-quote">
-        <span class="quote-mark">“</span>
-        <p>{{ contenido.intendencia.cita }}</p>
-        <footer><strong>{{ contenido.intendencia.nombre }}</strong><small>Intendente de Ensenada</small></footer>
-      </blockquote>
     </div>
   </section>
 

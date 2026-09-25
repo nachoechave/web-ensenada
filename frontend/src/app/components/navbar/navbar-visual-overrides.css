@@ -1,15 +1,15 @@
 .navbar-container {
-  min-height: 8rem;
+  min-height: 5.9rem;
   gap: 1rem;
 }
 
 .brand {
-  min-width: 34rem;
+  min-width: 24rem;
 }
 
 .brand-logo {
-  width: 34rem;
-  height: 7rem;
+  width: 24rem;
+  height: 4.9rem;
   max-width: none;
   object-fit: contain;
   object-position: left center;
@@ -21,16 +21,16 @@
 
 @media (max-width: 78rem) {
   .navbar-container {
-    min-height: 7rem;
+    min-height: 5.45rem;
   }
 
   .brand {
-    min-width: 27rem;
+    min-width: 20rem;
   }
 
   .brand-logo {
-    width: 27rem;
-    height: 5.9rem;
+    width: 20rem;
+    height: 4.35rem;
   }
 
   .nav-links > a:not(.boletin-button) {
@@ -40,33 +40,33 @@
 
 @media (max-width: 68rem) {
   .brand {
-    min-width: 23rem;
+    min-width: 17rem;
   }
 
   .brand-logo {
-    width: 23rem;
-    height: 5.2rem;
+    width: 17rem;
+    height: 3.9rem;
   }
 }
 
 @media (max-width: 62rem) {
   .navbar-container {
-    min-height: 5.8rem;
+    min-height: 4.9rem;
   }
 
   .brand {
-    min-width: 19rem;
+    min-width: 15rem;
   }
 
   .brand-logo {
-    width: 19rem;
-    height: 4.6rem;
+    width: 15rem;
+    height: 3.6rem;
   }
 }
 
 @media (max-width: 38rem) {
   .navbar-container {
-    min-height: 5.3rem;
+    min-height: 4.65rem;
   }
 
   .brand {
@@ -74,7 +74,7 @@
   }
 
   .brand-logo {
-    width: 15.5rem;
-    height: 4rem;
+    width: 12.8rem;
+    height: 3.2rem;
   }
 }

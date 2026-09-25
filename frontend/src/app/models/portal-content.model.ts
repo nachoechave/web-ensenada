@@ -38,6 +38,8 @@ export interface PortalContent {
     titulo: string;
     bajada: string;
     imagen: string;
+    imagenes: string[];
+    intervaloSegundos: number;
     ctaPrimarioTexto: string;
     ctaPrimarioUrl: string;
     ctaSecundarioTexto: string;

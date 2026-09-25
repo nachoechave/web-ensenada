@@ -98,11 +98,6 @@ main {
   text-decoration: none;
 }
 
-.hero-identity { align-self: flex-end; margin-bottom: 2.8rem; text-align: right; }
-.hero-identity span, .hero-identity strong { display: block; }
-.hero-identity span { color: #c9e5da; font-size: .72rem; letter-spacing: .11rem; text-transform: uppercase; }
-.hero-identity strong { margin-top: .35rem; font-size: 1.9rem; font-weight: 500; letter-spacing: -.04em; }
-
 .mayor-section { background: white; }
 
 .mayor-grid {
@@ -205,7 +200,6 @@ main {
 .interactive-map-frame iframe { width: 100%; height: 100%; display: block; border: 0; }
 
 @media (max-width: 62rem) {
-  .hero-identity { display: none; }
   .mayor-grid { grid-template-columns: 1fr; }
   .mayor-visual { max-width: 44rem; }
   .map-shell { grid-template-columns: 1fr; }

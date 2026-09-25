@@ -1,14 +1,9 @@
-import { externalLinks } from '../../config/external-links';
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
-type NavLink = {
-  texto: string;
-  ruta: string;
-  exacta?: boolean;
-  externo?: boolean;
-  fragmento?: string;
-};
+import { cloneDefaultPortalContent } from '../../config/site-content';
+import { PortalContentService } from '../../services/portal-content.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,22 +12,32 @@ type NavLink = {
   styleUrl: './navbar.css',
 })
 export class Navbar {
+  private readonly portalContentService = inject(PortalContentService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  contenido = cloneDefaultPortalContent();
   menuAbierto = false;
+  busquedaAbierta = false;
 
-  links: NavLink[] = [
-    { texto: 'Inicio', ruta: '/', exacta: true },
-    { texto: 'Intendente', ruta: '/', fragmento: 'intendente' },
-    { texto: 'Servicios', ruta: '/', fragmento: 'servicios' },
-    { texto: 'Noticias', ruta: '/noticias' },
-    { texto: 'Hacienda', ruta: '/hacienda' },
-    { texto: 'Boletín Oficial', ruta: externalLinks.boletinOficial, externo: true },
-  ];
+  constructor() {
+    this.portalContentService
+      .obtenerPublico()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((contenido) => (this.contenido = contenido));
+  }
 
-  irArriba(): void {
+  cerrarMenus(): void {
     this.menuAbierto = false;
+    this.busquedaAbierta = false;
   }
 
   alternarMenu(): void {
     this.menuAbierto = !this.menuAbierto;
+    this.busquedaAbierta = false;
+  }
+
+  alternarBusqueda(): void {
+    this.busquedaAbierta = !this.busquedaAbierta;
+    this.menuAbierto = false;
   }
 }

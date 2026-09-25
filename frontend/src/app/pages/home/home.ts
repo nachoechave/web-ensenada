@@ -1,20 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
-import { AccesosRapidos } from '../../components/accesos-rapidos/accesos-rapidos';
 import { Footer } from '../../components/footer/footer';
 import { Navbar } from '../../components/navbar/navbar';
 import { NoticiasDestacadas } from '../../components/noticias-destacadas/noticias-destacadas';
-import { externalLinks } from '../../config/external-links';
-import { siteContent } from '../../config/site-content';
+import { PortalIcon } from '../../components/portal-icon/portal-icon';
+import { cloneDefaultPortalContent } from '../../config/site-content';
+import { PortalContentService } from '../../services/portal-content.service';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, Navbar, AccesosRapidos, NoticiasDestacadas, Footer],
+  imports: [RouterLink, Navbar, NoticiasDestacadas, Footer, PortalIcon],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home {
-  readonly contenido = siteContent;
-  readonly externalLinks = externalLinks;
+  private readonly portalContentService = inject(PortalContentService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  contenido = cloneDefaultPortalContent();
+
+  constructor() {
+    this.portalContentService
+      .obtenerPublico()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((contenido) => (this.contenido = contenido));
+  }
+
+  esInterno(url: string): boolean {
+    return url.startsWith('/') && !url.startsWith('//');
+  }
 }

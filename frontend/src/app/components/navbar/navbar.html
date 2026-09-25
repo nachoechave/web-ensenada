@@ -1,6 +1,33 @@
+<div class="topbar">
+  <div class="topbar-container">
+    <div class="topbar-info">
+      <a [href]="'tel:' + contenido.topbar.telefono.replaceAll(' ', '')">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.9z"/></svg>
+        <span>{{ contenido.topbar.telefono }}</span>
+      </a>
+      <span class="topbar-separator"></span>
+      <span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 12-9 12S3 17 3 10a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        {{ contenido.topbar.direccion }}
+      </span>
+      <span class="topbar-separator"></span>
+      <span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        {{ contenido.topbar.horarios }}
+      </span>
+    </div>
+
+    <div class="topbar-social" aria-label="Redes sociales">
+      @if (contenido.topbar.facebook) { <a [href]="contenido.topbar.facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a> }
+      @if (contenido.topbar.instagram) { <a [href]="contenido.topbar.instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram">◎</a> }
+      @if (contenido.topbar.youtube) { <a [href]="contenido.topbar.youtube" target="_blank" rel="noopener noreferrer" aria-label="YouTube">▶</a> }
+    </div>
+  </div>
+</div>
+
 <header class="navbar">
   <div class="navbar-container">
-    <a routerLink="/" class="brand" aria-label="Ir al inicio" (click)="irArriba()">
+    <a routerLink="/" class="brand" aria-label="Ir al inicio" (click)="cerrarMenus()">
       <span class="brand-logo" aria-hidden="true"></span>
     </a>
 
@@ -9,15 +36,33 @@
     </button>
 
     <nav id="main-navigation" class="nav-links" [class.open]="menuAbierto" aria-label="Navegación principal">
-      @for (link of links; track link.texto) {
-        @if (link.externo) {
-          <a class="external-link" [href]="link.ruta" target="_blank" rel="noopener noreferrer">{{ link.texto }}</a>
-        } @else if (link.fragmento) {
-          <a [routerLink]="link.ruta" [fragment]="link.fragmento" (click)="irArriba()">{{ link.texto }}</a>
-        } @else {
-          <a [routerLink]="link.ruta" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: link.exacta ?? false }" (click)="irArriba()">{{ link.texto }}</a>
-        }
-      }
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="cerrarMenus()">{{ contenido.navbar.inicio }}</a>
+      <a routerLink="/" fragment="municipio" (click)="cerrarMenus()">{{ contenido.navbar.municipio }}</a>
+      <a routerLink="/" fragment="areas" (click)="cerrarMenus()">{{ contenido.navbar.areas }}</a>
+      <a routerLink="/" fragment="tramites" (click)="cerrarMenus()">{{ contenido.navbar.tramites }}</a>
+      <a routerLink="/noticias" routerLinkActive="active" (click)="cerrarMenus()">{{ contenido.navbar.noticias }}</a>
+      <a routerLink="/hacienda" routerLinkActive="active" (click)="cerrarMenus()">{{ contenido.navbar.hacienda }}</a>
+      <a routerLink="/" fragment="contacto" (click)="cerrarMenus()">{{ contenido.navbar.contacto }}</a>
+
+      <button type="button" class="search-toggle" [class.active]="busquedaAbierta" aria-label="Abrir accesos de búsqueda" [attr.aria-expanded]="busquedaAbierta" (click)="alternarBusqueda()">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      </button>
+
+      <a class="boletin-button" [href]="contenido.navbar.boletinUrl" target="_blank" rel="noopener noreferrer">
+        {{ contenido.navbar.boletinTexto }} <span aria-hidden="true">→</span>
+      </a>
     </nav>
   </div>
+
+  @if (busquedaAbierta) {
+    <div class="search-panel">
+      <div class="search-panel-inner">
+        <strong>¿Qué necesitás encontrar?</strong>
+        <a routerLink="/" fragment="tramites" (click)="cerrarMenus()">Trámites y servicios</a>
+        <a routerLink="/" fragment="areas" (click)="cerrarMenus()">Áreas municipales</a>
+        <a routerLink="/noticias" (click)="cerrarMenus()">Noticias</a>
+        <a routerLink="/hacienda" (click)="cerrarMenus()">Hacienda</a>
+      </div>
+    </div>
+  }
 </header>

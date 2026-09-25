@@ -13,6 +13,7 @@ import { AdminLogin } from './pages/admin/admin-login/admin-login';
 import { AdminMiCuenta } from './pages/admin/admin-mi-cuenta/admin-mi-cuenta';
 import { AdminNoticiaForm } from './pages/admin/admin-noticia-form/admin-noticia-form';
 import { AdminNoticias } from './pages/admin/admin-noticias/admin-noticias';
+import { AdminSitio } from './pages/admin/admin-sitio/admin-sitio';
 import { AdminUsuarios } from './pages/admin/admin-usuarios/admin-usuarios';
 import { Home } from './pages/home/home';
 import { NoticiaDetalle } from './pages/noticia-detalle/noticia-detalle';
@@ -76,6 +77,12 @@ export const routes: Routes = [
       {
         path: '',
         component: AdminDashboard,
+      },
+      {
+        path: 'sitio',
+        component: AdminSitio,
+        canActivate: [roleGuard],
+        data: { roles: ['SUPER_ADMIN'] },
       },
       {
         path: 'noticias',

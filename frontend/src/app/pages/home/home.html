@@ -21,7 +21,7 @@
       <div class="quick-panel" aria-label="Accesos rápidos">
         <div class="quick-heading">
           <h2>{{ contenido.accesosTitulo }}</h2>
-          <a href="#tramites">Ver todos los servicios <span aria-hidden="true">→</span></a>
+          <a href="#tramites">Ver todos <span aria-hidden="true">→</span></a>
         </div>
 
         <div class="quick-grid">
@@ -42,19 +42,12 @@
           }
         </div>
       </div>
-
-      <div class="hero-photo" [style.background-image]="'url(' + contenido.hero.imagen + ')'">
-        <div class="photo-caption">
-          <span class="caption-pin" aria-hidden="true">●</span>
-          <div><strong>Ensenada</strong><small>Municipalidad de Ensenada</small></div>
-        </div>
-      </div>
     </div>
   </section>
 
   <section id="tramites" class="portal-section services-section" aria-labelledby="tramites-title">
-    <div class="section-shell section-with-intro">
-      <div class="section-intro">
+    <div class="section-shell">
+      <div class="section-intro centered-intro">
         <span class="section-kicker">{{ contenido.tramites.kicker }}</span>
         <h2 id="tramites-title">{{ contenido.tramites.titulo }}</h2>
         <p>{{ contenido.tramites.bajada }}</p>

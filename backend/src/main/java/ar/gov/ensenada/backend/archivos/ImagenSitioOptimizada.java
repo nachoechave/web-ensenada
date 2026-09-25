@@ -6,8 +6,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -38,16 +40,26 @@ public final class ImagenSitioOptimizada {
             throw invalida("La imagen debe pesar hasta 30 MB antes de optimizarse");
         }
 
-        try (InputStream input = archivo.getInputStream()) {
-            BufferedImage original = ImageIO.read(input);
-            if (original == null) {
-                throw invalida("El archivo no es una imagen compatible");
-            }
+        try (InputStream input = archivo.getInputStream();
+             ImageInputStream stream = ImageIO.createImageInputStream(input)) {
+            if (stream == null) throw invalida("El archivo no es una imagen compatible");
 
-            int width = original.getWidth();
-            int height = original.getHeight();
-            if (width < 1 || height < 1 || (long) width * height > MAX_PIXELS) {
-                throw invalida("La imagen supera el límite de resolución permitido");
+            Iterator<ImageReader> readers = ImageIO.getImageReaders(stream);
+            if (!readers.hasNext()) throw invalida("El archivo no es una imagen compatible");
+
+            ImageReader reader = readers.next();
+            BufferedImage original;
+            try {
+                reader.setInput(stream, true, true);
+                int width = reader.getWidth(0);
+                int height = reader.getHeight(0);
+                if (width < 1 || height < 1 || (long) width * height > MAX_PIXELS) {
+                    throw invalida("La imagen supera el límite de resolución permitido");
+                }
+                original = reader.read(0);
+                if (original == null) throw invalida("El archivo no es una imagen compatible");
+            } finally {
+                reader.dispose();
             }
 
             BufferedImage optimizada = redimensionar(original, MAX_DIMENSION);
@@ -129,14 +141,10 @@ public final class ImagenSitioOptimizada {
     }
 
     private static byte[] comprimirJpeg(BufferedImage image, float calidad) throws IOException {
-        BufferedImage rgb = image.getType() == BufferedImage.TYPE_INT_RGB
-                ? image
-                : convertirRgb(image);
+        BufferedImage rgb = image.getType() == BufferedImage.TYPE_INT_RGB ? image : convertirRgb(image);
 
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpeg");
-        if (!writers.hasNext()) {
-            throw invalida("No hay un codificador JPEG disponible");
-        }
+        if (!writers.hasNext()) throw invalida("No hay un codificador JPEG disponible");
 
         ImageWriter writer = writers.next();
         try (ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -148,7 +156,7 @@ public final class ImagenSitioOptimizada {
                 params.setCompressionQuality(calidad);
             }
             writer.write(null, new IIOImage(rgb, null, null), params);
-            writer.dispose();
+            imageOutput.flush();
             return output.toByteArray();
         } finally {
             writer.dispose();

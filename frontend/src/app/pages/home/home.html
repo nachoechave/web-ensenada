@@ -2,6 +2,8 @@
 
 <main>
   <section class="portal-hero" aria-labelledby="hero-title">
+    <div class="hero-photo-strip" [style.background-image]="'url(' + contenido.hero.imagen + ')'" aria-hidden="true"></div>
+
     <div class="hero-grid">
       <div class="hero-copy">
         <span class="eyebrow">{{ contenido.hero.eyebrow }}</span>
@@ -21,7 +23,7 @@
       <div class="quick-panel" aria-label="Accesos rápidos">
         <div class="quick-heading">
           <h2>{{ contenido.accesosTitulo }}</h2>
-          <a href="#tramites">Ver todos <span aria-hidden="true">→</span></a>
+          <a href="#tramites">Ver todos los servicios <span aria-hidden="true">→</span></a>
         </div>
 
         <div class="quick-grid">
@@ -142,6 +144,36 @@
             <div class="event-copy"><strong>{{ evento.titulo }}</strong><span>⌖ {{ evento.lugar }}</span><span>◷ {{ evento.hora }}</span></div>
           </article>
         }
+      </div>
+    </div>
+  </section>
+
+  <section id="mapa" class="portal-section map-section" aria-labelledby="map-title">
+    <div class="section-shell">
+      <div class="map-heading">
+        <div>
+          <span class="section-kicker">Mapa interactivo</span>
+          <h2 id="map-title">Explorá Ensenada</h2>
+          <p>Ubicá la ciudad y recorré servicios, instituciones y puntos de interés desde el mapa.</p>
+        </div>
+        <a class="button secondary" [href]="contenido.footer.mapaUrl" target="_blank" rel="noopener noreferrer">Abrir mapa completo <span aria-hidden="true">→</span></a>
+      </div>
+
+      <div class="map-shell">
+        <div class="map-info">
+          <span class="map-label">Ensenada · Buenos Aires</span>
+          <h3>La ciudad, en un solo mapa</h3>
+          <p>Consultá una vista general del distrito y continuá la navegación en Google Maps cuando necesites más detalle.</p>
+        </div>
+        <div class="interactive-map-frame">
+          <iframe
+            title="Mapa interactivo de Ensenada, Buenos Aires"
+            src="https://www.google.com/maps?q=Ensenada,%20Buenos%20Aires,%20Argentina&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+        </div>
       </div>
     </div>
   </section>

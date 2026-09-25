@@ -1,28 +1,112 @@
-<h2>Panel editorial</h2>
-<p>Noticias, publicaciones de Hacienda y usuarios.</p>
+<div class="dashboard-header">
+  <div>
+    <span>Resumen general</span>
+    <h2>Panel de administración</h2>
+    <p>Gestioná el contenido público, las publicaciones y los usuarios desde un mismo lugar.</p>
+  </div>
+  @if (auth.tieneRol(['PRENSA'])) {
+    <a class="primary-button" routerLink="/admin/noticias/nueva">+ Nueva noticia</a>
+  }
+</div>
+
 @if (error()) {
-  <p role="alert">{{ error() }}</p>
+  <p class="dashboard-error" role="alert">{{ error() }}</p>
 }
+
+<div class="stats-grid">
+  @if (auth.tieneRol(['PRENSA'])) {
+    <article class="stat-card">
+      <span>Noticias</span>
+      <strong>{{ noticias().length }}</strong>
+      <p>contenidos totales</p>
+    </article>
+    <article class="stat-card">
+      <span>Publicadas</span>
+      <strong>{{ contar('PUBLICADA') }}</strong>
+      <p>{{ contar('BORRADOR') }} borradores pendientes</p>
+    </article>
+  }
+  @if (auth.tieneRol(['HACIENDA'])) {
+    <article class="stat-card">
+      <span>Hacienda</span>
+      <strong>{{ publicaciones().length }}</strong>
+      <p>publicaciones cargadas</p>
+    </article>
+  }
+</div>
+
+<div class="section-title section-title-plain">
+  <div>
+    <span>Acciones rápidas</span>
+    <h3>¿Qué querés administrar?</h3>
+  </div>
+</div>
+
+<div class="quick-admin-grid">
+  @if (auth.tieneRol(['SUPER_ADMIN'])) {
+    <a class="quick-admin-card" routerLink="/admin/sitio">
+      <span>Sitio público</span>
+      <strong>Editar portada</strong>
+      <p>Hero, accesos directos, datos institucionales, agenda, áreas y footer.</p>
+    </a>
+  }
+  @if (auth.tieneRol(['PRENSA'])) {
+    <a class="quick-admin-card" routerLink="/admin/noticias/nueva">
+      <span>Prensa</span>
+      <strong>Crear noticia</strong>
+      <p>Publicá novedades con imagen, contenido, fecha y estado editorial.</p>
+    </a>
+  }
+  @if (auth.tieneRol(['HACIENDA'])) {
+    <a class="quick-admin-card" routerLink="/admin/hacienda/nueva">
+      <span>Hacienda</span>
+      <strong>Nueva publicación</strong>
+      <p>Cargá información fiscal y adjuntá documentación PDF o imágenes.</p>
+    </a>
+  }
+  @if (auth.tieneRol(['SUPER_ADMIN'])) {
+    <a class="quick-admin-card" routerLink="/admin/usuarios">
+      <span>Accesos</span>
+      <strong>Usuarios y roles</strong>
+      <p>Administrá cuentas de Prensa y Hacienda desde el perfil SuperAdmin.</p>
+    </a>
+  }
+</div>
+
 @if (auth.tieneRol(['PRENSA'])) {
-  <section>
-    <h3>Noticias</h3>
-    <p>
-      Total: {{ noticias().length }} · Publicadas: {{ contar('PUBLICADA') }} · Borradores:
-      {{ contar('BORRADOR') }}
-    </p>
-    <a routerLink="/admin/noticias">Noticias</a> ·
-    <a routerLink="/admin/noticias/nueva">Nueva noticia</a>
+  <section class="latest-section">
+    <div class="section-title">
+      <div>
+        <span>Actividad editorial</span>
+        <h3>Últimas noticias</h3>
+      </div>
+      <a routerLink="/admin/noticias">Ver todas →</a>
+    </div>
+
+    <div class="latest-list">
+      @for (noticia of noticias().slice(0, 4); track noticia.id) {
+        <article class="latest-item">
+          @if (noticia.imagen) {
+            <img [src]="noticia.imagen" [alt]="noticia.titulo" />
+          } @else {
+            <div class="latest-placeholder" aria-hidden="true">N</div>
+          }
+          <div class="latest-content">
+            <div class="latest-meta">
+              <span class="category">{{ noticia.categoria }}</span>
+              <span class="status" [class.status-draft]="noticia.estado !== 'PUBLICADA'">{{ noticia.estado }}</span>
+            </div>
+            <h4>{{ noticia.titulo }}</h4>
+            <p>{{ noticia.fechaPublicacion }}</p>
+          </div>
+          <a class="edit-link" [routerLink]="['/admin/noticias/editar', noticia.id]">Editar →</a>
+        </article>
+      } @empty {
+        <div class="empty-state">
+          <h4>Todavía no hay noticias</h4>
+          <p>Cuando cargues contenido, vas a ver acá las publicaciones más recientes.</p>
+        </div>
+      }
+    </div>
   </section>
 }
-@if (auth.tieneRol(['HACIENDA'])) {
-  <section>
-    <h3>Hacienda</h3>
-    <p>Total: {{ publicaciones().length }}</p>
-    <a routerLink="/admin/hacienda">Hacienda</a> ·
-    <a routerLink="/admin/hacienda/nueva">Nueva publicación</a>
-  </section>
-}
-@if (auth.tieneRol(['SUPER_ADMIN'])) {
-  <p><a routerLink="/admin/usuarios">Usuarios</a></p>
-}
-<p><a routerLink="/admin/mi-cuenta">Mi cuenta</a></p>

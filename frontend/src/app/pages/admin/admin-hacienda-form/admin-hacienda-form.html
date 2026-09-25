@@ -1,120 +1,138 @@
 <div class="admin-page-header">
   <div>
-    <span>Hacienda</span>
-    <h2>{{ id ? 'Editar publicación' : 'Nueva publicación' }}</h2>
+    <span>{{ id ? 'Editar publicación' : 'Nueva publicación' }}</span>
+    <h2>{{ id ? 'Editar contenido de Hacienda' : 'Crear publicación de Hacienda' }}</h2>
+    <p>Completá los datos, guardá el borrador y adjuntá la documentación que corresponda.</p>
   </div>
-  <a routerLink="/admin/hacienda">Volver al listado</a>
+  <a routerLink="/admin/hacienda" class="secondary-button">Volver al listado</a>
 </div>
+
 @if (cargando()) {
-  <p role="status">Cargando publicación…</p>
+  <p class="status-message" role="status">Cargando publicación…</p>
 }
 @if (error()) {
-  <p role="alert" class="error-message">{{ error() }}</p>
+  <p role="alert" class="field-error">{{ error() }}</p>
 }
 @if (mensaje()) {
-  <p role="status">{{ mensaje() }}</p>
+  <p class="success-message" role="status">{{ mensaje() }}</p>
 }
-<form #form="ngForm" (ngSubmit)="guardar()" class="editor">
+
+<form #form="ngForm" (ngSubmit)="guardar()" class="hacienda-form">
   <fieldset [disabled]="cargando() || ocupado() || cargaFallida()">
-    <legend>Datos de la publicación</legend>
-    <label
-      >Título <input name="titulo" [(ngModel)]="publicacion.titulo" required maxlength="255"
-    /></label>
-    <label
-      >Descripción
-      <textarea
-        name="descripcion"
-        [(ngModel)]="publicacion.descripcion"
-        maxlength="10000"
-        rows="5"
-      ></textarea>
-    </label>
-    <label
-      >Tipo
-      <select name="tipo" [(ngModel)]="publicacion.tipo" required>
-        @for (t of tipos; track t.value) {
-          <option [value]="t.value">{{ t.label }}</option>
+    <div class="form-grid">
+      <label class="form-field full">
+        <span>Título</span>
+        <input
+          name="titulo"
+          [(ngModel)]="publicacion.titulo"
+          required
+          maxlength="255"
+          placeholder="Ej: Presupuesto municipal 2026"
+        />
+      </label>
+
+      <label class="form-field full">
+        <span>Descripción</span>
+        <textarea
+          name="descripcion"
+          [(ngModel)]="publicacion.descripcion"
+          maxlength="10000"
+          rows="4"
+          placeholder="Resumen de la publicación y documentación adjunta"
+        ></textarea>
+      </label>
+
+      <label class="form-field">
+        <span>Tipo</span>
+        <select name="tipo" [(ngModel)]="publicacion.tipo" required>
+          @for (t of tipos; track t.value) {
+            <option [value]="t.value">{{ t.label }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="form-field">
+        <span>Fecha de publicación</span>
+        <input type="date" name="fecha" [(ngModel)]="publicacion.fechaPublicacion" required />
+      </label>
+
+      <label class="form-field full">
+        <span>Estado</span>
+        <select name="estado" [(ngModel)]="publicacion.estado" required>
+          <option value="BORRADOR">Borrador</option>
+          <option value="PUBLICADA" [disabled]="!archivos().length">Publicada</option>
+          <option value="ARCHIVADA">Archivada</option>
+        </select>
+        @if (!archivos().length) {
+          <small>Para publicar, guardá primero el borrador y adjuntá al menos un documento.</small>
         }
-      </select></label
-    >
-    <label
-      >Fecha de publicación
-      <input type="date" name="fecha" [(ngModel)]="publicacion.fechaPublicacion" required
-    /></label>
-    <label
-      >Estado
-      <select name="estado" [(ngModel)]="publicacion.estado" required>
-        <option value="BORRADOR">Borrador</option>
-        <option value="PUBLICADA" [disabled]="!archivos().length">Publicada</option>
-        <option value="ARCHIVADA">Archivada</option>
-      </select></label
-    >
-    <p>Para publicar, guardá primero un borrador y adjuntá al menos un documento.</p>
-    <button type="submit" [disabled]="form.invalid">
-      {{ ocupado() ? 'Guardando…' : 'Guardar publicación' }}
-    </button>
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <a routerLink="/admin/hacienda" class="cancel-button">Cancelar</a>
+      <button type="submit" [disabled]="form.invalid">
+        {{ ocupado() ? 'Guardando…' : id ? 'Guardar cambios' : 'Guardar borrador' }}
+      </button>
+    </div>
   </fieldset>
 </form>
-<section class="editor" aria-labelledby="documentos-titulo">
-  <h3 id="documentos-titulo">Documentos adjuntos</h3>
-  @if (!id) {
-    <p>Guardá el borrador para adjuntar documentos.</p>
-  } @else {
-    <label
-      >Adjuntar documento
+
+<section class="documents-panel" aria-labelledby="documentos-titulo">
+  <div class="documents-heading">
+    <div>
+      <span>Documentación</span>
+      <h3 id="documentos-titulo">Archivos adjuntos</h3>
+      <p>PDF hasta 20 MB. JPEG o PNG hasta 5 MB. Máximo 50 documentos.</p>
+    </div>
+
+    @if (id) {
       <input
+        #archivoInput
+        class="file-input"
         type="file"
         accept="application/pdf,image/jpeg,image/png"
         (change)="adjuntar($event)"
         [disabled]="ocupado() || cargando() || cargaFallida()"
-    /></label>
-    <p>
-      PDF hasta 20 MB. JPEG o PNG hasta 5 MB. Máximo 50 documentos. Los cambios de archivos se
-      guardan al instante.
-    </p>
-    @if (ocupado()) {
-      <p role="status">Procesando…</p>
+      />
+      <button
+        type="button"
+        class="file-upload"
+        (click)="archivoInput.click()"
+        [disabled]="ocupado() || cargando() || cargaFallida()"
+      >
+        {{ ocupado() ? 'Procesando…' : '+ Adjuntar archivo' }}
+      </button>
     }
-    <ol>
+  </div>
+
+  @if (!id) {
+    <div class="upload-empty">
+      <strong>Primero guardá el borrador</strong>
+      <p>Después de crear la publicación vas a poder adjuntar PDFs e imágenes desde esta misma pantalla.</p>
+    </div>
+  } @else {
+    <div class="document-list">
       @for (a of archivos(); track a.id; let i = $index) {
-        <li>
-          <span
-            >{{ a.nombreOriginal }} —
-            {{ a.tipoMime === 'application/pdf' ? 'PDF' : 'Imagen' }}</span
-          >
-          <div class="document-actions">
-            <button type="button" (click)="descargar(a)" [disabled]="ocupado()">
-              Descargar para revisar
-            </button>
-            <button
-              type="button"
-              (click)="mover(i, -1)"
-              [disabled]="ocupado() || i === 0"
-              [attr.aria-label]="'Subir ' + a.nombreOriginal"
-            >
-              Subir
-            </button>
-            <button
-              type="button"
-              (click)="mover(i, 1)"
-              [disabled]="ocupado() || i === archivos().length - 1"
-              [attr.aria-label]="'Bajar ' + a.nombreOriginal"
-            >
-              Bajar
-            </button>
-            <button
-              type="button"
-              (click)="quitar(a)"
-              [disabled]="ocupado()"
-              [attr.aria-label]="'Retirar ' + a.nombreOriginal"
-            >
-              Eliminar
-            </button>
+        <article class="document-card">
+          <div class="document-icon" aria-hidden="true">{{ a.tipoMime === 'application/pdf' ? 'PDF' : 'IMG' }}</div>
+          <div class="document-info">
+            <strong>{{ a.nombreOriginal }}</strong>
+            <span>{{ a.tipoMime === 'application/pdf' ? 'Documento PDF' : 'Imagen adjunta' }}</span>
           </div>
-        </li>
+          <div class="document-actions">
+            <button type="button" class="ghost-button" (click)="descargar(a)" [disabled]="ocupado()">Revisar</button>
+            <button type="button" class="icon-button" (click)="mover(i, -1)" [disabled]="ocupado() || i === 0" [attr.aria-label]="'Subir ' + a.nombreOriginal">↑</button>
+            <button type="button" class="icon-button" (click)="mover(i, 1)" [disabled]="ocupado() || i === archivos().length - 1" [attr.aria-label]="'Bajar ' + a.nombreOriginal">↓</button>
+            <button type="button" class="danger-button" (click)="quitar(a)" [disabled]="ocupado()" [attr.aria-label]="'Retirar ' + a.nombreOriginal">Eliminar</button>
+          </div>
+        </article>
       } @empty {
-        <li>No hay documentos adjuntos.</li>
+        <div class="upload-empty">
+          <strong>Todavía no hay archivos</strong>
+          <p>Usá “Adjuntar archivo” para cargar la documentación de esta publicación.</p>
+        </div>
       }
-    </ol>
+    </div>
   }
 </section>

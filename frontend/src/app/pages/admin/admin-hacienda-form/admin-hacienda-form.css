@@ -1,52 +1,349 @@
-.editor {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  margin: 1.5rem 0;
+.admin-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
-.editor fieldset {
+
+.admin-page-header span,
+.documents-heading > div > span {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #258b5b;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-page-header h2,
+.documents-heading h3 {
+  margin: 0;
+  color: #12382b;
+}
+
+.admin-page-header h2 {
+  font-size: 1.8rem;
+}
+
+.admin-page-header p,
+.documents-heading p {
+  margin: 0.5rem 0 0;
+  color: #687970;
+  line-height: 1.5;
+}
+
+.secondary-button {
+  color: #0f6b45;
+  text-decoration: none;
+  border: 1px solid #b7d8c8;
+  border-radius: 0.7rem;
+  padding: 0.85rem 1rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.hacienda-form,
+.documents-panel {
+  border: 1px solid #e4eee8;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  background: #fff;
+}
+
+.documents-panel {
+  margin-top: 1.25rem;
+}
+
+.hacienda-form fieldset {
   border: 0;
+  margin: 0;
   padding: 0;
 }
-.editor label {
+
+.form-grid {
   display: grid;
-  gap: 0.4rem;
-  margin: 1rem 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
 }
-.editor input,
-.editor select,
-.editor textarea {
-  padding: 0.7rem;
-  border: 1px solid #9ca3af;
-  border-radius: 0.4rem;
-  font: inherit;
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.form-field.full {
+  grid-column: 1 / -1;
+}
+
+.form-field span {
+  color: #315347;
+  font-weight: 800;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
   width: 100%;
   box-sizing: border-box;
+  border: 1px solid #cfe0d7;
+  border-radius: 0.7rem;
+  padding: 0.85rem 1rem;
+  color: #12382b;
+  font: inherit;
+  background: #fff;
 }
-.editor li {
-  padding: 1rem 0;
-  border-bottom: 1px solid #ddd;
+
+.form-field textarea {
+  resize: vertical;
+}
+
+.form-field small {
+  color: #718078;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  outline: 2px solid rgba(15, 107, 69, 0.2);
+  border-color: #0f6b45;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.cancel-button {
+  color: #5b6b63;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.form-actions button,
+.file-upload {
+  border: 0;
+  border-radius: 0.7rem;
+  padding: 0.9rem 1.2rem;
+  background: #0f6b45;
+  color: #fff;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.form-actions button:disabled,
+.file-upload:disabled,
+.document-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.documents-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.15rem;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-upload {
+  flex: 0 0 auto;
+  background: #f4fbf7;
+  color: #0f6b45;
+  border: 1px dashed #8abfa3;
+}
+
+.document-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.document-card {
+  display: grid;
+  grid-template-columns: 3.4rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid #e4eee8;
+  border-radius: 0.9rem;
+  padding: 0.9rem 1rem;
+  background: #fbfdfc;
+}
+
+.document-icon {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 0.8rem;
+  background: #e6f5ed;
+  color: #0f6b45;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.document-info {
+  min-width: 0;
+}
+
+.document-info strong,
+.document-info span {
+  display: block;
+}
+
+.document-info strong {
+  color: #12382b;
   overflow-wrap: anywhere;
 }
+
+.document-info span {
+  margin-top: 0.25rem;
+  color: #738078;
+  font-size: 0.86rem;
+}
+
 .document-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.7rem;
+  justify-content: flex-end;
+  gap: 0.45rem;
 }
-.error-message {
+
+.document-actions button {
+  border-radius: 0.65rem;
+  padding: 0.65rem 0.8rem;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.ghost-button,
+.icon-button {
+  border: 1px solid #cfe0d7;
+  background: #fff;
+  color: #0f6b45;
+}
+
+.icon-button {
+  min-width: 2.5rem;
+}
+
+.danger-button {
+  border: 1px solid #fecaca;
+  background: #fff7f7;
+  color: #a32323;
+}
+
+.upload-empty {
+  border: 1px dashed #bcd7c8;
+  border-radius: 0.9rem;
+  padding: 1.5rem;
+  text-align: center;
+  background: #f8fcfa;
+}
+
+.upload-empty strong {
+  color: #12382b;
+}
+
+.upload-empty p {
+  margin: 0.4rem 0 0;
+  color: #6c7b73;
+}
+
+.field-error,
+.success-message,
+.status-message {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+}
+
+.field-error {
   color: #991b1b;
+  background: #fff7f7;
+  border: 1px solid #fecaca;
 }
-.editor button {
-  padding: 0.5rem 0.8rem;
+
+.success-message {
+  color: #166534;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
 }
-.editor button:disabled {
-  opacity: 0.6;
+
+.status-message {
+  color: #315347;
+  background: #f4f8f5;
+  border: 1px solid #e4eee8;
 }
+
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
-button:focus-visible {
-  outline: 3px solid #166534;
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(22, 101, 52, 0.28);
   outline-offset: 2px;
+}
+
+@media (max-width: 60rem) {
+  .document-card {
+    grid-template-columns: 3.4rem 1fr;
+  }
+
+  .document-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 48rem) {
+  .admin-page-header,
+  .documents-heading {
+    flex-direction: column;
+  }
+
+  .secondary-button,
+  .file-upload {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .form-actions button,
+  .cancel-button {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .document-card {
+    grid-template-columns: 1fr;
+  }
+
+  .document-actions {
+    grid-column: auto;
+  }
 }

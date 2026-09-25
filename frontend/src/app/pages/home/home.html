@@ -18,9 +18,23 @@
         </div>
       </div>
 
-      <div class="quick-panel" aria-label="Accesos rápidos">
+      <div class="hero-photo" [style.background-image]="'url(' + contenido.hero.imagen + ')'">
+        <div class="photo-caption">
+          <span class="caption-pin" aria-hidden="true">●</span>
+          <div><strong>Ensenada</strong><small>Municipalidad de Ensenada</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="quick-section" aria-label="Accesos rápidos">
+    <div class="section-shell">
+      <div class="quick-panel">
         <div class="quick-heading">
-          <h2>{{ contenido.accesosTitulo }}</h2>
+          <div>
+            <span class="section-kicker">Accesos rápidos</span>
+            <h2>{{ contenido.accesosTitulo }}</h2>
+          </div>
           <a href="#tramites">Ver todos los servicios <span aria-hidden="true">→</span></a>
         </div>
 
@@ -40,13 +54,6 @@
               </a>
             }
           }
-        </div>
-      </div>
-
-      <div class="hero-photo" [style.background-image]="'url(' + contenido.hero.imagen + ')'">
-        <div class="photo-caption">
-          <span class="caption-pin" aria-hidden="true">●</span>
-          <div><strong>Ensenada</strong><small>Municipalidad de Ensenada</small></div>
         </div>
       </div>
     </div>

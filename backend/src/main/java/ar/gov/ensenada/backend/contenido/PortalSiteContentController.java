@@ -1,10 +1,10 @@
 package ar.gov.ensenada.backend.contenido;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,18 +16,22 @@ public class PortalSiteContentController {
         this.service = service;
     }
 
-    @GetMapping("/api/site-content")
-    public JsonNode obtenerPublico() {
-        return service.obtener();
+    @GetMapping(value = "/api/site-content", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> obtenerPublico() {
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(service.obtener());
     }
 
-    @GetMapping("/api/admin/site-content")
-    public JsonNode obtenerAdmin() {
-        return service.obtener();
+    @GetMapping(value = "/api/admin/site-content", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> obtenerAdmin() {
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(service.obtener());
     }
 
-    @PutMapping("/api/admin/site-content")
-    public JsonNode guardar(@RequestBody JsonNode contenido) {
-        return service.guardar(contenido);
+    @PutMapping(
+            value = "/api/admin/site-content",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<String> guardar(@RequestBody String contenido) {
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(service.guardar(contenido));
     }
 }

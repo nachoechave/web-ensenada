@@ -14,18 +14,24 @@ import java.util.List;
 public class JwtService {
 
     private final JwtEncoder jwtEncoder;
+    private final UsuarioRepository usuarioRepository;
     private final long expirationMinutes;
 
     public JwtService(
             JwtEncoder jwtEncoder,
+            UsuarioRepository usuarioRepository,
             @Value("${app.jwt.expiration-minutes}") long expirationMinutes
     ) {
         this.jwtEncoder = jwtEncoder;
+        this.usuarioRepository = usuarioRepository;
         this.expirationMinutes = expirationMinutes;
     }
 
     public String generarToken(Authentication authentication) {
         Instant ahora = Instant.now();
+
+        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(authentication.getName())
+                .orElseThrow(() -> new IllegalStateException("Usuario autenticado no encontrado"));
 
         List<String> roles = authentication.getAuthorities()
                 .stream()
@@ -39,6 +45,7 @@ public class JwtService {
                 .expiresAt(ahora.plus(expirationMinutes, ChronoUnit.MINUTES))
                 .subject(authentication.getName())
                 .claim("roles", roles)
+                .claim("tokenVersion", usuario.getTokenVersion())
                 .build();
 
         JwsHeader header = JwsHeader.with(MacAlgorithm.HS256).build();

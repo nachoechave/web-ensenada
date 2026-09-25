@@ -15,12 +15,13 @@ class MySqlMigrationTests {
     @Autowired JdbcTemplate jdbc;
     @Autowired Flyway flyway;
     @Autowired EntityManagerFactory entityManagerFactory;
-    @Test void v1Yv2EnMySqlRealConHibernateValidate(){
+    @Test void v1Av3EnMySqlRealConHibernateValidate(){
         assertTrue(entityManagerFactory.isOpen());
-        assertEquals("2",flyway.info().current().getVersion().toString());
-        assertEquals(2,flyway.info().applied().length);
+        assertEquals("3",flyway.info().current().getVersion().toString());
+        assertEquals(3,flyway.info().applied().length);
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM publicaciones_hacienda",Integer.class));
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM archivos_hacienda",Integer.class));
+        assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM usuarios WHERE token_version <> 0",Integer.class));
         assertTrue(jdbc.queryForObject("SELECT VERSION()",String.class).startsWith("8."));
     }
 }

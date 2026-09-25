@@ -1,0 +1,168 @@
+.portal-hero {
+  min-height: 38rem;
+  background: #f7faf8;
+  isolation: isolate;
+}
+
+.portal-hero::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: .5;
+  width: 54%;
+  content: '';
+  pointer-events: none;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, .99) 0%,
+      rgba(255, 255, 255, .97) 48%,
+      rgba(255, 255, 255, .88) 66%,
+      rgba(255, 255, 255, .58) 82%,
+      rgba(255, 255, 255, 0) 100%
+    );
+}
+
+.hero-photo-strip {
+  width: 66.666%;
+  background-position: center center;
+  background-size: cover;
+}
+
+.hero-photo-strip::after {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(247, 250, 248, .98) 0%,
+      rgba(247, 250, 248, .86) 13%,
+      rgba(247, 250, 248, .48) 27%,
+      rgba(247, 250, 248, .14) 42%,
+      rgba(247, 250, 248, 0) 58%
+    );
+}
+
+.hero-grid {
+  min-height: 38rem;
+  grid-template-columns: minmax(23rem, .78fr) minmax(34rem, 1.22fr);
+  gap: 3.25rem;
+  padding: 4.5rem 0 5rem;
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 32rem;
+}
+
+.hero-copy::before {
+  position: absolute;
+  inset: -3rem -5rem -3rem -3rem;
+  z-index: -1;
+  content: '';
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse at 28% 48%,
+      rgba(255, 255, 255, .98) 0%,
+      rgba(255, 255, 255, .94) 34%,
+      rgba(255, 255, 255, .78) 54%,
+      rgba(255, 255, 255, .42) 72%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  filter: blur(3px);
+}
+
+.hero-copy h1 {
+  max-width: 31rem;
+  text-shadow: 0 .08rem .5rem rgba(255, 255, 255, .5);
+}
+
+.hero-copy > p {
+  max-width: 30rem;
+}
+
+.quick-panel {
+  position: relative;
+  z-index: 3;
+  width: min(100%, 43rem);
+  justify-self: end;
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 1.4rem 3.8rem rgba(2, 42, 31, .12);
+  backdrop-filter: blur(.65rem);
+}
+
+@media (max-width: 74rem) {
+  .portal-hero::before {
+    width: 58%;
+  }
+
+  .hero-photo-strip {
+    width: 62%;
+  }
+
+  .hero-grid {
+    grid-template-columns: minmax(20rem, .82fr) minmax(28rem, 1.18fr);
+    gap: 2.25rem;
+  }
+}
+
+@media (max-width: 58rem) {
+  .portal-hero {
+    min-height: auto;
+  }
+
+  .portal-hero::before {
+    inset: 0;
+    width: 100%;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, .98) 0%,
+        rgba(255, 255, 255, .95) 36%,
+        rgba(255, 255, 255, .76) 62%,
+        rgba(255, 255, 255, .28) 84%,
+        rgba(255, 255, 255, 0) 100%
+      );
+  }
+
+  .hero-photo-strip {
+    display: block;
+    width: 100%;
+    opacity: .42;
+  }
+
+  .hero-photo-strip::after {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(247, 250, 248, .9) 0%,
+        rgba(247, 250, 248, .58) 45%,
+        rgba(247, 250, 248, .12) 100%
+      );
+  }
+
+  .hero-grid {
+    min-height: auto;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 4rem 0;
+  }
+
+  .hero-copy {
+    max-width: 38rem;
+  }
+
+  .hero-copy::before {
+    inset: -2rem;
+  }
+
+  .quick-panel {
+    width: 100%;
+    justify-self: stretch;
+  }
+}
+
+@media (max-width: 38rem) {
+  .hero-copy::before {
+    inset: -1.25rem;
+  }
+}

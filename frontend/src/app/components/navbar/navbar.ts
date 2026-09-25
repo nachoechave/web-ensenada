@@ -9,7 +9,7 @@ import { PortalContentService } from '../../services/portal-content.service';
   selector: 'app-navbar',
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './navbar.html',
-  styleUrl: './navbar.css',
+  styleUrls: ['./navbar.css', './navbar-visual-overrides.css'],
 })
 export class Navbar {
   private readonly portalContentService = inject(PortalContentService);

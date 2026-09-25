@@ -35,6 +35,9 @@ public class Usuario {
     @Column(nullable = false)
     private boolean activo = true;
 
+    @Column(name = "token_version", nullable = false)
+    private long tokenVersion = 0;
+
     public Usuario() {
     }
 
@@ -79,6 +82,10 @@ public class Usuario {
         return activo;
     }
 
+    public long getTokenVersion() {
+        return tokenVersion;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -106,6 +113,14 @@ public class Usuario {
 
     public void setActivo(boolean activo) {
         this.activo = activo;
+    }
+
+    public void setTokenVersion(long tokenVersion) {
+        this.tokenVersion = tokenVersion;
+    }
+
+    public void incrementarTokenVersion() {
+        this.tokenVersion++;
     }
 
     private String obtenerRolPrincipal(Set<RolUsuario> roles) {

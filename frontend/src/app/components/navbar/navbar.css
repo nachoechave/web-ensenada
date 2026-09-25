@@ -32,9 +32,11 @@
 .topbar-info > span { gap: .35rem; }
 .topbar-info svg { width: .9rem; height: .9rem; fill: none; stroke: currentColor; stroke-width: 1.9; }
 .topbar-separator { width: 1px; height: .85rem; background: rgba(255,255,255,.35); }
-.topbar-social { gap: .45rem; }
-.topbar-social a { width: 1.6rem; height: 1.6rem; display: grid; place-items: center; border-radius: 50%; color: #fff; text-decoration: none; font-weight: 700; }
+.topbar-social { gap: .4rem; }
+.topbar-social a { width: 1.75rem; height: 1.75rem; display: grid; place-items: center; border-radius: 50%; color: #fff; text-decoration: none; }
 .topbar-social a:hover { background: rgba(255,255,255,.14); }
+.topbar-social .social-icon { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.topbar-social .social-fill { fill: currentColor; stroke: none; }
 
 .navbar {
   position: sticky;
@@ -66,7 +68,8 @@
   width: 20rem;
   height: 4rem;
   display: block;
-  background: url('/assets/escudo-ensenada.png') left center / contain no-repeat;
+  object-fit: contain;
+  object-position: left center;
 }
 
 .nav-links {

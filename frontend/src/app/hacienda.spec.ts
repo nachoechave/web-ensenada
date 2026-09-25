@@ -194,8 +194,9 @@ describe('Hacienda', () => {
     expect(
       fixture.nativeElement.querySelector('a[href="/uploads/hacienda/documento.pdf"]').textContent,
     ).toContain('Ver documento');
-    expect(fixture.nativeElement.querySelector('img').getAttribute('loading')).toBe('lazy');
-    expect(fixture.nativeElement.querySelector('img').alt).toContain('pagina.png');
+    const documentImage = fixture.nativeElement.querySelector('.document img');
+    expect(documentImage.getAttribute('loading')).toBe('lazy');
+    expect(documentImage.alt).toContain('pagina.png');
   });
 
   it('detalle no disponible muestra error y limpia al cambiar id', () => {

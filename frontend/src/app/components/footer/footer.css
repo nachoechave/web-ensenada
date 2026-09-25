@@ -18,7 +18,7 @@
 }
 
 .footer-brand-block p { max-width: 20rem; margin: .75rem 0 0; color: #cce4da; font-size: .75rem; line-height: 1.55; }
-.footer-logo { width: 15.5rem; height: 3.4rem; display: block; filter: brightness(0) invert(1); background: url('/assets/escudo-ensenada.png') left center / contain no-repeat; }
+.footer-logo { width: 15.5rem; height: 3.4rem; display: block; object-fit: contain; object-position: left center; filter: brightness(0) invert(1); }
 
 .footer-column strong { display: block; margin-bottom: .65rem; color: #fff; font-size: .78rem; }
 .footer-column a,
@@ -45,8 +45,10 @@
 .map-dot { color: #e5504e; }
 
 .footer-socials { display: flex; gap: .45rem; }
-.footer-socials a { width: 1.75rem; height: 1.75rem; display: grid; place-items: center; border-radius: 50%; color: #fff; background: rgba(255,255,255,.1); text-decoration: none; font-weight: 700; }
+.footer-socials a { width: 1.9rem; height: 1.9rem; display: grid; place-items: center; border-radius: 50%; color: #fff; background: rgba(255,255,255,.1); text-decoration: none; }
 .footer-socials a:hover { background: rgba(255,255,255,.2); }
+.footer-socials .social-icon { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.footer-socials .social-fill { fill: currentColor; stroke: none; }
 
 .footer-bottom { border-top: 1px solid rgba(255,255,255,.15); }
 .footer-bottom-inner { min-height: 3.2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: #bfd9cf; font-size: .64rem; }

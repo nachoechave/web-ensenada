@@ -18,7 +18,7 @@ export const defaultPortalContent: PortalContent = {
     hacienda: 'Hacienda',
     contacto: 'Contacto',
     boletinTexto: 'Boletín Oficial',
-    boletinUrl: 'https://www.ensenada.gov.ar/boletin-oficial/',
+    boletinUrl: 'https://boletinoficial.ensenada.gov.ar/index.php',
   },
   hero: {
     eyebrow: 'Ensenada · Buenos Aires',

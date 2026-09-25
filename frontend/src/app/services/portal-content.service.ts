@@ -69,6 +69,10 @@ export class PortalContentService {
       footer: { ...base.footer, ...contenido.footer },
     } as PortalContent;
 
+    // El Boletín Oficial tiene un destino institucional único. Esto también corrige
+    // configuraciones antiguas guardadas en la base con la URL del portal anterior.
+    combinado.navbar.boletinUrl = base.navbar.boletinUrl;
+
     const accesosGuardados = contenido.accesos ?? [];
     const accesosLegacy = ['Licencias', 'Ambiente', 'Desarrollo Social', 'Obras Públicas', 'Salud', 'Deportes'];
     const conservaAccesosLegacy =

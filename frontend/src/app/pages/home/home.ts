@@ -13,7 +13,7 @@ import { PortalContentService } from '../../services/portal-content.service';
   selector: 'app-home',
   imports: [RouterLink, Navbar, NoticiasDestacadas, Footer, PortalIcon],
   templateUrl: './home.html',
-  styleUrl: './home.css',
+  styleUrls: ['./home.css', './home-hero-overrides.css'],
 })
 export class Home {
   private readonly portalContentService = inject(PortalContentService);

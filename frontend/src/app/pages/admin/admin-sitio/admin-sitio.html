@@ -72,9 +72,9 @@
           <div class="hero-image-add">
             <label>Agregar por URL<input [(ngModel)]="nuevaImagenHero" placeholder="https://… o /uploads/…" /></label>
             <button type="button" class="secondary" (click)="agregarImagenHeroUrl()">Agregar URL</button>
-            <label class="upload-button">Subir JPG/PNG<input type="file" accept="image/jpeg,image/png" (change)="subirImagen($event, 'hero')" /></label>
+            <label class="upload-button">Subir imagen<input type="file" accept="image/*" (change)="subirImagen($event, 'hero')" /></label>
           </div>
-          <p class="helper">La primera imagen es la inicial. Podés subir fotos reales, cambiar el orden y quitarlas sin tocar código.</p>
+          <p class="helper">La primera imagen es la inicial. Podés subir imágenes de hasta 30 MB: el servidor las redimensiona y comprime automáticamente antes de guardarlas.</p>
 
           <div class="hero-image-list">
             @for (imagen of contenido.hero.imagenes; track $index) {
@@ -131,9 +131,10 @@
           <label>Descripción<textarea rows="3" [(ngModel)]="contenido.intendencia.descripcion"></textarea></label>
           <div class="image-field">
             <label>Imagen<input [(ngModel)]="contenido.intendencia.imagen" /></label>
-            <label class="upload-button">Subir JPG/PNG<input type="file" accept="image/jpeg,image/png" (change)="subirImagen($event, 'intendencia')" /></label>
+            <label class="upload-button">Subir imagen<input type="file" accept="image/*" (change)="subirImagen($event, 'intendencia')" /></label>
             @if (contenido.intendencia.imagen) { <img [src]="contenido.intendencia.imagen" alt="Vista previa de Intendencia" /> }
           </div>
+          <p class="helper">Podés subir imágenes de hasta 30 MB. El servidor las optimiza automáticamente para la web.</p>
           <div class="fields four">
             <label>Botón principal<input [(ngModel)]="contenido.intendencia.botonTexto" /></label><label>URL principal<input [(ngModel)]="contenido.intendencia.botonUrl" /></label>
             <label>Botón secundario<input [(ngModel)]="contenido.intendencia.secundarioTexto" /></label><label>URL secundario<input [(ngModel)]="contenido.intendencia.secundarioUrl" /></label>
@@ -207,7 +208,7 @@
     </div>
 
     <div class="sticky-save">
-      <span>@if (subiendoImagen) { Subiendo imagen… } @else { Los cambios no se publican hasta guardar. }</span>
+      <span>@if (subiendoImagen) { Subiendo y optimizando imagen… } @else { Los cambios no se publican hasta guardar. }</span>
       <button type="button" class="primary" [disabled]="guardando || subiendoImagen" (click)="guardar()">{{ guardando ? 'Guardando…' : 'Guardar y publicar' }}</button>
     </div>
   }

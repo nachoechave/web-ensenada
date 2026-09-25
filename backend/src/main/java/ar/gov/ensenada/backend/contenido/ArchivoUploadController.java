@@ -1,6 +1,7 @@
 package ar.gov.ensenada.backend.contenido;
 
 import ar.gov.ensenada.backend.archivos.ImagenSegura;
+import ar.gov.ensenada.backend.archivos.ImagenSitioOptimizada;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,26 +27,27 @@ public class ArchivoUploadController {
 
     @PostMapping(value = "/noticias", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ArchivoUploadResponse subirNoticia(@RequestParam("archivo") MultipartFile archivo) {
-        return guardarImagen(archivo, "noticias");
+        var image = ImagenSegura.procesar(archivo);
+        return guardarImagen(image.bytes(), image.extension(), image.mime(), "noticias");
     }
 
     @PostMapping(value = "/sitio", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ArchivoUploadResponse subirSitio(@RequestParam("archivo") MultipartFile archivo) {
-        return guardarImagen(archivo, "sitio");
+        var image = ImagenSitioOptimizada.procesar(archivo);
+        return guardarImagen(image.bytes(), image.extension(), image.mime(), "sitio");
     }
 
-    private ArchivoUploadResponse guardarImagen(MultipartFile archivo, String carpeta) {
-        var image = ImagenSegura.procesar(archivo);
-        String filename = UUID.randomUUID() + "." + image.extension();
+    private ArchivoUploadResponse guardarImagen(byte[] bytes, String extension, String mime, String carpeta) {
+        String filename = UUID.randomUUID() + "." + extension;
         Path directory = Path.of(uploadsDir, carpeta).toAbsolutePath().normalize();
         try {
             Files.createDirectories(directory);
-            Files.write(directory.resolve(filename), image.bytes(), StandardOpenOption.CREATE_NEW);
+            Files.write(directory.resolve(filename), bytes, StandardOpenOption.CREATE_NEW);
             return new ArchivoUploadResponse(
                     "/uploads/" + carpeta + "/" + filename,
                     filename,
-                    image.mime(),
-                    image.bytes().length
+                    mime,
+                    bytes.length
             );
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "No se pudo guardar la imagen");

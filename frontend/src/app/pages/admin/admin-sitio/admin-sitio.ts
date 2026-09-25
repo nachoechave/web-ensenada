@@ -160,7 +160,8 @@ export class AdminSitio {
         this.cdr.markForCheck();
       },
       error: () => {
-        this.error = 'No se pudo subir la imagen. Usá JPG o PNG dentro del límite permitido.';
+        this.error =
+          'No se pudo procesar la imagen. Probá con una imagen raster común de hasta 30 MB; el servidor la comprime automáticamente.';
         this.subiendoImagen = false;
         input.value = '';
         this.cdr.markForCheck();

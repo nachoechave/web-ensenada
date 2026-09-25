@@ -24,6 +24,10 @@ export class AdminSitio {
 
   readonly iconos = [
     ['document', 'Documento'],
+    ['receipt', 'Recibo'],
+    ['invoice', 'Factura'],
+    ['mail', 'Correo'],
+    ['providers', 'Proveedores'],
     ['coins', 'Tasas / monedas'],
     ['calendar', 'Calendario'],
     ['building', 'Edificio'],

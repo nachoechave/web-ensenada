@@ -3,7 +3,6 @@ import { HaciendaDetalle } from './pages/hacienda-detalle/hacienda-detalle';
 import { AdminHacienda } from './pages/admin/admin-hacienda/admin-hacienda';
 import { AdminHaciendaForm } from './pages/admin/admin-hacienda-form/admin-hacienda-form';
 import { Routes } from '@angular/router';
-import { ServicioExterno } from './pages/servicio-externo/servicio-externo';
 
 import { adminGuard } from './core/admin.guard';
 import { roleGuard } from './core/role.guard';
@@ -18,6 +17,7 @@ import { AdminUsuarios } from './pages/admin/admin-usuarios/admin-usuarios';
 import { Home } from './pages/home/home';
 import { NoticiaDetalle } from './pages/noticia-detalle/noticia-detalle';
 import { Noticias } from './pages/noticias/noticias';
+import { RegistroProveedores } from './pages/registro-proveedores/registro-proveedores';
 
 export const routes: Routes = [
   { path: 'hacienda/:id', component: HaciendaDetalle },
@@ -28,9 +28,8 @@ export const routes: Routes = [
   },
   {
     path: 'registro-proveedores',
-    component: ServicioExterno,
-    data: { servicio: 'proveedores', nombre: 'Registro Municipal de Proveedores' },
-    title: 'Proveedores | Municipalidad de Ensenada',
+    component: RegistroProveedores,
+    title: 'Registro Municipal de Proveedores | Municipalidad de Ensenada',
   },
   {
     path: '',

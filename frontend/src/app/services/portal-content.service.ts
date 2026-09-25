@@ -69,7 +69,18 @@ export class PortalContentService {
       footer: { ...base.footer, ...contenido.footer },
     } as PortalContent;
 
-    combinado.accesos = contenido.accesos ?? base.accesos;
+    const accesosGuardados = contenido.accesos ?? [];
+    const accesosLegacy = ['Licencias', 'Ambiente', 'Desarrollo Social', 'Obras Públicas', 'Salud', 'Deportes'];
+    const conservaAccesosLegacy =
+      accesosGuardados.length === accesosLegacy.length &&
+      accesosGuardados.every((item, index) => item.titulo === accesosLegacy[index]);
+
+    combinado.accesos =
+      accesosGuardados.length === 0 || conservaAccesosLegacy ? base.accesos : accesosGuardados;
+    if (!contenido.accesosTitulo || contenido.accesosTitulo === 'Accesos rápidos') {
+      combinado.accesosTitulo = base.accesosTitulo;
+    }
+
     combinado.tramites.items = contenido.tramites?.items ?? base.tramites.items;
     combinado.areas.items = contenido.areas?.items ?? base.areas.items;
     combinado.agenda.items = contenido.agenda?.items ?? base.agenda.items;

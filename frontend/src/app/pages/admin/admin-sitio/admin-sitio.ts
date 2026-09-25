@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { cloneDefaultPortalContent } from '../../../config/site-content';
@@ -13,6 +13,7 @@ import { PortalContentService } from '../../../services/portal-content.service';
 })
 export class AdminSitio {
   private readonly portalContentService = inject(PortalContentService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   contenido = cloneDefaultPortalContent();
   cargando = true;
@@ -50,10 +51,12 @@ export class AdminSitio {
       next: (contenido) => {
         this.contenido = contenido;
         this.cargando = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.error = 'No se pudo cargar la configuración del sitio.';
         this.cargando = false;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -73,10 +76,12 @@ export class AdminSitio {
         this.contenido = contenido;
         this.guardando = false;
         this.mensaje = 'Cambios guardados. La home pública ya usa esta configuración.';
+        this.cdr.markForCheck();
       },
       error: () => {
         this.guardando = false;
         this.error = 'No se pudieron guardar los cambios.';
+        this.cdr.markForCheck();
       },
     });
   }
@@ -152,11 +157,13 @@ export class AdminSitio {
         }
         this.subiendoImagen = false;
         input.value = '';
+        this.cdr.markForCheck();
       },
       error: () => {
         this.error = 'No se pudo subir la imagen. Usá JPG o PNG dentro del límite permitido.';
         this.subiendoImagen = false;
         input.value = '';
+        this.cdr.markForCheck();
       },
     });
   }

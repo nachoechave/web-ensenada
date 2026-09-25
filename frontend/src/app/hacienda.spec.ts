@@ -284,7 +284,7 @@ describe('Hacienda', () => {
     fixture.componentInstance.adjuntar({
       target: { files: [new File(['<svg/>'], 'x.svg', { type: 'image/svg+xml' })], value: '' },
     } as unknown as Event);
-    expect(fixture.componentInstance.error).toContain('PDF');
+    expect(fixture.componentInstance.error()).toContain('PDF');
     http.expectNone('/api/admin/hacienda/1/archivos');
   });
 

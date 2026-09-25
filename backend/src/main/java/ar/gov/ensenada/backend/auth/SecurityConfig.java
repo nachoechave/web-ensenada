@@ -53,6 +53,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/actuator/health", "/actuator/health/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/me").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/auth/me").authenticated()
@@ -137,6 +138,13 @@ public class SecurityConfig {
             Usuario usuario = repository.findByEmailIgnoreCase(jwt.getSubject())
                 .filter(Usuario::isActivo)
                 .orElseThrow(() -> new org.springframework.security.oauth2.core.OAuth2AuthenticationException("invalid_token"));
+
+            Object tokenVersionClaim = jwt.getClaim("tokenVersion");
+            long tokenVersion = tokenVersionClaim instanceof Number number ? number.longValue() : -1;
+            if (tokenVersion != usuario.getTokenVersion()) {
+                throw new org.springframework.security.oauth2.core.OAuth2AuthenticationException("invalid_token");
+            }
+
             return usuario.getRoles().stream()
                 .map(rol -> (org.springframework.security.core.GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + rol.name())).toList();
         });

@@ -11,7 +11,7 @@
       @for (imagen of contenido.hero.imagenes; track imagen; let i = $index) {
         <div
           class="hero-slide"
-          [class.active]="i === heroIndex"
+          [class.active]="i === heroIndex()"
           [style.background-image]="'url(' + imagen + ')'"
         ></div>
       }
@@ -39,9 +39,9 @@
           @for (imagen of contenido.hero.imagenes; track imagen; let i = $index) {
             <button
               type="button"
-              [class.active]="i === heroIndex"
+              [class.active]="i === heroIndex()"
               [attr.aria-label]="'Mostrar imagen ' + (i + 1)"
-              [attr.aria-current]="i === heroIndex ? 'true' : null"
+              [attr.aria-current]="i === heroIndex() ? 'true' : null"
               (click)="seleccionarHero(i)"
             ></button>
           }
@@ -80,10 +80,6 @@
 
   <section id="municipio" class="portal-section mayor-section" aria-labelledby="municipio-title">
     <div class="section-shell mayor-feature">
-      <div class="mayor-photo">
-        <img [src]="contenido.intendencia.imagen" [alt]="contenido.intendencia.nombre" />
-      </div>
-
       <div class="mayor-copy">
         <span class="section-kicker">{{ contenido.intendencia.kicker }}</span>
         <h2 id="municipio-title">{{ contenido.intendencia.nombre }}</h2>
@@ -98,11 +94,9 @@
         </div>
       </div>
 
-      <blockquote class="mayor-quote">
-        <span class="quote-mark">“</span>
-        <p>{{ contenido.intendencia.cita }}</p>
-        <footer><strong>{{ contenido.intendencia.nombre }}</strong><small>Intendente de Ensenada</small></footer>
-      </blockquote>
+      <div class="mayor-photo">
+        <img [src]="contenido.intendencia.imagen" [alt]="contenido.intendencia.nombre" />
+      </div>
     </div>
   </section>
 

@@ -8,11 +8,14 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
+import { of } from 'rxjs';
 import { vi } from 'vitest';
 import { adminGuard } from './core/admin.guard';
 import { roleGuard } from './core/role.guard';
 import { AuthService } from './services/auth.service';
 import { NoticiasService } from './services/noticias.service';
+import { PortalContentService } from './services/portal-content.service';
+import { cloneDefaultPortalContent } from './config/site-content';
 import { AdminNoticias } from './pages/admin/admin-noticias/admin-noticias';
 import { AdminNoticiaForm } from './pages/admin/admin-noticia-form/admin-noticia-form';
 import { Noticias } from './pages/noticias/noticias';
@@ -32,8 +35,9 @@ const news: Noticia = {
   estado: 'PUBLICADA',
   destacada: true,
 };
+
 describe('Portal de prensa', () => {
-  it('las rutas conservan noticias y accesos externos sin módulos CMS', () => {
+  it('las rutas conservan noticias y agregan el CMS del sitio para SuperAdmin', () => {
     expect(routes.map((route) => route.path)).toEqual([
       'hacienda/:id',
       'hacienda',
@@ -51,6 +55,7 @@ describe('Portal de prensa', () => {
       'hacienda/nueva',
       'hacienda/editar/:id',
       '',
+      'sitio',
       'noticias',
       'noticias/nueva',
       'noticias/editar/:id',
@@ -58,9 +63,14 @@ describe('Portal de prensa', () => {
       'mi-cuenta',
     ]);
     expect(admin.canActivateChild).toContain(adminGuard);
+    expect(admin.children?.find((route) => route.path === 'sitio')?.data?.['roles']).toEqual([
+      'SUPER_ADMIN',
+    ]);
   });
+
   let http: HttpTestingController;
   let params: Map<string, string>;
+
   beforeEach(() => {
     localStorage.clear();
     params = new Map();
@@ -70,15 +80,23 @@ describe('Portal de prensa', () => {
         provideHttpClientTesting(),
         provideRouter([]),
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: params } } },
+        {
+          provide: PortalContentService,
+          useValue: {
+            obtenerPublico: () => of(cloneDefaultPortalContent()),
+          },
+        },
       ],
     });
     http = TestBed.inject(HttpTestingController);
   });
+
   afterEach(() => {
     http.verify();
     localStorage.clear();
     vi.restoreAllMocks();
   });
+
   function session(roles: string[] = ['PRENSA']) {
     localStorage.setItem('admin-token', 'test');
     localStorage.setItem(
@@ -86,6 +104,7 @@ describe('Portal de prensa', () => {
       JSON.stringify({ nombre: 'Prensa', email: 'prensa@example.test', roles }),
     );
   }
+
   it('el guard redirige sin sesión y permite una sesión válida', () => {
     const run = () =>
       TestBed.runInInjectionContext(() =>
@@ -95,6 +114,7 @@ describe('Portal de prensa', () => {
     session();
     expect(run()).toBe(true);
   });
+
   it('PRENSA no accede a usuarios; SUPER_ADMIN sí', () => {
     const run = () =>
       TestBed.runInInjectionContext(() =>
@@ -108,6 +128,7 @@ describe('Portal de prensa', () => {
     session(['SUPER_ADMIN']);
     expect(run()).toBe(true);
   });
+
   it('el menú del periodista contiene solo noticias y cuenta', () => {
     session();
     const fixture = TestBed.createComponent(AdminLayout);
@@ -115,9 +136,11 @@ describe('Portal de prensa', () => {
     const text = fixture.nativeElement.querySelector('nav').textContent;
     expect(text).toContain('Noticias');
     expect(text).toContain('Mi cuenta');
+    expect(text).not.toContain('Sitio público');
     expect(text).not.toContain('Usuarios y roles');
     expect(text).not.toContain('Hacienda');
   });
+
   it('login guarda únicamente la sesión recibida', () => {
     const auth = TestBed.inject(AuthService);
     auth.login({ email: 'p@example.test', password: 'password' }).subscribe();
@@ -127,6 +150,7 @@ describe('Portal de prensa', () => {
     expect(auth.obtenerToken()).toBe('jwt');
     expect(auth.tieneRol(['SUPER_ADMIN'])).toBe(false);
   });
+
   it('listado muestra API, miniaturas y filtros de estado', () => {
     const fixture = TestBed.createComponent(AdminNoticias);
     http
@@ -140,6 +164,7 @@ describe('Portal de prensa', () => {
     fixture.componentInstance.filtro = 'Destacadas';
     expect(fixture.componentInstance.filtradas.map((n) => n.id)).toEqual([1]);
   });
+
   it('listado informa errores de API sin datos demo', () => {
     const fixture = TestBed.createComponent(AdminNoticias);
     http.expectOne('/api/admin/noticias').flush({}, { status: 500, statusText: 'Error' });
@@ -147,6 +172,7 @@ describe('Portal de prensa', () => {
     expect(fixture.componentInstance.noticias).toEqual([]);
     expect(fixture.nativeElement.textContent).toContain('No se pudieron cargar');
   });
+
   it('crear envía el formulario al backend y navega al listado', () => {
     vi.spyOn(window, 'alert').mockImplementation(() => {});
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
@@ -159,6 +185,7 @@ describe('Portal de prensa', () => {
     req.flush(news);
     expect(navigate).toHaveBeenCalledWith(['/admin/noticias']);
   });
+
   it('editar carga la noticia y guarda cambios con PUT', () => {
     params.set('id', '1');
     vi.spyOn(window, 'alert').mockImplementation(() => {});
@@ -172,14 +199,16 @@ describe('Portal de prensa', () => {
     expect(req.request.body.titulo).toBe('Editada');
     req.flush({ ...news, titulo: 'Editada' });
   });
+
   it('guardar sin imagen no genera una petición', () => {
     const fixture = TestBed.createComponent(AdminNoticiaForm);
     fixture.componentInstance.guardarNoticia();
     expect(fixture.componentInstance.errorImagen).toBeTruthy();
     http.expectNone('/api/admin/noticias');
   });
+
   it('errores al guardar mantienen el formulario', () => {
-    const alert = vi.spyOn(window, 'alert').mockImplementation(() => {});
+    vi.spyOn(window, 'alert').mockImplementation(() => {});
     const fixture = TestBed.createComponent(AdminNoticiaForm);
     fixture.componentInstance.noticia = { ...news };
     fixture.componentInstance.guardarNoticia();
@@ -187,6 +216,7 @@ describe('Portal de prensa', () => {
     expect(fixture.componentInstance.errorGuardado).toContain('No se pudo guardar');
     expect(fixture.componentInstance.noticia.titulo).toBe(news.titulo);
   });
+
   it('noticias públicas consultan exclusivamente la API pública', () => {
     localStorage.setItem('municipio-noticias', JSON.stringify([{ ...news, titulo: 'Legacy' }]));
     const fixture = TestBed.createComponent(Noticias);
@@ -195,6 +225,7 @@ describe('Portal de prensa', () => {
     expect(fixture.nativeElement.textContent).toContain(news.titulo);
     expect(fixture.nativeElement.textContent).not.toContain('Legacy');
   });
+
   it('Home usa el endpoint de destacadas', () => {
     const fixture = TestBed.createComponent(NoticiasDestacadas);
     http.expectOne('/api/noticias/destacadas').flush([news]);
@@ -202,6 +233,7 @@ describe('Portal de prensa', () => {
     expect(fixture.componentInstance.noticiaPrincipal?.id).toBe(1);
     expect(fixture.nativeElement.textContent).toContain(news.titulo);
   });
+
   it('archivar mantiene el contrato DELETE del backend', () => {
     TestBed.inject(NoticiasService).archivarDesdeApi(1).subscribe();
     const req = http.expectOne('/api/admin/noticias/1');

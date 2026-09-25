@@ -9,7 +9,7 @@ import {
   Router,
   convertToParamMap,
 } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { Title, Meta } from '@angular/platform-browser';
 import { vi } from 'vitest';
 import { roleGuard } from './core/role.guard';
@@ -23,6 +23,8 @@ import { AdminDashboard } from './pages/admin/admin-dashboard/admin-dashboard';
 import { AdminUsuarios } from './pages/admin/admin-usuarios/admin-usuarios';
 import { AdminLogin } from './pages/admin/admin-login/admin-login';
 import { PublicacionHacienda } from './models/hacienda.model';
+import { PortalContentService } from './services/portal-content.service';
+import { cloneDefaultPortalContent } from './config/site-content';
 
 const pub: PublicacionHacienda = {
   id: 1,
@@ -50,18 +52,21 @@ const pub: PublicacionHacienda = {
     },
   ],
 };
+
 describe('Hacienda', () => {
   it('login explica el límite de intentos', () => {
     const fixture = TestBed.createComponent(AdminLogin);
     fixture.componentInstance.email = 'op@example.test';
     fixture.componentInstance.password = 'Test-password-1234';
     fixture.componentInstance.login();
-    http.expectOne('/api/auth/login').flush({}, {status:429, statusText:'Too Many Requests'});
+    http.expectOne('/api/auth/login').flush({}, { status: 429, statusText: 'Too Many Requests' });
     expect(fixture.componentInstance.error).toContain('Demasiados intentos');
   });
+
   let http: HttpTestingController;
   let params: Map<string, string>;
   let routeParams: BehaviorSubject<ReturnType<typeof convertToParamMap>>;
+
   beforeEach(() => {
     localStorage.clear();
     params = new Map();
@@ -75,15 +80,23 @@ describe('Hacienda', () => {
           provide: ActivatedRoute,
           useValue: { snapshot: { paramMap: params }, paramMap: routeParams },
         },
+        {
+          provide: PortalContentService,
+          useValue: {
+            obtenerPublico: () => of(cloneDefaultPortalContent()),
+          },
+        },
       ],
     });
     http = TestBed.inject(HttpTestingController);
   });
+
   afterEach(() => {
     http.verify();
     localStorage.clear();
     vi.restoreAllMocks();
   });
+
   function session(rol: string) {
     localStorage.setItem('admin-token', 'test');
     localStorage.setItem(
@@ -91,6 +104,7 @@ describe('Hacienda', () => {
       JSON.stringify({ nombre: 'Operador', email: 'op@example.test', roles: [rol] }),
     );
   }
+
   it.each(['HACIENDA', 'SUPER_ADMIN'])('permite el guard a %s', (rol) => {
     session(rol);
     expect(
@@ -107,6 +121,7 @@ describe('Hacienda', () => {
       ),
     ).toBe(true);
   });
+
   it('PRENSA no accede a Hacienda', () => {
     session('PRENSA');
     expect(
@@ -120,6 +135,7 @@ describe('Hacienda', () => {
       ),
     ).toBe('/admin');
   });
+
   it.each(['PRENSA', 'HACIENDA', 'SUPER_ADMIN'])('menú de %s no ofrece módulos ajenos', (rol) => {
     session(rol);
     const fixture = TestBed.createComponent(AdminLayout);
@@ -128,7 +144,9 @@ describe('Hacienda', () => {
     expect(nav.includes('Hacienda')).toBe(rol !== 'PRENSA');
     expect(nav.includes('Noticias')).toBe(rol !== 'HACIENDA');
     expect(nav.includes('Usuarios')).toBe(rol === 'SUPER_ADMIN');
+    expect(nav.includes('Sitio público')).toBe(rol === 'SUPER_ADMIN');
   });
+
   it('dashboard Hacienda no consulta noticias ni usuarios', () => {
     session('HACIENDA');
     const fixture = TestBed.createComponent(AdminDashboard);
@@ -137,6 +155,7 @@ describe('Hacienda', () => {
     http.expectNone('/api/admin/noticias');
     expect(fixture.nativeElement.querySelector('a[href="/admin/noticias"]')).toBeNull();
   });
+
   it('listado público muestra loading, datos y vínculos', () => {
     const fixture = TestBed.createComponent(Hacienda);
     fixture.detectChanges();
@@ -146,12 +165,14 @@ describe('Hacienda', () => {
     expect(fixture.nativeElement.textContent).toContain(pub.titulo);
     expect(fixture.nativeElement.querySelector('a[href="/hacienda/1"]')).toBeTruthy();
   });
+
   it('listado público informa vacío', () => {
     const fixture = TestBed.createComponent(Hacienda);
     http.expectOne('/api/hacienda').flush([]);
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toContain('No hay publicaciones');
   });
+
   it('error público permite reintentar', () => {
     const fixture = TestBed.createComponent(Hacienda);
     http.expectOne('/api/hacienda').flush({}, { status: 500, statusText: 'Error' });
@@ -161,6 +182,7 @@ describe('Hacienda', () => {
     http.expectOne('/api/hacienda').flush([pub]);
     expect(fixture.componentInstance.error()).toBe('');
   });
+
   it('detalle muestra PDF, imágenes ordenadas y metadata', () => {
     const fixture = TestBed.createComponent(HaciendaDetalle);
     http.expectOne('/api/hacienda/1').flush(pub);
@@ -175,6 +197,7 @@ describe('Hacienda', () => {
     expect(fixture.nativeElement.querySelector('img').getAttribute('loading')).toBe('lazy');
     expect(fixture.nativeElement.querySelector('img').alt).toContain('pagina.png');
   });
+
   it('detalle no disponible muestra error y limpia al cambiar id', () => {
     const fixture = TestBed.createComponent(HaciendaDetalle);
     http.expectOne('/api/hacienda/1').flush(pub);
@@ -184,12 +207,14 @@ describe('Hacienda', () => {
     expect(fixture.nativeElement.textContent).toContain('Publicación no disponible');
     expect(fixture.nativeElement.textContent).not.toContain(pub.titulo);
   });
+
   it('admin filtra borradores sin perder la lista completa', () => {
     const fixture = TestBed.createComponent(AdminHacienda);
     http.expectOne('/api/admin/hacienda').flush([pub, { ...pub, id: 2, estado: 'BORRADOR' }]);
     fixture.componentInstance.filtro.set('BORRADOR');
     expect(fixture.componentInstance.filtradas().map((p) => p.id)).toEqual([2]);
   });
+
   it('admin publica y recarga desde backend', () => {
     const fixture = TestBed.createComponent(AdminHacienda);
     http.expectOne('/api/admin/hacienda').flush([{ ...pub, estado: 'BORRADOR' }]);
@@ -199,6 +224,7 @@ describe('Hacienda', () => {
     req.flush(pub);
     http.expectOne('/api/admin/hacienda').flush([pub]);
   });
+
   it('admin archiva por DELETE y actualiza estado', () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     const fixture = TestBed.createComponent(AdminHacienda);
@@ -209,6 +235,7 @@ describe('Hacienda', () => {
     req.flush(null);
     http.expectOne('/api/admin/hacienda').flush([{ ...pub, estado: 'ARCHIVADA' }]);
   });
+
   it('formulario crea borrador antes de adjuntar', () => {
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
     const fixture = TestBed.createComponent(AdminHaciendaForm);
@@ -219,6 +246,7 @@ describe('Hacienda', () => {
     req.flush({ ...pub, estado: 'BORRADOR', archivos: [] });
     expect(navigate).toHaveBeenCalledWith(['/admin/hacienda/editar', 1]);
   });
+
   it('formulario edita y mantiene datos ante error', () => {
     params.set('id', '1');
     const fixture = TestBed.createComponent(AdminHaciendaForm);
@@ -231,6 +259,7 @@ describe('Hacienda', () => {
     expect(fixture.componentInstance.error()).toBeTruthy();
     expect(fixture.componentInstance.publicacion.titulo).toBe('Título editado');
   });
+
   it('adjunta multipart y conserva cambios editoriales sin guardar', () => {
     params.set('id', '1');
     const fixture = TestBed.createComponent(AdminHaciendaForm);
@@ -246,6 +275,7 @@ describe('Hacienda', () => {
     expect(fixture.componentInstance.archivos().length).toBe(2);
     expect(fixture.componentInstance.publicacion.titulo).toBe('Sin guardar');
   });
+
   it('rechaza SVG antes de subir', () => {
     params.set('id', '1');
     const fixture = TestBed.createComponent(AdminHaciendaForm);
@@ -256,6 +286,7 @@ describe('Hacienda', () => {
     expect(fixture.componentInstance.error()).toContain('PDF');
     http.expectNone('/api/admin/hacienda/1/archivos');
   });
+
   it('reordena archivos por IDs completos', () => {
     params.set('id', '1');
     const fixture = TestBed.createComponent(AdminHaciendaForm);
@@ -266,6 +297,7 @@ describe('Hacienda', () => {
     req.flush({ ...pub, archivos: [pub.archivos[1], pub.archivos[0]] });
     expect(fixture.componentInstance.archivos()[0].id).toBe(11);
   });
+
   it('usuarios envía exactamente un rol operativo', () => {
     const fixture = TestBed.createComponent(AdminUsuarios);
     http.expectOne('/api/admin/usuarios').flush([]);

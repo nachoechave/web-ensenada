@@ -1,38 +1,46 @@
-<section id="actualidad" class="news-section section-block">
-  <div class="section-container">
-    <div class="section-header">
-      <span class="section-kicker">Actualidad</span>
-      <div class="section-title-row">
-        <div><h2>Lo que pasa en Ensenada</h2><p>Noticias sobre obras, actividades, servicios y novedades de la ciudad.</p></div>
-        <a routerLink="/noticias" class="button-link">Ver todas las noticias</a>
-      </div>
+<section id="actualidad" class="news-section" aria-labelledby="news-title">
+  <div class="news-shell">
+    <div class="news-intro">
+      <span class="news-kicker">{{ contenido.noticias.kicker }}</span>
+      <h2 id="news-title">{{ contenido.noticias.titulo }}</h2>
+      <p>{{ contenido.noticias.bajada }}</p>
+      <a routerLink="/noticias" class="news-button">{{ contenido.noticias.boton }} <span aria-hidden="true">→</span></a>
     </div>
 
-    @if (error) { <p class="news-error" role="alert">{{ error }}</p> }
-
-    <div class="news-grid">
-      @if (noticiaPrincipal) {
-        <article class="news-card">
-          <img class="news-image" [src]="noticiaPrincipal.imagen" [alt]="noticiaPrincipal.titulo" />
-          <div class="news-content">
-            <span class="news-category">{{ noticiaPrincipal.categoria }}</span>
-            <h3>{{ noticiaPrincipal.titulo }}</h3>
-            <p>{{ noticiaPrincipal.bajada }}</p>
-            <a [routerLink]="['/noticias', noticiaPrincipal.id]">Leer más <span>→</span></a>
-          </div>
-        </article>
+    <div class="news-content-area">
+      @if (error) {
+        <p class="news-error" role="alert">{{ error }}</p>
       }
 
-      @for (noticia of noticiasSecundarias; track noticia.id) {
-        <article class="news-card">
-          <img class="news-image" [src]="noticia.imagen" [alt]="noticia.titulo" />
-          <div class="news-content">
-            <span class="news-category">{{ noticia.categoria }}</span>
-            <h3>{{ noticia.titulo }}</h3>
-            <p>{{ noticia.bajada }}</p>
-            <a [routerLink]="['/noticias', noticia.id]">Leer más <span>→</span></a>
-          </div>
-        </article>
+      @if (noticiaPrincipal) {
+        <div class="news-grid">
+          <article class="news-card principal">
+            <img class="news-image" [src]="noticiaPrincipal.imagen" [alt]="noticiaPrincipal.titulo" />
+            <div class="news-overlay"></div>
+            <div class="news-content">
+              <span class="news-category">{{ noticiaPrincipal.categoria }}</span>
+              <small>{{ noticiaPrincipal.fechaPublicacion }}</small>
+              <h3>{{ noticiaPrincipal.titulo }}</h3>
+              <p>{{ noticiaPrincipal.bajada }}</p>
+              <a [routerLink]="['/noticias', noticiaPrincipal.id]" aria-label="Leer noticia principal">→</a>
+            </div>
+          </article>
+
+          @for (noticia of noticiasSecundarias; track noticia.id) {
+            <article class="news-card secundaria">
+              <img class="news-image" [src]="noticia.imagen" [alt]="noticia.titulo" />
+              <div class="news-content">
+                <span class="news-category">{{ noticia.categoria }}</span>
+                <small>{{ noticia.fechaPublicacion }}</small>
+                <h3>{{ noticia.titulo }}</h3>
+                <p>{{ noticia.bajada }}</p>
+                <a [routerLink]="['/noticias', noticia.id]" aria-label="Leer noticia">→</a>
+              </div>
+            </article>
+          }
+        </div>
+      } @else if (!error) {
+        <div class="news-empty">Todavía no hay noticias destacadas publicadas.</div>
       }
     </div>
   </div>

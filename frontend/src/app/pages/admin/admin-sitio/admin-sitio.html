@@ -1,0 +1,206 @@
+<div class="site-editor">
+  <header class="editor-header">
+    <div>
+      <span class="eyebrow">SUPERADMIN · SITIO PÚBLICO</span>
+      <h2>Control total de la portada</h2>
+      <p>Modificá textos, enlaces, imágenes, tarjetas, áreas, agenda y datos institucionales sin tocar código.</p>
+    </div>
+    <div class="editor-actions">
+      <button type="button" class="secondary" (click)="restaurarBase()">Restaurar base</button>
+      <button type="button" class="primary" [disabled]="guardando || cargando" (click)="guardar()">
+        {{ guardando ? 'Guardando…' : 'Guardar y publicar' }}
+      </button>
+    </div>
+  </header>
+
+  @if (mensaje) { <div class="status success">{{ mensaje }}</div> }
+  @if (error) { <div class="status error">{{ error }}</div> }
+
+  @if (cargando) {
+    <div class="loading">Cargando configuración del portal…</div>
+  } @else {
+    <div class="editor-grid">
+      <details class="editor-section" open>
+        <summary>Barra superior y navegación</summary>
+        <div class="section-body">
+          <div class="fields three">
+            <label>Teléfono<input [(ngModel)]="contenido.topbar.telefono" /></label>
+            <label>Dirección<input [(ngModel)]="contenido.topbar.direccion" /></label>
+            <label>Horarios<input [(ngModel)]="contenido.topbar.horarios" /></label>
+          </div>
+          <div class="fields three">
+            <label>Facebook<input [(ngModel)]="contenido.topbar.facebook" /></label>
+            <label>Instagram<input [(ngModel)]="contenido.topbar.instagram" /></label>
+            <label>YouTube<input [(ngModel)]="contenido.topbar.youtube" /></label>
+          </div>
+          <h3>Etiquetas del navbar</h3>
+          <div class="fields four">
+            <label>Inicio<input [(ngModel)]="contenido.navbar.inicio" /></label>
+            <label>Municipio<input [(ngModel)]="contenido.navbar.municipio" /></label>
+            <label>Áreas<input [(ngModel)]="contenido.navbar.areas" /></label>
+            <label>Trámites<input [(ngModel)]="contenido.navbar.tramites" /></label>
+            <label>Noticias<input [(ngModel)]="contenido.navbar.noticias" /></label>
+            <label>Hacienda<input [(ngModel)]="contenido.navbar.hacienda" /></label>
+            <label>Contacto<input [(ngModel)]="contenido.navbar.contacto" /></label>
+            <label>Botón Boletín<input [(ngModel)]="contenido.navbar.boletinTexto" /></label>
+          </div>
+          <label class="wide">URL Boletín Oficial<input [(ngModel)]="contenido.navbar.boletinUrl" /></label>
+        </div>
+      </details>
+
+      <details class="editor-section" open>
+        <summary>Hero principal</summary>
+        <div class="section-body">
+          <div class="fields two">
+            <label>Texto superior<input [(ngModel)]="contenido.hero.eyebrow" /></label>
+            <label>Título<input [(ngModel)]="contenido.hero.titulo" /></label>
+          </div>
+          <label>Bajada<textarea rows="3" [(ngModel)]="contenido.hero.bajada"></textarea></label>
+          <div class="image-field">
+            <label>Imagen del hero<input [(ngModel)]="contenido.hero.imagen" /></label>
+            <label class="upload-button">Subir JPG/PNG<input type="file" accept="image/jpeg,image/png" (change)="subirImagen($event, 'hero')" /></label>
+            @if (contenido.hero.imagen) { <img [src]="contenido.hero.imagen" alt="Vista previa del hero" /> }
+          </div>
+          <div class="fields four">
+            <label>CTA principal<input [(ngModel)]="contenido.hero.ctaPrimarioTexto" /></label>
+            <label>URL principal<input [(ngModel)]="contenido.hero.ctaPrimarioUrl" /></label>
+            <label>CTA secundario<input [(ngModel)]="contenido.hero.ctaSecundarioTexto" /></label>
+            <label>URL secundario<input [(ngModel)]="contenido.hero.ctaSecundarioUrl" /></label>
+          </div>
+        </div>
+      </details>
+
+      <details class="editor-section" open>
+        <summary>Accesos rápidos</summary>
+        <div class="section-body">
+          <label>Título del bloque<input [(ngModel)]="contenido.accesosTitulo" /></label>
+          <div class="repeater">
+            @for (item of contenido.accesos; track $index) {
+              <article class="item-editor">
+                <div class="item-toolbar"><strong>Acceso {{ $index + 1 }}</strong><span><button type="button" (click)="mover(contenido.accesos, $index, -1)">↑</button><button type="button" (click)="mover(contenido.accesos, $index, 1)">↓</button><button type="button" class="danger" (click)="eliminar(contenido.accesos, $index)">Eliminar</button></span></div>
+                <div class="fields four">
+                  <label>Título<input [(ngModel)]="item.titulo" /></label>
+                  <label>Descripción<input [(ngModel)]="item.descripcion" /></label>
+                  <label>URL<input [(ngModel)]="item.url" /></label>
+                  <label>Ícono<select [(ngModel)]="item.icono">@for (icono of iconos; track icono[0]) { <option [value]="icono[0]">{{ icono[1] }}</option> }</select></label>
+                </div>
+              </article>
+            }
+          </div>
+          <button type="button" class="add-button" (click)="agregarAcceso()">+ Agregar acceso</button>
+        </div>
+      </details>
+
+      <details class="editor-section" open>
+        <summary>Trámites y servicios</summary>
+        <div class="section-body">
+          <div class="fields three">
+            <label>Etiqueta<input [(ngModel)]="contenido.tramites.kicker" /></label>
+            <label>Título<input [(ngModel)]="contenido.tramites.titulo" /></label>
+            <label>Bajada<input [(ngModel)]="contenido.tramites.bajada" /></label>
+          </div>
+          <div class="repeater">
+            @for (item of contenido.tramites.items; track $index) {
+              <article class="item-editor">
+                <div class="item-toolbar"><strong>Servicio {{ $index + 1 }}</strong><span><button type="button" (click)="mover(contenido.tramites.items, $index, -1)">↑</button><button type="button" (click)="mover(contenido.tramites.items, $index, 1)">↓</button><button type="button" class="danger" (click)="eliminar(contenido.tramites.items, $index)">Eliminar</button></span></div>
+                <div class="fields four">
+                  <label>Título<input [(ngModel)]="item.titulo" /></label>
+                  <label>Descripción<input [(ngModel)]="item.descripcion" /></label>
+                  <label>URL<input [(ngModel)]="item.url" /></label>
+                  <label>Ícono<select [(ngModel)]="item.icono">@for (icono of iconos; track icono[0]) { <option [value]="icono[0]">{{ icono[1] }}</option> }</select></label>
+                </div>
+              </article>
+            }
+          </div>
+          <button type="button" class="add-button" (click)="agregarTramite()">+ Agregar trámite</button>
+        </div>
+      </details>
+
+      <details class="editor-section">
+        <summary>Noticias destacadas</summary>
+        <div class="section-body">
+          <div class="fields four">
+            <label>Etiqueta<input [(ngModel)]="contenido.noticias.kicker" /></label>
+            <label>Título<input [(ngModel)]="contenido.noticias.titulo" /></label>
+            <label>Bajada<input [(ngModel)]="contenido.noticias.bajada" /></label>
+            <label>Botón<input [(ngModel)]="contenido.noticias.boton" /></label>
+          </div>
+          <p class="helper">Las noticias y cuáles están destacadas se siguen administrando desde el módulo Noticias.</p>
+        </div>
+      </details>
+
+      <details class="editor-section" open>
+        <summary>Áreas municipales</summary>
+        <div class="section-body">
+          <div class="fields three">
+            <label>Etiqueta<input [(ngModel)]="contenido.areas.kicker" /></label>
+            <label>Título<input [(ngModel)]="contenido.areas.titulo" /></label>
+            <label>Bajada<input [(ngModel)]="contenido.areas.bajada" /></label>
+          </div>
+          <div class="repeater">
+            @for (item of contenido.areas.items; track $index) {
+              <article class="item-editor">
+                <div class="item-toolbar"><strong>Área {{ $index + 1 }}</strong><span><button type="button" (click)="mover(contenido.areas.items, $index, -1)">↑</button><button type="button" (click)="mover(contenido.areas.items, $index, 1)">↓</button><button type="button" class="danger" (click)="eliminar(contenido.areas.items, $index)">Eliminar</button></span></div>
+                <div class="fields four">
+                  <label>Nombre<input [(ngModel)]="item.titulo" /></label>
+                  <label>Descripción<input [(ngModel)]="item.descripcion" /></label>
+                  <label>URL<input [(ngModel)]="item.url" /></label>
+                  <label>Ícono<select [(ngModel)]="item.icono">@for (icono of iconos; track icono[0]) { <option [value]="icono[0]">{{ icono[1] }}</option> }</select></label>
+                </div>
+              </article>
+            }
+          </div>
+          <button type="button" class="add-button" (click)="agregarArea()">+ Agregar área</button>
+        </div>
+      </details>
+
+      <details class="editor-section">
+        <summary>Intendencia / Municipio</summary>
+        <div class="section-body">
+          <div class="fields two"><label>Etiqueta<input [(ngModel)]="contenido.intendencia.kicker" /></label><label>Nombre<input [(ngModel)]="contenido.intendencia.nombre" /></label></div>
+          <label>Descripción<textarea rows="3" [(ngModel)]="contenido.intendencia.descripcion"></textarea></label>
+          <div class="image-field">
+            <label>Imagen<input [(ngModel)]="contenido.intendencia.imagen" /></label>
+            <label class="upload-button">Subir JPG/PNG<input type="file" accept="image/jpeg,image/png" (change)="subirImagen($event, 'intendencia')" /></label>
+            @if (contenido.intendencia.imagen) { <img [src]="contenido.intendencia.imagen" alt="Vista previa de Intendencia" /> }
+          </div>
+          <div class="fields four">
+            <label>Botón principal<input [(ngModel)]="contenido.intendencia.botonTexto" /></label><label>URL principal<input [(ngModel)]="contenido.intendencia.botonUrl" /></label>
+            <label>Botón secundario<input [(ngModel)]="contenido.intendencia.secundarioTexto" /></label><label>URL secundario<input [(ngModel)]="contenido.intendencia.secundarioUrl" /></label>
+          </div>
+          <label>Cita<textarea rows="3" [(ngModel)]="contenido.intendencia.cita"></textarea></label>
+        </div>
+      </details>
+
+      <details class="editor-section">
+        <summary>Agenda y eventos</summary>
+        <div class="section-body">
+          <div class="fields three"><label>Etiqueta<input [(ngModel)]="contenido.agenda.kicker" /></label><label>Título<input [(ngModel)]="contenido.agenda.titulo" /></label><label>Bajada<input [(ngModel)]="contenido.agenda.bajada" /></label></div>
+          <div class="repeater">
+            @for (evento of contenido.agenda.items; track $index) {
+              <article class="item-editor">
+                <div class="item-toolbar"><strong>Evento {{ $index + 1 }}</strong><span><button type="button" (click)="mover(contenido.agenda.items, $index, -1)">↑</button><button type="button" (click)="mover(contenido.agenda.items, $index, 1)">↓</button><button type="button" class="danger" (click)="eliminar(contenido.agenda.items, $index)">Eliminar</button></span></div>
+                <div class="fields five"><label>Día<input [(ngModel)]="evento.dia" /></label><label>Mes<input [(ngModel)]="evento.mes" /></label><label>Título<input [(ngModel)]="evento.titulo" /></label><label>Lugar<input [(ngModel)]="evento.lugar" /></label><label>Horario<input [(ngModel)]="evento.hora" /></label></div>
+              </article>
+            }
+          </div>
+          <button type="button" class="add-button" (click)="agregarEvento()">+ Agregar evento</button>
+        </div>
+      </details>
+
+      <details class="editor-section">
+        <summary>Footer y contacto</summary>
+        <div class="section-body">
+          <label>Descripción<textarea rows="2" [(ngModel)]="contenido.footer.descripcion"></textarea></label>
+          <div class="fields three"><label>Teléfono<input [(ngModel)]="contenido.footer.telefono" /></label><label>Dirección<input [(ngModel)]="contenido.footer.direccion" /></label><label>Email<input [(ngModel)]="contenido.footer.email" /></label></div>
+          <div class="fields two"><label>URL del mapa<input [(ngModel)]="contenido.footer.mapaUrl" /></label><label>Copyright<input [(ngModel)]="contenido.footer.copyright" /></label></div>
+        </div>
+      </details>
+    </div>
+
+    <div class="sticky-save">
+      <span>@if (subiendoImagen) { Subiendo imagen… } @else { Los cambios no se publican hasta guardar. }</span>
+      <button type="button" class="primary" [disabled]="guardando || subiendoImagen" (click)="guardar()">{{ guardando ? 'Guardando…' : 'Guardar y publicar' }}</button>
+    </div>
+  }
+</div>

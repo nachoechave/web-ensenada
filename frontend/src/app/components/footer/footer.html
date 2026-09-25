@@ -1,23 +1,45 @@
-<footer class="footer">
-  <div class="footer-container">
-    <div class="footer-brand">
-      <a routerLink="/" class="footer-brand-link" aria-label="Ir al inicio">
-        <span class="footer-seal" aria-hidden="true"></span>
-        <span><strong>Municipalidad de Ensenada</strong><small>Portal oficial de información y servicios</small></span>
-      </a>
-      <p>{{ contenido.footerDescripcion }}</p>
-      <div class="social-links" aria-label="Redes sociales">
-        <a [href]="externalLinks.instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram de la Municipalidad de Ensenada"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm0 2A3.8 3.8 0 0 0 4 7.8v8.4A3.8 3.8 0 0 0 7.8 20h8.4a3.8 3.8 0 0 0 3.8-3.8V7.8A3.8 3.8 0 0 0 16.2 4H7.8Zm8.7 2.2a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6ZM12 7.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8Zm0 2a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8Z"/></svg></a>
-        <a [href]="externalLinks.facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook de la Municipalidad de Ensenada"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.2 8.1V6.6c0-.8.5-1 1-1h2.2V2h-3.1c-3.4 0-4.2 2.1-4.2 4.2v1.9H7.4v3.7h2.7V22h4.1V11.8h3l.5-3.7h-3.5Z"/></svg></a>
-        <a [href]="externalLinks.twitter" target="_blank" rel="noopener noreferrer" aria-label="X de la Municipalidad de Ensenada"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.9 10.5 21.3 2h-1.8l-6.4 7.4L8 2H2l7.8 11.3L2 22h1.8l6.8-7.8L16 22h6l-8.1-11.5Zm-2.4 2.7-.8-1.1L4.4 3.3h2.7l5 7.1.8 1.1 6.6 9.3h-2.7l-5.3-7.6Z"/></svg></a>
-      </div>
+<footer id="contacto" class="site-footer">
+  <div class="footer-shell">
+    <div class="footer-brand-block">
+      <span class="footer-logo" aria-hidden="true"></span>
+      <p>{{ contenido.footer.descripcion }}</p>
     </div>
 
-    <div class="footer-links">
-      <div><h3>Portal</h3><a routerLink="/">Inicio</a><a routerLink="/noticias">Noticias</a><a routerLink="/hacienda">Hacienda</a></div>
-      <div><h3>Servicios</h3><a [href]="externalLinks.boletinOficial" target="_blank" rel="noopener noreferrer">Boletín Oficial</a><a [href]="externalLinks.tasas" target="_blank" rel="noopener noreferrer">Tasas municipales</a><a [href]="externalLinks.boletaDigital" target="_blank" rel="noopener noreferrer">Boleta digital</a></div>
-      <div><h3>Ubicación</h3><p>Ensenada, Buenos Aires</p><a routerLink="/" fragment="mapa">Mapa interactivo</a></div>
+    <div class="footer-column">
+      <strong>Contacto</strong>
+      <a [href]="'tel:' + contenido.footer.telefono.replaceAll(' ', '')">{{ contenido.footer.telefono }}</a>
+      <span>{{ contenido.footer.direccion }}</span>
+      <a [href]="'mailto:' + contenido.footer.email">{{ contenido.footer.email }}</a>
+    </div>
+
+    <div class="footer-column">
+      <strong>Enlaces útiles</strong>
+      <a routerLink="/" fragment="tramites">Trámites</a>
+      <a [href]="contenido.navbar.boletinUrl" target="_blank" rel="noopener noreferrer">{{ contenido.navbar.boletinTexto }}</a>
+      <a routerLink="/hacienda">Hacienda</a>
+      <a routerLink="/noticias">Noticias</a>
+    </div>
+
+    <a class="footer-map" [href]="contenido.footer.mapaUrl" target="_blank" rel="noopener noreferrer">
+      <span class="map-dot">●</span>
+      <div><strong>Municipalidad de Ensenada</strong><small>{{ contenido.footer.direccion }}</small></div>
+      <span aria-hidden="true">→</span>
+    </a>
+
+    <div class="footer-column social-column">
+      <strong>Seguinos</strong>
+      <div class="footer-socials">
+        @if (contenido.topbar.facebook) { <a [href]="contenido.topbar.facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a> }
+        @if (contenido.topbar.instagram) { <a [href]="contenido.topbar.instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram">◎</a> }
+        @if (contenido.topbar.youtube) { <a [href]="contenido.topbar.youtube" target="_blank" rel="noopener noreferrer" aria-label="YouTube">▶</a> }
+      </div>
     </div>
   </div>
-  <div class="footer-bottom"><p>© 2026 Municipalidad de Ensenada. Todos los derechos reservados.</p><span>Identidad local · Información pública · Accesibilidad</span></div>
+
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <span>{{ contenido.footer.copyright }}</span>
+      <div><a href="#">Términos y condiciones</a><a href="#">Accesibilidad</a><a href="#">Mapa del sitio</a></div>
+    </div>
+  </div>
 </footer>

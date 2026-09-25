@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { siteContent } from '../../config/site-content';
-import { externalLinks } from '../../config/external-links';
+
+import { cloneDefaultPortalContent } from '../../config/site-content';
+import { PortalContentService } from '../../services/portal-content.service';
+
 @Component({
   selector: 'app-footer',
   imports: [RouterLink],
@@ -9,6 +12,15 @@ import { externalLinks } from '../../config/external-links';
   styleUrl: './footer.css',
 })
 export class Footer {
-  readonly contenido = siteContent;
-  readonly externalLinks = externalLinks;
+  private readonly portalContentService = inject(PortalContentService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  contenido = cloneDefaultPortalContent();
+
+  constructor() {
+    this.portalContentService
+      .obtenerPublico()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((contenido) => (this.contenido = contenido));
+  }
 }

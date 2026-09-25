@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { cloneDefaultPortalContent } from '../../../config/site-content';
-import { PortalAgendaItem, PortalLinkItem } from '../../../models/portal-content.model';
+import { PortalLinkItem } from '../../../models/portal-content.model';
 import { PortalContentService } from '../../../services/portal-content.service';
 
 @Component({
@@ -20,6 +20,7 @@ export class AdminSitio {
   subiendoImagen = false;
   mensaje = '';
   error = '';
+  nuevaImagenHero = '';
 
   readonly iconos = [
     ['document', 'Documento'],
@@ -57,6 +58,12 @@ export class AdminSitio {
     this.guardando = true;
     this.mensaje = '';
     this.error = '';
+    this.contenido.hero.intervaloSegundos = Math.min(
+      15,
+      Math.max(3, Number(this.contenido.hero.intervaloSegundos) || 4),
+    );
+    this.contenido.hero.imagen = this.contenido.hero.imagenes[0] ?? this.contenido.hero.imagen;
+
     this.portalContentService.guardar(this.contenido).subscribe({
       next: (contenido) => {
         this.contenido = contenido;
@@ -92,6 +99,28 @@ export class AdminSitio {
     this.contenido.agenda.items.push({ dia: '01', mes: 'ENE', titulo: 'Nuevo evento', lugar: '', hora: '' });
   }
 
+  agregarImagenHeroUrl(): void {
+    const url = this.nuevaImagenHero.trim();
+    if (!url) return;
+    this.contenido.hero.imagenes.push(url);
+    if (this.contenido.hero.imagenes.length === 1) this.contenido.hero.imagen = url;
+    this.nuevaImagenHero = '';
+  }
+
+  eliminarImagenHero(index: number): void {
+    if (this.contenido.hero.imagenes.length <= 1) {
+      this.error = 'El hero debe conservar al menos una imagen.';
+      return;
+    }
+    this.contenido.hero.imagenes.splice(index, 1);
+    this.contenido.hero.imagen = this.contenido.hero.imagenes[0];
+  }
+
+  moverImagenHero(index: number, direccion: -1 | 1): void {
+    this.mover(this.contenido.hero.imagenes, index, direccion);
+    this.contenido.hero.imagen = this.contenido.hero.imagenes[0];
+  }
+
   eliminar<T>(items: T[], index: number): void {
     items.splice(index, 1);
   }
@@ -111,8 +140,12 @@ export class AdminSitio {
     this.error = '';
     this.portalContentService.subirImagen(archivo).subscribe({
       next: (respuesta) => {
-        if (destino === 'hero') this.contenido.hero.imagen = respuesta.url;
-        else this.contenido.intendencia.imagen = respuesta.url;
+        if (destino === 'hero') {
+          this.contenido.hero.imagenes.push(respuesta.url);
+          if (this.contenido.hero.imagenes.length === 1) this.contenido.hero.imagen = respuesta.url;
+        } else {
+          this.contenido.intendencia.imagen = respuesta.url;
+        }
         this.subiendoImagen = false;
         input.value = '';
       },

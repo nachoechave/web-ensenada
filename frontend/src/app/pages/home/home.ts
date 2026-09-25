@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
@@ -13,7 +13,7 @@ import { PortalContentService } from '../../services/portal-content.service';
   selector: 'app-home',
   imports: [RouterLink, Navbar, NoticiasDestacadas, Footer, PortalIcon],
   templateUrl: './home.html',
-  styleUrls: ['./home.css', './home-hero-overrides.css'],
+  styleUrls: ['./home.css', './home-hero-overrides.css', './home-intendencia-overrides.css'],
 })
 export class Home {
   private readonly portalContentService = inject(PortalContentService);
@@ -22,7 +22,7 @@ export class Home {
   private pausado = false;
 
   contenido = cloneDefaultPortalContent();
-  heroIndex = 0;
+  readonly heroIndex = signal(0);
 
   constructor() {
     this.destroyRef.onDestroy(() => this.detenerCarousel());
@@ -32,7 +32,7 @@ export class Home {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((contenido) => {
         this.contenido = contenido;
-        this.heroIndex = 0;
+        this.heroIndex.set(0);
         this.precargarHero();
         this.iniciarCarousel();
       });
@@ -52,7 +52,7 @@ export class Home {
 
   seleccionarHero(index: number): void {
     if (index < 0 || index >= this.contenido.hero.imagenes.length) return;
-    this.heroIndex = index;
+    this.heroIndex.set(index);
   }
 
   private iniciarCarousel(): void {
@@ -63,7 +63,7 @@ export class Home {
     const intervalo = Math.max(3, this.contenido.hero.intervaloSegundos) * 1000;
     this.carouselTimer = setInterval(() => {
       if (this.pausado) return;
-      this.heroIndex = (this.heroIndex + 1) % this.contenido.hero.imagenes.length;
+      this.heroIndex.update((actual) => (actual + 1) % this.contenido.hero.imagenes.length);
     }, intervalo);
   }
 

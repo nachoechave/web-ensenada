@@ -1,0 +1,106 @@
+/* Intendencia: lectura más limpia, texto a la izquierda e imagen a la derecha. */
+.mayor-section {
+  padding: 3.75rem 0;
+  background: #fff;
+}
+
+.mayor-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(19rem, .75fr);
+  align-items: stretch;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid #e0ebe6;
+  border-radius: 1.4rem;
+  background: linear-gradient(120deg, #ffffff 0%, #f5faf7 100%);
+  box-shadow: 0 1.15rem 2.8rem rgba(2, 42, 31, .065);
+}
+
+.mayor-feature .mayor-copy {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 2.8rem 3rem;
+}
+
+.mayor-feature .mayor-copy .section-kicker {
+  margin-bottom: .9rem;
+}
+
+.mayor-feature .mayor-copy h2 {
+  margin: 0;
+  font-size: clamp(2.35rem, 3.3vw, 3.35rem);
+  line-height: 1;
+  letter-spacing: -.045em;
+}
+
+.mayor-feature .mayor-copy > p {
+  max-width: 48rem;
+  margin: 1.15rem 0 0;
+  color: #62746d;
+  font-size: .98rem;
+  line-height: 1.72;
+}
+
+.mayor-feature .mayor-actions {
+  margin-top: 1.65rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem;
+}
+
+.mayor-feature .mayor-photo {
+  order: 2;
+  min-height: 28rem;
+  max-width: none;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
+  background: #e8f1ed;
+}
+
+.mayor-feature .mayor-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 28rem;
+  object-fit: cover;
+  object-position: center top;
+}
+
+@media (max-width: 64rem) {
+  .mayor-feature {
+    grid-template-columns: minmax(0, 1.15fr) minmax(16rem, .8fr);
+  }
+
+  .mayor-feature .mayor-copy {
+    padding: 2.25rem 2.2rem;
+  }
+}
+
+@media (max-width: 48rem) {
+  .mayor-section {
+    padding: 3rem 0;
+  }
+
+  .mayor-feature {
+    grid-template-columns: 1fr;
+  }
+
+  .mayor-feature .mayor-copy {
+    order: 1;
+    padding: 2rem 1.6rem;
+  }
+
+  .mayor-feature .mayor-photo {
+    order: 2;
+    min-height: 21rem;
+  }
+
+  .mayor-feature .mayor-photo img {
+    min-height: 21rem;
+    max-height: 28rem;
+  }
+}

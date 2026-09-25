@@ -1,0 +1,90 @@
+<app-navbar></app-navbar>
+
+<main class="providers-page">
+  <section class="providers-hero">
+    <div class="providers-shell hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">Hacienda · Compras y suministros</span>
+        <h1>Registro Municipal de Proveedores</h1>
+        <p>
+          Encontrá en un solo lugar los requisitos, formularios y documentación necesaria
+          para inscribirte como proveedor de la Municipalidad de Ensenada.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#documentacion">Ver documentación <span>↓</span></a>
+          <a class="button secondary" href="mailto:compras@ensenada.gov.ar">Contactar a Compras <span>→</span></a>
+        </div>
+      </div>
+
+      <aside class="hero-panel" aria-label="Información del trámite">
+        <span class="panel-label">Información rápida</span>
+        <div class="info-row"><strong>Trámite</strong><span>Inscripción de proveedores</span></div>
+        <div class="info-row"><strong>Costo</strong><span>Gratuito</span></div>
+        <div class="info-row"><strong>Modalidad</strong><span>Presencial con documentación</span></div>
+        <div class="info-row"><strong>Área</strong><span>Oficina de Compras y Suministros</span></div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="documentacion" class="providers-section">
+    <div class="providers-shell">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Documentación</span>
+          <h2>Todo lo que necesitás para inscribirte</h2>
+          <p>Descargá o consultá los documentos oficiales vinculados al registro.</p>
+        </div>
+      </div>
+
+      <div class="documents-grid">
+        @for (documento of documentos; track documento.titulo) {
+          <a class="document-card" [href]="documento.url" target="_blank" rel="noopener noreferrer">
+            <span class="document-icon"><app-portal-icon [name]="documento.icono"></app-portal-icon></span>
+            <span class="document-copy">
+              <strong>{{ documento.titulo }}</strong>
+              <small>{{ documento.descripcion }}</small>
+            </span>
+            <span class="document-action">{{ documento.directo ? 'Abrir PDF' : 'Consultar' }} <span>→</span></span>
+          </a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="providers-section soft-section">
+    <div class="providers-shell process-grid">
+      <div class="process-copy">
+        <span class="eyebrow">Cómo realizarlo</span>
+        <h2>Inscripción simple, con la información ordenada</h2>
+        <p>
+          Prepará la documentación requerida, completá la planilla de inscripción y presentala
+          ante la Oficina de Compras. La página concentra los accesos para evitar que tengas que
+          buscarlos en distintas secciones.
+        </p>
+      </div>
+
+      <ol class="steps-list">
+        <li><span>01</span><div><strong>Revisá los requisitos</strong><p>Confirmá qué documentación corresponde a tu tipo de proveedor.</p></div></li>
+        <li><span>02</span><div><strong>Completá la planilla</strong><p>Descargá el formulario y prepará los datos solicitados.</p></div></li>
+        <li><span>03</span><div><strong>Presentá la documentación</strong><p>Acercate a la Oficina de Compras para completar el alta.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="providers-section contact-section">
+    <div class="providers-shell contact-card">
+      <div>
+        <span class="eyebrow light">Contacto</span>
+        <h2>Oficina de Compras y Suministros</h2>
+        <p>Consultas sobre inscripción, documentación o actualización de datos de proveedores.</p>
+      </div>
+      <div class="contact-data">
+        <a href="tel:02214602343"><strong>(0221) 460-2343</strong><span>Teléfono</span></a>
+        <a href="mailto:compras@ensenada.gov.ar"><strong>compras@ensenada.gov.ar</strong><span>Correo electrónico</span></a>
+        <div><strong>Pte. Perón y San Martín</strong><span>Ensenada</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

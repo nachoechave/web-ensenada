@@ -39,28 +39,17 @@ public class AuthController {
         String email = normalizarEmail(request.email());
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        email,
-                        request.password()
-                )
+                new UsernamePasswordAuthenticationToken(email, request.password())
         );
 
-        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email)
-                .orElseThrow();
-
+        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email).orElseThrow();
         return crearLoginResponse(usuario, authentication);
     }
 
     @GetMapping("/me")
     public UsuarioResponse me() {
         Usuario usuario = obtenerUsuarioAutenticado();
-
-        return new UsuarioResponse(
-                usuario.getNombre(),
-                usuario.getEmail(),
-                obtenerRolPrincipal(usuario),
-                usuario.getRoles()
-        );
+        return new UsuarioResponse(usuario.getNombre(), usuario.getEmail(), obtenerRolPrincipal(usuario), usuario.getRoles());
     }
 
     @PutMapping("/me")
@@ -76,9 +65,7 @@ public class AuthController {
 
         usuario.setNombre(request.nombre());
         usuario.setEmail(email);
-
         Usuario usuarioGuardado = usuarioRepository.save(usuario);
-
         return crearLoginResponse(usuarioGuardado);
     }
 
@@ -92,51 +79,31 @@ public class AuthController {
         }
 
         usuario.setPassword(passwordEncoder.encode(request.passwordNueva()));
+        usuario.incrementarTokenVersion();
         usuarioRepository.save(usuario);
     }
 
     private Usuario obtenerUsuarioAutenticado() {
-        String email = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getName();
-
-        return usuarioRepository.findByEmailIgnoreCase(email)
-                .orElseThrow();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return usuarioRepository.findByEmailIgnoreCase(email).orElseThrow();
     }
 
     private LoginResponse crearLoginResponse(Usuario usuario) {
-        List<SimpleGrantedAuthority> authorities = usuario.getRoles()
-                .stream()
+        List<SimpleGrantedAuthority> authorities = usuario.getRoles().stream()
                 .map(rol -> new SimpleGrantedAuthority("ROLE_" + rol.name()))
                 .toList();
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                usuario.getEmail(),
-                null,
-                authorities
-        );
-
+        Authentication authentication = new UsernamePasswordAuthenticationToken(usuario.getEmail(), null, authorities);
         return crearLoginResponse(usuario, authentication);
     }
 
     private LoginResponse crearLoginResponse(Usuario usuario, Authentication authentication) {
         String token = jwtService.generarToken(authentication);
-
-        return new LoginResponse(
-                token,
-                usuario.getNombre(),
-                usuario.getEmail(),
-                obtenerRolPrincipal(usuario),
-                usuario.getRoles()
-        );
+        return new LoginResponse(token, usuario.getNombre(), usuario.getEmail(), obtenerRolPrincipal(usuario), usuario.getRoles());
     }
 
     private String obtenerRolPrincipal(Usuario usuario) {
-        return usuario.getRoles()
-                .stream()
-                .findFirst()
-                .map(Enum::name)
-                .orElse(RolUsuario.PRENSA.name());
+        return usuario.getRoles().stream().findFirst().map(Enum::name).orElse(RolUsuario.PRENSA.name());
     }
 
     private String normalizarEmail(String email) {

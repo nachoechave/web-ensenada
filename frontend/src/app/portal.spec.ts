@@ -28,6 +28,7 @@ import { routes } from './app.routes';
 const news: Noticia = {
   id: 1,
   titulo: 'Obras en Ensenada',
+  slug: 'obras-en-ensenada',
   bajada: 'Resumen',
   contenido: 'Texto de la noticia',
   imagen: '/assets/ensenada-hero.jpg',
@@ -256,6 +257,13 @@ describe('Portal de prensa', () => {
     fixture.detectChanges();
     expect(fixture.componentInstance.noticiaPrincipal?.id).toBe(1);
     expect(fixture.nativeElement.textContent).toContain(news.titulo);
+  });
+
+  it('consulta una noticia pública por slug', () => {
+    TestBed.inject(NoticiasService).obtenerPublicaDesdeApi(news.slug).subscribe();
+    const req = http.expectOne('/api/noticias/obras-en-ensenada');
+    expect(req.request.method).toBe('GET');
+    req.flush(news);
   });
 
   it('archivar mantiene el contrato DELETE del backend', () => {

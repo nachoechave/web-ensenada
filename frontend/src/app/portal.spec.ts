@@ -59,6 +59,7 @@ describe('Portal de prensa', () => {
       '',
       'sitio',
       'noticias',
+      'noticias/auditoria',
       'noticias/nueva',
       'noticias/editar/:id',
       'usuarios',
@@ -165,6 +166,26 @@ describe('Portal de prensa', () => {
     expect(fixture.componentInstance.filtradas.map((n) => n.id)).toEqual([2]);
     fixture.componentInstance.filtro = 'Destacadas';
     expect(fixture.componentInstance.filtradas.map((n) => n.id)).toEqual([1]);
+  });
+
+  it('historial editorial consume la auditoría de noticias', () => {
+    session();
+    const fixture = TestBed.createComponent(AdminAuditoriaNoticias);
+    http.expectOne('/api/admin/noticias/auditoria').flush([
+      {
+        id: 1,
+        noticiaId: 7,
+        noticiaTitulo: 'Nueva noticia',
+        accion: 'PUBLICACION',
+        estadoResultante: 'PUBLICADA',
+        usuarioNombre: 'Prensa',
+        usuarioEmail: 'prensa@example.test',
+        fecha: '2026-10-01T15:45:00Z',
+      },
+    ]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('PUBLICACION');
+    expect(fixture.nativeElement.textContent).toContain('Prensa');
   });
 
   it('listado informa errores de API sin datos demo', () => {

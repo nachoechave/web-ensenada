@@ -57,7 +57,7 @@ Imágenes: JPEG/PNG, máximo 5 MB y 20 megapíxeles. Se decodifican, verifican y
 | POST | `/auth/login` | Público |
 | GET / PUT | `/auth/me` | Autenticado |
 | PUT | `/auth/me/password` | Autenticado, contraseña actual |
-| GET | `/noticias`, `/noticias/destacadas`, `/noticias/{id}` | Público; solo publicadas |
+| GET | `/noticias`, `/noticias/destacadas`, `/noticias/{slug-o-id}` | Público; solo publicadas |
 | GET / POST | `/admin/noticias` | PRENSA / SUPER_ADMIN |
 | GET / PUT / DELETE | `/admin/noticias/{id}` | PRENSA / SUPER_ADMIN; DELETE archiva |
 | POST multipart (`archivo`) | `/admin/archivos/noticias` | PRENSA / SUPER_ADMIN |
@@ -72,17 +72,17 @@ Imágenes: JPEG/PNG, máximo 5 MB y 20 megapíxeles. Se decodifican, verifican y
 | PUT | `/admin/hacienda/{id}/archivos/orden` | HACIENDA / SUPER_ADMIN; body `{ "ids": [1, 2] }` |
 | GET | `/admin/hacienda/{id}/archivos/{archivoId}/contenido` | HACIENDA / SUPER_ADMIN; descarga privada |
 
-Rutas públicas: `/`, `/noticias`, `/noticias/:id`, `/hacienda`, `/hacienda/:id`, `/registro-proveedores`.
+Rutas públicas: `/`, `/noticias`, `/noticias/:slug` (acepta IDs históricos), `/hacienda`, `/hacienda/:id`, `/registro-proveedores`.
 Rutas administrativas: `/admin/login`, `/admin` (dashboard), `/admin/sitio`, `/admin/noticias`, `/admin/noticias/nueva`, `/admin/noticias/editar/:id`, `/admin/hacienda`, `/admin/hacienda/nueva`, `/admin/hacienda/editar/:id`, `/admin/mi-cuenta`, `/admin/usuarios`.
 
 ## Base de datos y producción
 
-Flyway V1 crea usuarios, roles y noticias y permanece sin cambios. V2 agrega publicaciones y archivos de Hacienda, V3 agrega la versión de token JWT y V4 persiste el contenido administrable del portal. `ddl-auto=validate` en todos los perfiles; no hay `update` ni baseline automático. Leer [la transición de bases existentes](docs/base-de-datos.md) antes de usar una base anterior. CI valida V1–V4 y el arranque Spring sobre MySQL 8.4 efímero.
+Flyway V1 crea usuarios, roles y noticias y permanece sin cambios. V2 agrega publicaciones y archivos de Hacienda, V3 agrega la versión de token JWT y V4 persiste el contenido administrable del portal y V5 agrega slugs únicos y estables a noticias. `ddl-auto=validate` en todos los perfiles; no hay `update` ni baseline automático. Leer [la transición de bases existentes](docs/base-de-datos.md) antes de usar una base anterior. CI valida V1–V5 y el arranque Spring sobre MySQL 8.4 efímero.
 
 Antes de desplegar: configurar secretos nuevos, cuenta inicial, MySQL, backup y almacenamiento; completar URLs pendientes; validar migración en copia de la base real; configurar HTTPS, reverse proxy SPA (`index.html` para rutas frontend), límites de upload y orígenes permitidos. No usar el perfil de memoria `dev` en producción. El login tiene rate limiting configurable por IP (10 intentos / 300 segundos por defecto); revisar la política de proxy y los límites por instancia en [la guía operativa](docs/hacienda.md).
 
 Deuda: paginación para noticias, auditoría editorial, limpieza programada de imágenes huérfanas, recuperación de cuentas y eventual uso de cookies HttpOnly. Actualmente los tokens tienen 120 minutos de vida; desactivar una cuenta revoca acceso inmediatamente porque el backend consulta sus roles/estado en cada petición. Cambiar la contraseña incrementa `tokenVersion`, por lo que los JWT emitidos anteriormente dejan de ser válidos.
 
-SEO inicial en español argentino, títulos y metadatos de noticia. Se mantienen IDs como identificador estable; una futura columna `slug` única, endpoint de búsqueda por slug y redirecciones desde IDs pueden añadirse sin cambiar el dominio editorial. SSR/prerender de noticias queda para una segunda etapa: los crawlers sociales que no ejecutan JavaScript ven solo metadata inicial.
+SEO inicial en español argentino, títulos y metadatos de noticia. Las noticias nuevas reciben un `slug` único y estable derivado del título; el endpoint público acepta slug o ID para conservar compatibilidad con enlaces históricos. El frontend usa el slug como URL pública y completa Open Graph/Twitter/canonical en cliente. SSR/prerender de noticias sigue pendiente: los crawlers sociales que no ejecutan JavaScript ven solo metadata inicial.
 
 El historial contiene antiguas configuraciones de contraseña/JWT (`5424a10`, `c6742d6`, retiradas parcialmente en `de1bedf`). Si se usaron fuera del desarrollo, rotarlas. No se reescribió historia Git.

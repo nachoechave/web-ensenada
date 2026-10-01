@@ -1,0 +1,95 @@
+.admin-page-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.admin-page-header span {
+  color: #258b5b;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-page-header h2 {
+  margin: 0.35rem 0 0;
+  color: #12382b;
+}
+
+.admin-page-header p {
+  color: #5b6b63;
+}
+
+.secondary-button {
+  border: 1px solid #b9d8c8;
+  border-radius: 0.7rem;
+  padding: 0.85rem 1rem;
+  color: #0f6b45;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.table-card {
+  overflow-x: auto;
+  border: 1px solid #e4eee8;
+  border-radius: 1rem;
+}
+
+table {
+  width: 100%;
+  min-width: 52rem;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 1rem;
+  border-bottom: 1px solid #e4eee8;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: #f4f7f5;
+  color: #315347;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+}
+
+td small {
+  display: block;
+  margin-top: 0.25rem;
+  color: #6b7a73;
+}
+
+.action-badge {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  background: #e8f5ee;
+  color: #0f6b45;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.audit-error, .empty-table {
+  color: #6b7a73;
+}
+
+.empty-table {
+  text-align: center;
+  padding: 2rem;
+}
+
+@media (max-width: 48rem) {
+  .admin-page-header {
+    flex-direction: column;
+  }
+  .secondary-button {
+    width: 100%;
+    text-align: center;
+  }
+}

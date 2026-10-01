@@ -50,6 +50,30 @@
     </div>
   </section>
 
+  <section id="municipio" class="portal-section mayor-section" aria-labelledby="municipio-title">
+    <div class="section-shell mayor-feature">
+      <div class="mayor-copy">
+        <span class="section-kicker">{{ contenido.intendencia.kicker }}</span>
+        <h2 id="municipio-title">{{ contenido.intendencia.nombre }}</h2>
+        <p>{{ contenido.intendencia.descripcion }}</p>
+        <div class="mayor-actions">
+          <a class="button primary" [href]="contenido.intendencia.botonUrl" target="_blank" rel="noopener noreferrer">
+            {{ contenido.intendencia.botonTexto }} <span>→</span>
+          </a>
+          <a class="button secondary" [href]="contenido.intendencia.secundarioUrl" target="_blank" rel="noopener noreferrer">
+            {{ contenido.intendencia.secundarioTexto }} <span>→</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="mayor-photo">
+        <img [src]="contenido.intendencia.imagen" [alt]="contenido.intendencia.nombre" />
+      </div>
+    </div>
+  </section>
+
+  <app-noticias-destacadas></app-noticias-destacadas>
+
   <section id="accesos" class="portal-section quick-access-section" aria-labelledby="accesos-title">
     <div class="section-shell">
       <div class="quick-access-heading">
@@ -77,30 +101,6 @@
       </div>
     </div>
   </section>
-
-  <section id="municipio" class="portal-section mayor-section" aria-labelledby="municipio-title">
-    <div class="section-shell mayor-feature">
-      <div class="mayor-copy">
-        <span class="section-kicker">{{ contenido.intendencia.kicker }}</span>
-        <h2 id="municipio-title">{{ contenido.intendencia.nombre }}</h2>
-        <p>{{ contenido.intendencia.descripcion }}</p>
-        <div class="mayor-actions">
-          <a class="button primary" [href]="contenido.intendencia.botonUrl" target="_blank" rel="noopener noreferrer">
-            {{ contenido.intendencia.botonTexto }} <span>→</span>
-          </a>
-          <a class="button secondary" [href]="contenido.intendencia.secundarioUrl" target="_blank" rel="noopener noreferrer">
-            {{ contenido.intendencia.secundarioTexto }} <span>→</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="mayor-photo">
-        <img [src]="contenido.intendencia.imagen" [alt]="contenido.intendencia.nombre" />
-      </div>
-    </div>
-  </section>
-
-  <app-noticias-destacadas></app-noticias-destacadas>
 
   <section id="areas" class="portal-section areas-section" aria-labelledby="areas-title">
     <div class="section-shell section-with-intro areas-layout">

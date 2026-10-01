@@ -8,7 +8,7 @@ import { Noticia } from '../../../models/noticia.model';
 import { ArchivoUploadService } from '../../../services/archivo-upload.service';
 import { NoticiasService } from '../../../services/noticias.service';
 
-type NoticiaForm = Omit<Noticia, 'id'>;
+type NoticiaForm = Omit<Noticia, 'id' | 'slug'>;
 
 @Component({
   selector: 'app-admin-noticia-form',
@@ -150,7 +150,7 @@ export class AdminNoticiaForm {
   }
 
   private asignarNoticia(noticia: Noticia): void {
-    const { id, ...noticiaSinId } = noticia;
+    const { id, slug, ...noticiaSinId } = noticia;
     this.noticia = noticiaSinId;
     this.imagenPreview = this.noticia.imagen;
   }

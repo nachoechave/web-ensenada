@@ -5,7 +5,10 @@
     <p>Desde acá se podrán crear, editar y archivar noticias del sitio.</p>
   </div>
 
-  <a routerLink="/admin/noticias/nueva" class="primary-button"> Nueva noticia </a>
+  <div class="header-actions">
+    <a routerLink="/admin/noticias/auditoria" class="secondary-button">Historial editorial</a>
+    <a routerLink="/admin/noticias/nueva" class="primary-button">Nueva noticia</a>
+  </div>
 </div>
 
 @if (mensaje) {

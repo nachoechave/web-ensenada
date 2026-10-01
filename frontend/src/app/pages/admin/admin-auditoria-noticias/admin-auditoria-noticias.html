@@ -1,0 +1,47 @@
+<div class="admin-page-header">
+  <div>
+    <span>Noticias</span>
+    <h2>Historial editorial</h2>
+    <p>Últimas 100 acciones realizadas sobre las noticias del portal.</p>
+  </div>
+  <a routerLink="/admin/noticias" class="secondary-button">Volver a noticias</a>
+</div>
+
+@if (error) {
+  <p class="audit-error" role="alert">{{ error }}</p>
+}
+
+<div class="table-card">
+  <table>
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Acción</th>
+        <th>Noticia</th>
+        <th>Estado</th>
+        <th>Usuario</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (registro of registros; track registro.id) {
+        <tr>
+          <td>{{ registro.fecha }}</td>
+          <td><span class="action-badge">{{ registro.accion }}</span></td>
+          <td>
+            <strong>{{ registro.noticiaTitulo }}</strong>
+            <small>#{{ registro.noticiaId }}</small>
+          </td>
+          <td>{{ registro.estadoResultante }}</td>
+          <td>
+            <strong>{{ registro.usuarioNombre }}</strong>
+            <small>{{ registro.usuarioEmail }}</small>
+          </td>
+        </tr>
+      } @empty {
+        @if (!error) {
+          <tr><td colspan="5" class="empty-table">Todavía no hay movimientos registrados.</td></tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>

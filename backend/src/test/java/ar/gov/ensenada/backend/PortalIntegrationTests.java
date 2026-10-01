@@ -28,13 +28,14 @@ class PortalIntegrationTests {
     @Autowired MockMvc mvc;
     @Autowired UsuarioRepository usuarios;
     @Autowired NoticiaRepository noticias;
+    @Autowired AuditoriaNoticiaRepository auditoria;
     @Autowired PasswordEncoder encoder;
     String prensa, admin;
     Long periodistaId;
     final String password = "Test-password-1234";
 
     @BeforeEach void setup() throws Exception {
-        noticias.deleteAll(); usuarios.deleteAll();
+        auditoria.deleteAll(); noticias.deleteAll(); usuarios.deleteAll();
         periodistaId = usuarios.save(new Usuario("Prensa", "prensa@example.test", encoder.encode(password), Set.of(RolUsuario.PRENSA), true)).getId();
         usuarios.save(new Usuario("Admin", "admin@example.test", encoder.encode(password), Set.of(RolUsuario.SUPER_ADMIN), true));
         prensa = login("prensa@example.test"); admin = login("admin@example.test");
@@ -116,6 +117,24 @@ class PortalIntegrationTests {
             .andExpect(jsonPath("$.slug").value(slugOriginal));
         assertEquals(slugOriginal, noticias.findById(id).orElseThrow().getSlug());
     }
+    @Test void registraAuditoriaEditorial() throws Exception {
+        long id = crear("BORRADOR", false);
+        mvc.perform(put("/api/admin/noticias/"+id).header("Authorization","Bearer "+prensa)
+            .contentType(MediaType.APPLICATION_JSON).content(noticia("PUBLICADA",false)))
+            .andExpect(status().isOk());
+        mvc.perform(delete("/api/admin/noticias/"+id).header("Authorization","Bearer "+prensa))
+            .andExpect(status().isNoContent());
+
+        mvc.perform(get("/api/admin/noticias/auditoria").header("Authorization","Bearer "+prensa))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(3))
+            .andExpect(jsonPath("$[0].accion").value("ARCHIVADO"))
+            .andExpect(jsonPath("$[1].accion").value("PUBLICACION"))
+            .andExpect(jsonPath("$[2].accion").value("CREACION"))
+            .andExpect(jsonPath("$[0].usuarioEmail").value("prensa@example.test"))
+            .andExpect(jsonPath("$[0].noticiaId").value(id));
+    }
+
     @Test void slugsDuplicadosRecibenSufijo() throws Exception {
         long primero = crear("PUBLICADA", false);
         long segundo = crear("PUBLICADA", false);

@@ -1,14 +1,19 @@
 package ar.gov.ensenada.backend.contenido;
 
+import ar.gov.ensenada.backend.auth.Usuario;
+import ar.gov.ensenada.backend.auth.UsuarioRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.text.Normalizer;
+import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 
@@ -17,9 +22,17 @@ import java.util.Locale;
 public class NoticiaController {
 
     private final NoticiaRepository noticiaRepository;
+    private final AuditoriaNoticiaRepository auditoriaRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public NoticiaController(NoticiaRepository noticiaRepository) {
+    public NoticiaController(
+            NoticiaRepository noticiaRepository,
+            AuditoriaNoticiaRepository auditoriaRepository,
+            UsuarioRepository usuarioRepository
+    ) {
         this.noticiaRepository = noticiaRepository;
+        this.auditoriaRepository = auditoriaRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping("/noticias")
@@ -62,6 +75,11 @@ public class NoticiaController {
         return noticiaRepository.findAllByOrderByIdDesc();
     }
 
+    @GetMapping("/admin/noticias/auditoria")
+    public List<AuditoriaNoticia> listarAuditoria() {
+        return auditoriaRepository.findTop100ByOrderByFechaDesc();
+    }
+
     @GetMapping("/admin/noticias/{id}")
     public Noticia obtenerAdmin(@PathVariable Long id) {
         return noticiaRepository.findById(id)
@@ -70,28 +88,41 @@ public class NoticiaController {
 
     @PostMapping("/admin/noticias")
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     public Noticia crear(@Valid @RequestBody NoticiaRequest request) {
         Noticia noticia = new Noticia();
         noticia.setSlug(generarSlugUnico(request.titulo()));
         completar(noticia, request);
-        return noticiaRepository.save(noticia);
+        Noticia guardada = noticiaRepository.save(noticia);
+        registrarAuditoria(guardada, "CREACION");
+        return guardada;
     }
 
     @PutMapping("/admin/noticias/{id}")
+    @Transactional
     public Noticia actualizar(@PathVariable Long id, @Valid @RequestBody NoticiaRequest request) {
         Noticia noticia = noticiaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Noticia no encontrada"));
 
+        EstadoPublicacion estadoAnterior = noticia.getEstado();
         completar(noticia, request);
-        return noticiaRepository.save(noticia);
+        Noticia guardada = noticiaRepository.save(noticia);
+        String accion = "EDICION";
+        if (estadoAnterior != request.estado()) {
+            accion = request.estado() == EstadoPublicacion.PUBLICADA ? "PUBLICACION" : "DESPUBLICACION";
+        }
+        registrarAuditoria(guardada, accion);
+        return guardada;
     }
 
     @DeleteMapping("/admin/noticias/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void eliminar(@PathVariable Long id) {
         Noticia noticia = obtenerAdmin(id);
         noticia.setEstado(EstadoPublicacion.ARCHIVADA);
-        noticiaRepository.save(noticia);
+        Noticia guardada = noticiaRepository.save(noticia);
+        registrarAuditoria(guardada, "ARCHIVADO");
     }
 
     private Noticia buscarPublica(String identificador) {
@@ -130,6 +161,22 @@ public class NoticiaController {
             candidato = base + "-" + sufijo++;
         }
         return candidato;
+    }
+
+    private void registrarAuditoria(Noticia noticia, String accion) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario no encontrado"));
+
+        AuditoriaNoticia auditoria = new AuditoriaNoticia();
+        auditoria.setNoticiaId(noticia.getId());
+        auditoria.setNoticiaTitulo(noticia.getTitulo());
+        auditoria.setAccion(accion);
+        auditoria.setEstadoResultante(noticia.getEstado().name());
+        auditoria.setUsuarioNombre(usuario.getNombre());
+        auditoria.setUsuarioEmail(usuario.getEmail());
+        auditoria.setFecha(Instant.now());
+        auditoriaRepository.save(auditoria);
     }
 
     public record PaginaNoticias(

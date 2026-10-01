@@ -222,10 +222,26 @@ describe('Portal de prensa', () => {
   it('noticias públicas consultan exclusivamente la API pública', () => {
     localStorage.setItem('municipio-noticias', JSON.stringify([{ ...news, titulo: 'Legacy' }]));
     const fixture = TestBed.createComponent(Noticias);
-    http.expectOne('/api/noticias').flush([news]);
+    http.expectOne((req) => req.url === '/api/noticias' && req.params.get('page') === '0' && req.params.get('size') === '12')
+      .flush({ content: [news], page: 0, size: 12, totalElements: 1, totalPages: 1, first: true, last: true });
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toContain(news.titulo);
     expect(fixture.nativeElement.textContent).not.toContain('Legacy');
+  });
+
+  it('noticias públicas permiten avanzar de página', () => {
+    const fixture = TestBed.createComponent(Noticias);
+    http.expectOne((req) => req.url === '/api/noticias' && req.params.get('page') === '0')
+      .flush({ content: [news], page: 0, size: 12, totalElements: 13, totalPages: 2, first: true, last: false });
+    fixture.detectChanges();
+
+    fixture.componentInstance.cambiarPagina(1);
+    http.expectOne((req) => req.url === '/api/noticias' && req.params.get('page') === '1')
+      .flush({ content: [{ ...news, id: 2 }], page: 1, size: 12, totalElements: 13, totalPages: 2, first: false, last: true });
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.pagina).toBe(1);
+    expect(fixture.componentInstance.noticias[0].id).toBe(2);
   });
 
   it('Home conserva la jerarquía institucional antes de los accesos', () => {

@@ -6,6 +6,7 @@ import { Routes } from '@angular/router';
 
 import { adminGuard } from './core/admin.guard';
 import { roleGuard } from './core/role.guard';
+import { AdminAuditoriaNoticias } from './pages/admin/admin-auditoria-noticias/admin-auditoria-noticias';
 import { AdminDashboard } from './pages/admin/admin-dashboard/admin-dashboard';
 import { AdminLayout } from './pages/admin/admin-layout/admin-layout';
 import { AdminLogin } from './pages/admin/admin-login/admin-login';
@@ -86,6 +87,12 @@ export const routes: Routes = [
       {
         path: 'noticias',
         component: AdminNoticias,
+        canActivate: [roleGuard],
+        data: { roles: ['PRENSA'] },
+      },
+      {
+        path: 'noticias/auditoria',
+        component: AdminAuditoriaNoticias,
         canActivate: [roleGuard],
         data: { roles: ['PRENSA'] },
       },

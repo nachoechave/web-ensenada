@@ -30,8 +30,14 @@ export class AdminNoticias {
   cambiarEstado(noticia: Noticia): void {
     this.noticiasService
       .actualizarDesdeApi(noticia.id, {
-        ...noticia,
+        titulo: noticia.titulo,
+        bajada: noticia.bajada,
+        contenido: noticia.contenido,
+        imagen: noticia.imagen,
+        categoria: noticia.categoria,
+        fechaPublicacion: noticia.fechaPublicacion,
         estado: noticia.estado === 'PUBLICADA' ? 'BORRADOR' : 'PUBLICADA',
+        destacada: noticia.destacada,
       })
       .subscribe({
         error: () => {

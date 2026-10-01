@@ -1,6 +1,7 @@
 export interface Noticia {
   id: number;
   titulo: string;
+  slug: string;
   bajada: string;
   contenido: string;
   imagen: string;

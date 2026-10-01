@@ -17,6 +17,7 @@ import { NoticiasService } from './services/noticias.service';
 import { PortalContentService } from './services/portal-content.service';
 import { cloneDefaultPortalContent } from './config/site-content';
 import { AdminNoticias } from './pages/admin/admin-noticias/admin-noticias';
+import { AdminAuditoriaNoticias } from './pages/admin/admin-auditoria-noticias/admin-auditoria-noticias';
 import { AdminNoticiaForm } from './pages/admin/admin-noticia-form/admin-noticia-form';
 import { Noticias } from './pages/noticias/noticias';
 import { Home } from './pages/home/home';

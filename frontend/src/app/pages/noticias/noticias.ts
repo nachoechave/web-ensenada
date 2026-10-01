@@ -38,8 +38,12 @@ export class Noticias {
     if (pagina < 0 || pagina >= this.totalPaginas || pagina === this.pagina) return;
     this.pagina = pagina;
     this.cargarNoticias();
-    if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+      try {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch {
+        // Algunos entornos de test no implementan scrollTo.
+      }
     }
   }
 

@@ -11,7 +11,11 @@
         </p>
       </div>
 
-      <div class="noticias-grid">
+      @if (!error && totalElementos > 0) {
+        <p class="news-count">{{ totalElementos }} noticias publicadas</p>
+      }
+
+      <div class="noticias-grid" [attr.aria-busy]="cargando">
         @if (error) {
           <p role="alert">{{ error }}</p>
         }
@@ -23,6 +27,36 @@
           }
         }
       </div>
+
+      @if (totalPaginas > 1) {
+        <nav class="pagination" aria-label="Paginación de noticias">
+          <button type="button" (click)="cambiarPagina(pagina - 1)" [disabled]="pagina === 0 || cargando">
+            ← Anterior
+          </button>
+
+          <div class="page-numbers">
+            @for (paginaVisible of paginasVisibles; track paginaVisible) {
+              <button
+                type="button"
+                [class.active]="paginaVisible === pagina"
+                [attr.aria-current]="paginaVisible === pagina ? 'page' : null"
+                (click)="cambiarPagina(paginaVisible)"
+                [disabled]="cargando"
+              >
+                {{ paginaVisible + 1 }}
+              </button>
+            }
+          </div>
+
+          <button
+            type="button"
+            (click)="cambiarPagina(pagina + 1)"
+            [disabled]="pagina >= totalPaginas - 1 || cargando"
+          >
+            Siguiente →
+          </button>
+        </nav>
+      }
     </div>
   </section>
 </main>

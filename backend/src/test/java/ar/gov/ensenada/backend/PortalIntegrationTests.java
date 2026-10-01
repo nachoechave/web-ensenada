@@ -95,12 +95,12 @@ class PortalIntegrationTests {
     }
     @Test void crearEditarPublicarYArchivar() throws Exception {
         long id=crear("BORRADOR",true);
-        mvc.perform(get("/api/noticias")).andExpect(jsonPath("$.length()").value(0));
+        mvc.perform(get("/api/noticias")).andExpect(jsonPath("$.content.length()").value(0));
         mvc.perform(get("/api/noticias/"+id)).andExpect(status().isNotFound());
         mvc.perform(put("/api/admin/noticias/"+id).header("Authorization","Bearer "+prensa)
             .contentType(MediaType.APPLICATION_JSON).content(noticia("PUBLICADA",true).replace("Nueva noticia","Título editado")))
             .andExpect(status().isOk()).andExpect(jsonPath("$.titulo").value("Título editado"));
-        mvc.perform(get("/api/noticias")).andExpect(jsonPath("$.length()").value(1));
+        mvc.perform(get("/api/noticias")).andExpect(jsonPath("$.content.length()").value(1));
         Noticia publicada = noticias.findById(id).orElseThrow();
         String slugOriginal = publicada.getSlug();
         assertNotNull(slugOriginal);
@@ -109,7 +109,7 @@ class PortalIntegrationTests {
         mvc.perform(get("/api/noticias/"+slugOriginal)).andExpect(status().isOk()).andExpect(jsonPath("$.id").value(id));
         mvc.perform(delete("/api/admin/noticias/"+id).header("Authorization","Bearer "+prensa)).andExpect(status().isNoContent());
         assertEquals(EstadoPublicacion.ARCHIVADA, noticias.findById(id).orElseThrow().getEstado());
-        mvc.perform(get("/api/noticias")).andExpect(jsonPath("$.length()").value(0));
+        mvc.perform(get("/api/noticias")).andExpect(jsonPath("$.content.length()").value(0));
         mvc.perform(get("/api/noticias/"+id)).andExpect(status().isNotFound());
         mvc.perform(get("/api/admin/noticias/"+id).header("Authorization","Bearer "+prensa))
             .andExpect(status().isOk()).andExpect(jsonPath("$.estado").value("ARCHIVADA"))
@@ -123,10 +123,30 @@ class PortalIntegrationTests {
         assertEquals("nueva-noticia-2", noticias.findById(segundo).orElseThrow().getSlug());
     }
 
+    @Test void noticiasPublicasPaginanResultados() throws Exception {
+        for (int i = 0; i < 14; i++) crear("PUBLICADA", false);
+
+        mvc.perform(get("/api/noticias?page=0&size=5"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.content.length()").value(5))
+            .andExpect(jsonPath("$.page").value(0))
+            .andExpect(jsonPath("$.size").value(5))
+            .andExpect(jsonPath("$.totalElements").value(14))
+            .andExpect(jsonPath("$.totalPages").value(3))
+            .andExpect(jsonPath("$.first").value(true))
+            .andExpect(jsonPath("$.last").value(false));
+
+        mvc.perform(get("/api/noticias?page=2&size=5"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.content.length()").value(4))
+            .andExpect(jsonPath("$.page").value(2))
+            .andExpect(jsonPath("$.last").value(true));
+    }
+
     @Test void destacadasSoloPublicadasYMarcadas() throws Exception {
         crear("BORRADOR",true); crear("ARCHIVADA",true); crear("PUBLICADA",false); long id=crear("PUBLICADA",true);
         mvc.perform(get("/api/noticias/destacadas")).andExpect(jsonPath("$.length()").value(1)).andExpect(jsonPath("$[0].id").value(id));
-        mvc.perform(get("/api/noticias")).andExpect(jsonPath("$.length()").value(2));
+        mvc.perform(get("/api/noticias")).andExpect(jsonPath("$.content.length()").value(2));
     }
     @Test void validacionDeNoticia() throws Exception {
         mvc.perform(post("/api/admin/noticias").header("Authorization","Bearer "+prensa).contentType(MediaType.APPLICATION_JSON)

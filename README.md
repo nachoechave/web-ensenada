@@ -57,7 +57,7 @@ Imágenes: JPEG/PNG, máximo 5 MB y 20 megapíxeles. Se decodifican, verifican y
 | POST | `/auth/login` | Público |
 | GET / PUT | `/auth/me` | Autenticado |
 | PUT | `/auth/me/password` | Autenticado, contraseña actual |
-| GET | `/noticias`, `/noticias/destacadas`, `/noticias/{slug-o-id}` | Público; solo publicadas |
+| GET | `/noticias?page=0&size=12`, `/noticias/destacadas`, `/noticias/{slug-o-id}` | Público; solo publicadas; listado paginado |
 | GET / POST | `/admin/noticias` | PRENSA / SUPER_ADMIN |
 | GET / PUT / DELETE | `/admin/noticias/{id}` | PRENSA / SUPER_ADMIN; DELETE archiva |
 | POST multipart (`archivo`) | `/admin/archivos/noticias` | PRENSA / SUPER_ADMIN |
@@ -81,7 +81,7 @@ Flyway V1 crea usuarios, roles y noticias y permanece sin cambios. V2 agrega pub
 
 Antes de desplegar: configurar secretos nuevos, cuenta inicial, MySQL, backup y almacenamiento; completar URLs pendientes; validar migración en copia de la base real; configurar HTTPS, reverse proxy SPA (`index.html` para rutas frontend), límites de upload y orígenes permitidos. No usar el perfil de memoria `dev` en producción. El login tiene rate limiting configurable por IP (10 intentos / 300 segundos por defecto); revisar la política de proxy y los límites por instancia en [la guía operativa](docs/hacienda.md).
 
-Deuda: paginación para noticias, auditoría editorial, limpieza programada de imágenes huérfanas, recuperación de cuentas y eventual uso de cookies HttpOnly. Actualmente los tokens tienen 120 minutos de vida; desactivar una cuenta revoca acceso inmediatamente porque el backend consulta sus roles/estado en cada petición. Cambiar la contraseña incrementa `tokenVersion`, por lo que los JWT emitidos anteriormente dejan de ser válidos.
+Deuda: auditoría editorial, limpieza programada de imágenes huérfanas, recuperación de cuentas y eventual uso de cookies HttpOnly. Actualmente los tokens tienen 120 minutos de vida; desactivar una cuenta revoca acceso inmediatamente porque el backend consulta sus roles/estado en cada petición. Cambiar la contraseña incrementa `tokenVersion`, por lo que los JWT emitidos anteriormente dejan de ser válidos.
 
 SEO inicial en español argentino, títulos y metadatos de noticia. Las noticias nuevas reciben un `slug` único y estable derivado del título; el endpoint público acepta slug o ID para conservar compatibilidad con enlaces históricos. El frontend usa el slug como URL pública y completa Open Graph/Twitter/canonical en cliente. SSR/prerender de noticias sigue pendiente: los crawlers sociales que no ejecutan JavaScript ven solo metadata inicial.
 

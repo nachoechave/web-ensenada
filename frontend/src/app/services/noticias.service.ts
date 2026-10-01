@@ -5,6 +5,16 @@ import { Observable, Subject, tap } from 'rxjs';
 
 import { Noticia } from '../models/noticia.model';
 
+export interface PaginaNoticias {
+  content: Noticia[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  first: boolean;
+  last: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -15,8 +25,10 @@ export class NoticiasService {
 
   readonly cambiosNoticias$ = this.cambiosNoticiasSubject.asObservable();
 
-  obtenerPublicadasDesdeApi(): Observable<Noticia[]> {
-    return this.http.get<Noticia[]>(`${this.apiUrl}/noticias`);
+  obtenerPublicadasDesdeApi(page = 0, size = 12): Observable<PaginaNoticias> {
+    return this.http.get<PaginaNoticias>(`${this.apiUrl}/noticias`, {
+      params: { page, size },
+    });
   }
 
   obtenerDestacadasDesdeApi(): Observable<Noticia[]> {

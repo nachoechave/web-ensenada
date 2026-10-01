@@ -27,21 +27,25 @@ export class NoticiasService {
     return this.http.get<Noticia[]>(`${this.apiUrl}/admin/noticias`);
   }
 
+  obtenerPublicaDesdeApi(identificador: string | number): Observable<Noticia> {
+    return this.http.get<Noticia>(`${this.apiUrl}/noticias/${encodeURIComponent(String(identificador))}`);
+  }
+
   obtenerPublicaPorIdDesdeApi(id: number): Observable<Noticia> {
-    return this.http.get<Noticia>(`${this.apiUrl}/noticias/${id}`);
+    return this.obtenerPublicaDesdeApi(id);
   }
 
   obtenerAdminPorIdDesdeApi(id: number): Observable<Noticia> {
     return this.http.get<Noticia>(`${this.apiUrl}/admin/noticias/${id}`);
   }
 
-  crearDesdeApi(noticia: Omit<Noticia, 'id'>): Observable<Noticia> {
+  crearDesdeApi(noticia: Omit<Noticia, 'id' | 'slug'>): Observable<Noticia> {
     return this.http
       .post<Noticia>(`${this.apiUrl}/admin/noticias`, noticia)
       .pipe(tap(() => this.notificarCambio()));
   }
 
-  actualizarDesdeApi(id: number, noticia: Omit<Noticia, 'id'>): Observable<Noticia> {
+  actualizarDesdeApi(id: number, noticia: Omit<Noticia, 'id' | 'slug'>): Observable<Noticia> {
     return this.http
       .put<Noticia>(`${this.apiUrl}/admin/noticias/${id}`, noticia)
       .pipe(tap(() => this.notificarCambio()));

@@ -101,14 +101,28 @@ class PortalIntegrationTests {
             .contentType(MediaType.APPLICATION_JSON).content(noticia("PUBLICADA",true).replace("Nueva noticia","Título editado")))
             .andExpect(status().isOk()).andExpect(jsonPath("$.titulo").value("Título editado"));
         mvc.perform(get("/api/noticias")).andExpect(jsonPath("$.length()").value(1));
-        mvc.perform(get("/api/noticias/"+id)).andExpect(status().isOk());
+        Noticia publicada = noticias.findById(id).orElseThrow();
+        String slugOriginal = publicada.getSlug();
+        assertNotNull(slugOriginal);
+        assertFalse(slugOriginal.isBlank());
+        mvc.perform(get("/api/noticias/"+id)).andExpect(status().isOk()).andExpect(jsonPath("$.slug").value(slugOriginal));
+        mvc.perform(get("/api/noticias/"+slugOriginal)).andExpect(status().isOk()).andExpect(jsonPath("$.id").value(id));
         mvc.perform(delete("/api/admin/noticias/"+id).header("Authorization","Bearer "+prensa)).andExpect(status().isNoContent());
         assertEquals(EstadoPublicacion.ARCHIVADA, noticias.findById(id).orElseThrow().getEstado());
         mvc.perform(get("/api/noticias")).andExpect(jsonPath("$.length()").value(0));
         mvc.perform(get("/api/noticias/"+id)).andExpect(status().isNotFound());
         mvc.perform(get("/api/admin/noticias/"+id).header("Authorization","Bearer "+prensa))
-            .andExpect(status().isOk()).andExpect(jsonPath("$.estado").value("ARCHIVADA"));
+            .andExpect(status().isOk()).andExpect(jsonPath("$.estado").value("ARCHIVADA"))
+            .andExpect(jsonPath("$.slug").value(slugOriginal));
+        assertEquals(slugOriginal, noticias.findById(id).orElseThrow().getSlug());
     }
+    @Test void slugsDuplicadosRecibenSufijo() throws Exception {
+        long primero = crear("PUBLICADA", false);
+        long segundo = crear("PUBLICADA", false);
+        assertEquals("nueva-noticia", noticias.findById(primero).orElseThrow().getSlug());
+        assertEquals("nueva-noticia-2", noticias.findById(segundo).orElseThrow().getSlug());
+    }
+
     @Test void destacadasSoloPublicadasYMarcadas() throws Exception {
         crear("BORRADOR",true); crear("ARCHIVADA",true); crear("PUBLICADA",false); long id=crear("PUBLICADA",true);
         mvc.perform(get("/api/noticias/destacadas")).andExpect(jsonPath("$.length()").value(1)).andExpect(jsonPath("$[0].id").value(id));

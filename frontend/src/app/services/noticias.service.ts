@@ -5,6 +5,17 @@ import { Observable, Subject, tap } from 'rxjs';
 
 import { Noticia } from '../models/noticia.model';
 
+export interface AuditoriaNoticia {
+  id: number;
+  noticiaId: number;
+  noticiaTitulo: string;
+  accion: 'CREACION' | 'EDICION' | 'PUBLICACION' | 'DESPUBLICACION' | 'ARCHIVADO';
+  estadoResultante: string;
+  usuarioNombre: string;
+  usuarioEmail: string;
+  fecha: string;
+}
+
 export interface PaginaNoticias {
   content: Noticia[];
   page: number;
@@ -37,6 +48,10 @@ export class NoticiasService {
 
   obtenerTodasDesdeApi(): Observable<Noticia[]> {
     return this.http.get<Noticia[]>(`${this.apiUrl}/admin/noticias`);
+  }
+
+  obtenerAuditoriaDesdeApi(): Observable<AuditoriaNoticia[]> {
+    return this.http.get<AuditoriaNoticia[]>(`${this.apiUrl}/admin/noticias/auditoria`);
   }
 
   obtenerPublicaDesdeApi(identificador: string | number): Observable<Noticia> {

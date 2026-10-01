@@ -19,6 +19,7 @@ import { cloneDefaultPortalContent } from './config/site-content';
 import { AdminNoticias } from './pages/admin/admin-noticias/admin-noticias';
 import { AdminNoticiaForm } from './pages/admin/admin-noticia-form/admin-noticia-form';
 import { Noticias } from './pages/noticias/noticias';
+import { Home } from './pages/home/home';
 import { NoticiasDestacadas } from './components/noticias-destacadas/noticias-destacadas';
 import { Noticia } from './models/noticia.model';
 import { AdminLayout } from './pages/admin/admin-layout/admin-layout';
@@ -224,6 +225,29 @@ describe('Portal de prensa', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toContain(news.titulo);
     expect(fixture.nativeElement.textContent).not.toContain('Legacy');
+  });
+
+  it('Home conserva la jerarquía institucional antes de los accesos', () => {
+    const fixture = TestBed.createComponent(Home);
+    fixture.detectChanges();
+    http.expectOne('/api/noticias/destacadas').flush([news]);
+    fixture.detectChanges();
+
+    const main = fixture.nativeElement.querySelector('main');
+    const municipio = main.querySelector('#municipio');
+    const destacadas = main.querySelector('app-noticias-destacadas');
+    const accesos = main.querySelector('#accesos');
+    const areas = main.querySelector('#areas');
+
+    expect(
+      municipio.compareDocumentPosition(destacadas) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      destacadas.compareDocumentPosition(accesos) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      accesos.compareDocumentPosition(areas) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
   });
 
   it('Home usa el endpoint de destacadas', () => {

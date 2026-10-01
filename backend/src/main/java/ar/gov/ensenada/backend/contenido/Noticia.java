@@ -13,6 +13,9 @@ public class Noticia {
     @Column(nullable = false)
     private String titulo;
 
+    @Column(nullable = false, unique = true, length = 280)
+    private String slug;
+
     @Column(nullable = false, length = 500)
     private String bajada;
 
@@ -42,6 +45,10 @@ public class Noticia {
 
     public String getTitulo() {
         return titulo;
+    }
+
+    public String getSlug() {
+        return slug;
     }
 
     public String getBajada() {
@@ -78,6 +85,10 @@ public class Noticia {
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 
     public void setBajada(String bajada) {

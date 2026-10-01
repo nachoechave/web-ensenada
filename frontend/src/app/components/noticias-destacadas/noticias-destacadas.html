@@ -22,7 +22,7 @@
               <small>{{ noticiaPrincipal.fechaPublicacion }}</small>
               <h3>{{ noticiaPrincipal.titulo }}</h3>
               <p>{{ noticiaPrincipal.bajada }}</p>
-              <a [routerLink]="['/noticias', noticiaPrincipal.id]" aria-label="Leer noticia principal">→</a>
+              <a [routerLink]="['/noticias', noticiaPrincipal.slug]" aria-label="Leer noticia principal">→</a>
             </div>
           </article>
 
@@ -34,7 +34,7 @@
                 <small>{{ noticia.fechaPublicacion }}</small>
                 <h3>{{ noticia.titulo }}</h3>
                 <p>{{ noticia.bajada }}</p>
-                <a [routerLink]="['/noticias', noticia.id]" aria-label="Leer noticia">→</a>
+                <a [routerLink]="['/noticias', noticia.slug]" aria-label="Leer noticia">→</a>
               </div>
             </article>
           }

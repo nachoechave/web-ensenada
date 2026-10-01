@@ -1,6 +1,9 @@
 package ar.gov.ensenada.backend.contenido;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,8 +23,26 @@ public class NoticiaController {
     }
 
     @GetMapping("/noticias")
-    public List<Noticia> listarPublicadas() {
-        return noticiaRepository.findByEstadoOrderByIdDesc(EstadoPublicacion.PUBLICADA);
+    public PaginaNoticias listarPublicadas(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size
+    ) {
+        int pagina = Math.max(0, page);
+        int tamanio = Math.min(48, Math.max(1, size));
+        Page<Noticia> resultado = noticiaRepository.findByEstado(
+                EstadoPublicacion.PUBLICADA,
+                PageRequest.of(pagina, tamanio, Sort.by(Sort.Direction.DESC, "id"))
+        );
+
+        return new PaginaNoticias(
+                resultado.getContent(),
+                resultado.getNumber(),
+                resultado.getSize(),
+                resultado.getTotalElements(),
+                resultado.getTotalPages(),
+                resultado.isFirst(),
+                resultado.isLast()
+        );
     }
 
     @GetMapping("/noticias/destacadas")
@@ -110,6 +131,16 @@ public class NoticiaController {
         }
         return candidato;
     }
+
+    public record PaginaNoticias(
+            List<Noticia> content,
+            int page,
+            int size,
+            long totalElements,
+            int totalPages,
+            boolean first,
+            boolean last
+    ) {}
 
     private void completar(Noticia noticia, NoticiaRequest request) {
         noticia.setTitulo(request.titulo());

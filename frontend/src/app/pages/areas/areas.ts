@@ -1,9 +1,9 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, afterNextRender, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Footer } from '../../components/footer/footer';
 import { Navbar } from '../../components/navbar/navbar';
-import { cloneDefaultPortalContent } from '../../config/site-content';
+import { PortalContent } from '../../models/portal-content.model';
 import { PortalContentService } from '../../services/portal-content.service';
 
 @Component({
@@ -16,26 +16,32 @@ export class Areas {
   private readonly portalContentService = inject(PortalContentService);
   private readonly destroyRef = inject(DestroyRef);
 
-  contenido = cloneDefaultPortalContent();
+  contenido: PortalContent | null = null;
+  cargando = true;
   errorCarga = '';
 
   constructor() {
-    this.portalContentService
-      .obtenerPublico(true)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (contenido) => {
-          this.contenido = contenido;
-          this.errorCarga = '';
-        },
-        error: () => {
-          this.errorCarga =
-            'No se pudo cargar la información pública actualizada. Revisá que el backend esté disponible.';
-        },
-      });
+    afterNextRender(() => {
+      this.portalContentService
+        .obtenerPublico(true)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (contenido) => {
+            this.contenido = contenido;
+            this.cargando = false;
+            this.errorCarga = '';
+          },
+          error: () => {
+            this.contenido = null;
+            this.cargando = false;
+            this.errorCarga =
+              'No se pudo cargar la información pública actualizada. Revisá que el backend esté disponible.';
+          },
+        });
+    });
   }
 
   get secretarias() {
-    return this.contenido.areas.secretarias;
+    return this.contenido?.areas.secretarias ?? [];
   }
 }

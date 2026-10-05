@@ -270,8 +270,11 @@ describe('Portal de prensa', () => {
     expect(fixture.componentInstance.noticias[0].id).toBe(2);
   });
 
-  it('Áreas muestra el directorio completo de secretarías', () => {
+  it('Áreas muestra el directorio completo de secretarías', async () => {
     const fixture = TestBed.createComponent(Areas);
+    fixture.detectChanges();
+
+    await fixture.whenStable();
     fixture.detectChanges();
 
     const cards = fixture.nativeElement.querySelectorAll('.secretaria-card');

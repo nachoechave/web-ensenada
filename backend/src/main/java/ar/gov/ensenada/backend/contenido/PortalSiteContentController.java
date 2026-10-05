@@ -1,5 +1,6 @@
 package ar.gov.ensenada.backend.contenido;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class PortalSiteContentController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<String> guardar(@RequestBody String contenido) {
+    public ResponseEntity<JsonNode> guardar(@RequestBody JsonNode contenido) {
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noStore())
                 .contentType(MediaType.APPLICATION_JSON)

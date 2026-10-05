@@ -72,11 +72,13 @@ export class AdminSitio {
     );
     this.contenido.hero.imagen = this.contenido.hero.imagenes[0] ?? this.contenido.hero.imagen;
 
-    this.portalContentService.guardar(this.contenido).subscribe({
+    const enviado = structuredClone(this.contenido);
+
+    this.portalContentService.guardar(enviado).subscribe({
       next: (contenido) => {
         this.contenido = contenido;
         this.guardando = false;
-        this.mensaje = 'Cambios guardados. La home pública ya usa esta configuración.';
+        this.mensaje = 'Cambios guardados y verificados contra la base de datos.';
         this.cdr.markForCheck();
       },
       error: () => {

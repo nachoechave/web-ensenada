@@ -1,5 +1,6 @@
 package ar.gov.ensenada.backend.contenido;
 
+import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,12 +19,18 @@ public class PortalSiteContentController {
 
     @GetMapping(value = "/api/site-content", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> obtenerPublico() {
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(service.obtener());
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(service.obtener());
     }
 
     @GetMapping(value = "/api/admin/site-content", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> obtenerAdmin() {
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(service.obtener());
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(service.obtener());
     }
 
     @PutMapping(
@@ -32,6 +39,9 @@ public class PortalSiteContentController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<String> guardar(@RequestBody String contenido) {
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(service.guardar(contenido));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(service.guardar(contenido));
     }
 }

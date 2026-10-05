@@ -21,6 +21,10 @@ export class Footer {
     this.portalContentService
       .obtenerPublico()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((contenido) => (this.contenido = contenido));
+      .subscribe({
+        next: (contenido) => (this.contenido = contenido),
+        // Mantener los enlaces del sitio cuando la página informa un error del CMS.
+        error: () => {},
+      });
   }
 }

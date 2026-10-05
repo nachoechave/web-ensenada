@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Footer } from '../../components/footer/footer';
@@ -16,9 +16,9 @@ export class Areas {
   private readonly portalContentService = inject(PortalContentService);
   private readonly destroyRef = inject(DestroyRef);
 
-  contenido: PortalContent | null = null;
-  cargando = true;
-  errorCarga = '';
+  readonly contenido = signal<PortalContent | null>(null);
+  readonly cargando = signal(true);
+  readonly errorCarga = signal('');
 
   constructor() {
     this.portalContentService
@@ -26,20 +26,21 @@ export class Areas {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (contenido) => {
-          this.contenido = contenido;
-          this.cargando = false;
-          this.errorCarga = '';
+          this.contenido.set(contenido);
+          this.cargando.set(false);
+          this.errorCarga.set('');
         },
         error: () => {
-          this.contenido = null;
-          this.cargando = false;
-          this.errorCarga =
-            'No se pudo cargar la información pública actualizada. Revisá que el backend esté disponible.';
+          this.contenido.set(null);
+          this.cargando.set(false);
+          this.errorCarga.set(
+            'No se pudo cargar la información pública actualizada. Revisá que el backend esté disponible.',
+          );
         },
       });
   }
 
   get secretarias() {
-    return this.contenido?.areas.secretarias ?? [];
+    return this.contenido()?.areas.secretarias ?? [];
   }
 }

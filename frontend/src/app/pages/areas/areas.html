@@ -1,22 +1,22 @@
 <app-navbar></app-navbar>
 
 <main class="areas-page">
-  @if (cargando) {
+  @if (cargando()) {
     <section class="areas-hero">
       <div class="areas-shell">
         <span class="eyebrow">Municipalidad de Ensenada</span>
         <h1>Cargando áreas municipales…</h1>
       </div>
     </section>
-  } @else if (errorCarga) {
+  } @else if (errorCarga()) {
     <section class="areas-hero">
       <div class="areas-shell">
         <span class="eyebrow">Municipalidad de Ensenada</span>
         <h1>No pudimos cargar el directorio</h1>
-        <p>{{ errorCarga }}</p>
+        <p>{{ errorCarga() }}</p>
       </div>
     </section>
-  } @else if (contenido; as contenidoActual) {
+  } @else if (contenido(); as contenidoActual) {
     <section class="areas-hero">
       <div class="areas-shell">
         <span class="eyebrow">Municipalidad de Ensenada</span>

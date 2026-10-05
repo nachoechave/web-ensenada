@@ -221,7 +221,7 @@
                   <label>Horario<input [ngModel]="secretaria.horario" (ngModelChange)="actualizarCampoSecretaria($index, 'horario', $event)" /></label>
                 </div>
                 <div class="fields two">
-                  <label>Dirección<input [ngModel]="secretaria.direccion" (ngModelChange)="actualizarCampoSecretaria($index, 'direccion', $event)" /></label>
+                  <label>Dirección<input data-field="direccion" [attr.data-secretaria-id]="secretaria.id" [ngModel]="secretaria.direccion" (ngModelChange)="actualizarCampoSecretaria($index, 'direccion', $event)" /></label>
                   <label>Email<input [ngModel]="secretaria.email" (ngModelChange)="actualizarCampoSecretaria($index, 'email', $event)" /></label>
                 </div>
               </article>

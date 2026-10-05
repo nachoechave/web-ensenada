@@ -29,11 +29,10 @@ describe('AdminSitio CMS', () => {
     http.expectOne('/api/admin/site-content').flush(inicial);
     fixture.detectChanges();
 
-    const direccionOriginal = inicial.areas.secretarias[0].direccion;
-    const inputs = Array.from(
-      fixture.nativeElement.querySelectorAll('input'),
-    ) as HTMLInputElement[];
-    const direccionInput = inputs.find((input) => input.value === direccionOriginal);
+    const secretariaId = inicial.areas.secretarias[0].id;
+    const direccionInput = fixture.nativeElement.querySelector(
+      `input[data-field="direccion"][data-secretaria-id="${secretariaId}"]`,
+    ) as HTMLInputElement | null;
 
     expect(direccionInput).toBeTruthy();
 

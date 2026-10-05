@@ -47,6 +47,9 @@
 @if (error) {
   <p class="error-message">{{ error }}</p>
 }
+@if (mensaje) {
+  <p class="success-message">{{ mensaje }}</p>
+}
 
 @if (cargando) {
   <p class="loading-message">Cargando usuarios...</p>
@@ -78,6 +81,25 @@
             }
           </select></label
         >
+
+        <label>
+          Contraseña temporal
+          <input
+            type="password"
+            minlength="12"
+            maxlength="72"
+            [(ngModel)]="passwordsTemporales[usuarioAdmin.id]"
+            [name]="'password-reset-' + usuarioAdmin.id"
+            placeholder="Mínimo 12 caracteres"
+          />
+        </label>
+        <button
+          type="button"
+          [disabled]="(passwordsTemporales[usuarioAdmin.id] || '').length < 12"
+          (click)="resetearPassword(usuarioAdmin)"
+        >
+          Restablecer contraseña
+        </button>
       }
     </article>
   }

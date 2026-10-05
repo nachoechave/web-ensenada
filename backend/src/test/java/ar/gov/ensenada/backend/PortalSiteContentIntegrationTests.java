@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -75,9 +76,9 @@ class PortalSiteContentIntegrationTests {
                     "id": "seguridad-justicia",
                     "nombre": "Secretaría de Seguridad y Justicia",
                     "responsable": "Martín Slobodian",
-                    "direccion": "Calle Nueva 123",
-                    "telefono": "(221) 555-9999",
-                    "horario": "Lunes a viernes de 9 a 15",
+                    "direccion": "La Merced y Don Bosco.",
+                    "telefono": "(0221) 469-3154",
+                    "horario": "Lunes a viernes de 8:00 a 16:00",
                     "email": "seguridad@example.test"
                   }
                 ]
@@ -90,18 +91,21 @@ class PortalSiteContentIntegrationTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.areas.secretarias[0].direccion").value("Calle Nueva 123"))
-                .andExpect(jsonPath("$.areas.secretarias[0].telefono").value("(221) 555-9999"));
+                .andExpect(header().string("Cache-Control", "no-store"))
+                .andExpect(jsonPath("$.areas.secretarias[0].direccion").value("La Merced y Don Bosco."))
+                .andExpect(jsonPath("$.areas.secretarias[0].telefono").value("(0221) 469-3154"));
 
         mvc.perform(get("/api/admin/site-content")
                         .header("Authorization", "Bearer " + admin))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.areas.secretarias[0].direccion").value("Calle Nueva 123"))
-                .andExpect(jsonPath("$.areas.secretarias[0].telefono").value("(221) 555-9999"));
+                .andExpect(header().string("Cache-Control", "no-store"))
+                .andExpect(jsonPath("$.areas.secretarias[0].direccion").value("La Merced y Don Bosco."))
+                .andExpect(jsonPath("$.areas.secretarias[0].telefono").value("(0221) 469-3154"));
 
         mvc.perform(get("/api/site-content"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.areas.secretarias[0].direccion").value("Calle Nueva 123"))
-                .andExpect(jsonPath("$.areas.secretarias[0].telefono").value("(221) 555-9999"));
+                .andExpect(header().string("Cache-Control", "no-store"))
+                .andExpect(jsonPath("$.areas.secretarias[0].direccion").value("La Merced y Don Bosco."))
+                .andExpect(jsonPath("$.areas.secretarias[0].telefono").value("(0221) 469-3154"));
     }
 }

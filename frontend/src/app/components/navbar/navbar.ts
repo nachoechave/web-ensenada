@@ -23,7 +23,11 @@ export class Navbar {
     this.portalContentService
       .obtenerPublico()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((contenido) => (this.contenido = contenido));
+      .subscribe({
+        next: (contenido) => (this.contenido = contenido),
+        // La navegación sigue disponible si el CMS falla; la página informa el error.
+        error: () => {},
+      });
   }
 
   cerrarMenus(): void {

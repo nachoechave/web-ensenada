@@ -1,9 +1,7 @@
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Injectable, PLATFORM_ID, inject } from '@angular/core';
-import { Observable, catchError, map, of, shareReplay, switchMap, tap, throwError, timeout } from 'rxjs';
-
-import { isPlatformServer } from '@angular/common';
+import { Injectable, inject } from '@angular/core';
+import { Observable, map, shareReplay, switchMap, tap, timeout } from 'rxjs';
 
 import { cloneDefaultPortalContent } from '../config/site-content';
 import { PortalContent } from '../models/portal-content.model';
@@ -18,7 +16,6 @@ export interface PortalImageUploadResponse {
 @Injectable({ providedIn: 'root' })
 export class PortalContentService {
   private readonly http = inject(HttpClient);
-  private readonly platformId = inject(PLATFORM_ID);
   private readonly apiUrl = environment.apiUrl;
   private publicContent$?: Observable<PortalContent>;
 
@@ -26,12 +23,15 @@ export class PortalContentService {
     if (!this.publicContent$ || force) {
       this.publicContent$ = this.http.get<Partial<PortalContent>>(`${this.apiUrl}/site-content`, { transferCache: false }).pipe(
         timeout({ first: 8000 }),
-        map((contenido) => this.normalizar(contenido)),
-        catchError((error) =>
-          isPlatformServer(this.platformId)
-            ? of(cloneDefaultPortalContent())
-            : throwError(() => error),
-        ),
+        map((contenido) => {
+          if (!contenido || typeof contenido !== 'object' || Array.isArray(contenido)) {
+            throw new Error('El contenido público debe ser un objeto JSON');
+          }
+          const normalizado = this.normalizar(contenido);
+          // Un directorio ausente o vacío nunca se reemplaza por contactos de ejemplo.
+          normalizado.areas.secretarias = contenido.areas?.secretarias ?? [];
+          return normalizado;
+        }),
         shareReplay({ bufferSize: 1, refCount: false }),
       );
     }

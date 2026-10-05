@@ -1,4 +1,5 @@
 import { PortalContent } from '../models/portal-content.model';
+import { secretariasMunicipales } from './secretarias-municipales';
 
 export const defaultPortalContent: PortalContent = {
   topbar: {
@@ -83,6 +84,9 @@ export const defaultPortalContent: PortalContent = {
     kicker: 'Áreas municipales',
     titulo: 'Conocé nuestras áreas',
     bajada: 'Información, programas y servicios de cada área del Municipio.',
+    paginaTitulo: 'Secretarías y áreas municipales',
+    paginaBajada: 'Consultá autoridades, sedes, teléfonos y horarios de atención de las secretarías del Municipio.',
+    secretarias: secretariasMunicipales.map((item) => ({ ...item, email: item.email ?? '' })),
     items: [
       { titulo: 'Hacienda', descripcion: 'Información fiscal y presupuesto.', url: '/areas#hacienda-produccion', icono: 'building' },
       { titulo: 'Cultura', descripcion: 'Actividades y patrimonio.', url: '/areas#gestion-publica', icono: 'culture' },
@@ -99,11 +103,15 @@ export const defaultPortalContent: PortalContent = {
       'Intendente de Ensenada desde 2003. Información institucional sobre la Intendencia y el Departamento Ejecutivo municipal.',
     imagen: '/assets/mario-secco.jpg',
     botonTexto: 'Conocer la Intendencia',
-    botonUrl: 'https://www.ensenada.gov.ar/intendencia-municipal/',
+    botonUrl: '/intendencia',
     secundarioTexto: 'Ver autoridades',
-    secundarioUrl: 'https://www.ensenada.gov.ar/',
+    secundarioUrl: '/areas',
     cita:
       'Seguimos construyendo una Ensenada con más derechos, más obras y una comunidad cada vez más unida.',
+    historiaTitulo: 'Una gestión ligada a la historia de Ensenada',
+    historia:
+      'Mario Secco es intendente de Ensenada desde 2003. Esta sección institucional puede utilizarse para contar su trayectoria, las distintas etapas de gestión, obras, políticas públicas y momentos relevantes de la ciudad. El contenido completo puede ser actualizado desde el panel de administración.',
+    galeria: ['/assets/mario-secco.jpg'],
   },
   agenda: {
     kicker: 'Agenda y actualidad',

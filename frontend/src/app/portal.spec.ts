@@ -304,6 +304,17 @@ describe('Portal de prensa', () => {
     ).toBeTruthy();
   });
 
+  it('Home sincroniza las tarjetas de áreas con el directorio de secretarías', () => {
+    const fixture = TestBed.createComponent(Home);
+    fixture.detectChanges();
+    http.expectOne('/api/noticias/destacadas').flush([news]);
+    fixture.detectChanges();
+
+    const cards = fixture.nativeElement.querySelectorAll('#areas .area-card');
+    expect(cards.length).toBe(fixture.componentInstance.contenido.areas.secretarias.length);
+    expect(cards[0].getAttribute('href')).toContain('/areas#');
+  });
+
   it('Home usa el endpoint de destacadas', () => {
     const fixture = TestBed.createComponent(NoticiasDestacadas);
     http.expectOne('/api/noticias/destacadas').flush([news]);

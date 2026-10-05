@@ -69,6 +69,17 @@ public class UsuariosAdminController {
         return toResponse(usuarioRepository.save(usuario));
     }
 
+    @PutMapping("/{id}/password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void resetearPassword(@PathVariable Long id, @Valid @RequestBody UsuarioPasswordResetRequest request) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+        protegerAdministrador(usuario);
+        usuario.setPassword(passwordEncoder.encode(request.password()));
+        usuario.incrementarTokenVersion();
+        usuarioRepository.save(usuario);
+    }
+
     @PutMapping("/{id}/activo")
     public UsuarioAdminResponse activar(@PathVariable Long id, @Valid @RequestBody UsuarioActivoRequest request) {
         Usuario usuario = usuarioRepository.findById(id)

@@ -201,7 +201,7 @@
           <h3>Directorio de secretarías</h3>
           <p class="helper">Estos datos alimentan directamente la pantalla pública /areas.</p>
           <div class="repeater">
-            @for (secretaria of contenido.areas.secretarias; track $index) {
+            @for (secretaria of contenido.areas.secretarias; track secretaria.id) {
               <article class="item-editor">
                 <div class="item-toolbar">
                   <strong>Secretaría {{ $index + 1 }}</strong>
@@ -212,17 +212,17 @@
                   </span>
                 </div>
                 <div class="fields two">
-                  <label>Nombre<input [(ngModel)]="secretaria.nombre" /></label>
+                  <label>Nombre<input [ngModel]="secretaria.nombre" (ngModelChange)="actualizarCampoSecretaria($index, 'nombre', $event)" /></label>
                   <label>ID / ancla<input [(ngModel)]="secretaria.id" /></label>
                 </div>
                 <div class="fields three">
-                  <label>Secretario/a<input [(ngModel)]="secretaria.responsable" /></label>
-                  <label>Teléfono<input [(ngModel)]="secretaria.telefono" /></label>
-                  <label>Horario<input [(ngModel)]="secretaria.horario" /></label>
+                  <label>Secretario/a<input [ngModel]="secretaria.responsable" (ngModelChange)="actualizarCampoSecretaria($index, 'responsable', $event)" /></label>
+                  <label>Teléfono<input [ngModel]="secretaria.telefono" (ngModelChange)="actualizarCampoSecretaria($index, 'telefono', $event)" /></label>
+                  <label>Horario<input [ngModel]="secretaria.horario" (ngModelChange)="actualizarCampoSecretaria($index, 'horario', $event)" /></label>
                 </div>
                 <div class="fields two">
-                  <label>Dirección<input [(ngModel)]="secretaria.direccion" /></label>
-                  <label>Email<input [(ngModel)]="secretaria.email" /></label>
+                  <label>Dirección<input [ngModel]="secretaria.direccion" (ngModelChange)="actualizarCampoSecretaria($index, 'direccion', $event)" /></label>
+                  <label>Email<input [ngModel]="secretaria.email" (ngModelChange)="actualizarCampoSecretaria($index, 'email', $event)" /></label>
                 </div>
               </article>
             }

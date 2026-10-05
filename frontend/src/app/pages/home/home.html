@@ -118,20 +118,15 @@
       </div>
 
       <div class="areas-grid">
-        @for (item of contenido.areas.items; track $index) {
-          @if (esInterno(item.url)) {
-            <a class="area-card" [routerLink]="item.url">
-              <span class="area-icon"><app-portal-icon [name]="item.icono"></app-portal-icon></span>
-              <span><strong>{{ item.titulo }}</strong><small>{{ item.descripcion }}</small></span>
-              <span class="circle-arrow" aria-hidden="true">→</span>
-            </a>
-          } @else {
-            <a class="area-card" [href]="item.url" target="_blank" rel="noopener noreferrer">
-              <span class="area-icon"><app-portal-icon [name]="item.icono"></app-portal-icon></span>
-              <span><strong>{{ item.titulo }}</strong><small>{{ item.descripcion }}</small></span>
-              <span class="circle-arrow" aria-hidden="true">→</span>
-            </a>
-          }
+        @for (secretaria of contenido.areas.secretarias; track secretaria.id) {
+          <a class="area-card" routerLink="/areas" [fragment]="secretaria.id">
+            <span class="area-icon"><app-portal-icon [name]="iconoSecretaria(secretaria.id)"></app-portal-icon></span>
+            <span>
+              <strong>{{ secretaria.nombre }}</strong>
+              <small>{{ secretaria.responsable ? 'Responsable: ' + secretaria.responsable : secretaria.direccion }}</small>
+            </span>
+            <span class="circle-arrow" aria-hidden="true">→</span>
+          </a>
         }
       </div>
     </div>

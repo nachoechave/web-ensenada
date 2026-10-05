@@ -1,74 +1,85 @@
 <app-navbar></app-navbar>
 
 <main class="areas-page">
-  <section class="areas-hero">
-    <div class="areas-shell">
-      <span class="eyebrow">Municipalidad de Ensenada</span>
-      <h1>{{ contenido.areas.paginaTitulo }}</h1>
-      <p>
-        {{ contenido.areas.paginaBajada }}
-      </p>
-    </div>
-  </section>
+  @if (cargando) {
+    <section class="areas-hero">
+      <div class="areas-shell">
+        <span class="eyebrow">Municipalidad de Ensenada</span>
+        <h1>Cargando áreas municipales…</h1>
+      </div>
+    </section>
+  } @else if (errorCarga) {
+    <section class="areas-hero">
+      <div class="areas-shell">
+        <span class="eyebrow">Municipalidad de Ensenada</span>
+        <h1>No pudimos cargar el directorio</h1>
+        <p>{{ errorCarga }}</p>
+      </div>
+    </section>
+  } @else if (contenido; as contenidoActual) {
+    <section class="areas-hero">
+      <div class="areas-shell">
+        <span class="eyebrow">Municipalidad de Ensenada</span>
+        <h1>{{ contenidoActual.areas.paginaTitulo }}</h1>
+        <p>{{ contenidoActual.areas.paginaBajada }}</p>
+      </div>
+    </section>
 
-  <section class="areas-directory" aria-labelledby="areas-title">
-    <div class="areas-shell">
-      <div class="directory-heading">
-        <div>
-          <span class="section-kicker">Directorio institucional</span>
-          <h2 id="areas-title">Todas las secretarías</h2>
+    <section class="areas-directory" aria-labelledby="areas-title">
+      <div class="areas-shell">
+        <div class="directory-heading">
+          <div>
+            <span class="section-kicker">Directorio institucional</span>
+            <h2 id="areas-title">Todas las secretarías</h2>
+          </div>
+          <p>{{ secretarias.length }} dependencias principales con información de contacto.</p>
         </div>
-        <p>{{ secretarias.length }} dependencias principales con información de contacto.</p>
-      </div>
 
-      @if (errorCarga) {
-        <p class="source-note">{{ errorCarga }}</p>
-      }
-
-      <div class="secretarias-grid">
-        @for (secretaria of secretarias; track secretaria.id) {
-          <article class="secretaria-card" [id]="secretaria.id">
-            <div class="card-heading">
-              <span class="card-index">{{ $index + 1 }}</span>
-              <div>
-                <p class="card-kicker">Secretaría municipal</p>
-                <h3>{{ secretaria.nombre }}</h3>
-              </div>
-            </div>
-
-            <dl class="secretaria-data">
-              <div>
-                <dt>Secretario/a</dt>
-                <dd>{{ secretaria.responsable }}</dd>
-              </div>
-              <div>
-                <dt>Dirección</dt>
-                <dd>{{ secretaria.direccion }}</dd>
-              </div>
-              <div>
-                <dt>Teléfono</dt>
-                <dd>{{ secretaria.telefono }}</dd>
-              </div>
-              <div>
-                <dt>Horarios</dt>
-                <dd>{{ secretaria.horario }}</dd>
-              </div>
-              @if (secretaria.email) {
+        <div class="secretarias-grid">
+          @for (secretaria of secretarias; track secretaria.id) {
+            <article class="secretaria-card" [id]="secretaria.id">
+              <div class="card-heading">
+                <span class="card-index">{{ $index + 1 }}</span>
                 <div>
-                  <dt>Email</dt>
-                  <dd><a [href]="'mailto:' + secretaria.email">{{ secretaria.email }}</a></dd>
+                  <p class="card-kicker">Secretaría municipal</p>
+                  <h3>{{ secretaria.nombre }}</h3>
                 </div>
-              }
-            </dl>
-          </article>
-        }
-      </div>
+              </div>
 
-      <p class="source-note">
-        Información institucional basada en las fichas oficiales de autoridades de la Municipalidad de Ensenada.
-      </p>
-    </div>
-  </section>
+              <dl class="secretaria-data">
+                <div>
+                  <dt>Secretario/a</dt>
+                  <dd>{{ secretaria.responsable }}</dd>
+                </div>
+                <div>
+                  <dt>Dirección</dt>
+                  <dd>{{ secretaria.direccion }}</dd>
+                </div>
+                <div>
+                  <dt>Teléfono</dt>
+                  <dd>{{ secretaria.telefono }}</dd>
+                </div>
+                <div>
+                  <dt>Horarios</dt>
+                  <dd>{{ secretaria.horario }}</dd>
+                </div>
+                @if (secretaria.email) {
+                  <div>
+                    <dt>Email</dt>
+                    <dd><a [href]="'mailto:' + secretaria.email">{{ secretaria.email }}</a></dd>
+                  </div>
+                }
+              </dl>
+            </article>
+          }
+        </div>
+
+        <p class="source-note">
+          Información institucional publicada desde el panel de administración de la Municipalidad de Ensenada.
+        </p>
+      </div>
+    </section>
+  }
 </main>
 
 <app-footer></app-footer>

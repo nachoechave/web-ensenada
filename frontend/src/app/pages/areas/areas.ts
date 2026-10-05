@@ -1,9 +1,10 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, DestroyRef, PLATFORM_ID, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Footer } from '../../components/footer/footer';
 import { Navbar } from '../../components/navbar/navbar';
-import { cloneDefaultPortalContent } from '../../config/site-content';
+import { PortalContent } from '../../models/portal-content.model';
 import { PortalContentService } from '../../services/portal-content.service';
 
 @Component({
@@ -15,20 +16,27 @@ import { PortalContentService } from '../../services/portal-content.service';
 export class Areas {
   private readonly portalContentService = inject(PortalContentService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly platformId = inject(PLATFORM_ID);
 
-  contenido = cloneDefaultPortalContent();
+  contenido: PortalContent | null = null;
+  cargando = true;
   errorCarga = '';
 
   constructor() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     this.portalContentService
       .obtenerPublico(true)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (contenido) => {
           this.contenido = contenido;
+          this.cargando = false;
           this.errorCarga = '';
         },
         error: () => {
+          this.contenido = null;
+          this.cargando = false;
           this.errorCarga =
             'No se pudo cargar la información pública actualizada. Revisá que el backend esté disponible.';
         },
@@ -36,6 +44,6 @@ export class Areas {
   }
 
   get secretarias() {
-    return this.contenido.areas.secretarias;
+    return this.contenido?.areas.secretarias ?? [];
   }
 }

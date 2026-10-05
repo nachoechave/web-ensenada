@@ -314,7 +314,7 @@ describe('Portal de prensa', () => {
     fixture.detectChanges();
 
     const cards = fixture.nativeElement.querySelectorAll('#areas .area-card');
-    expect(cards.length).toBe(fixture.componentInstance.contenido.areas.secretarias.length);
+    expect(cards.length).toBe(fixture.componentInstance.contenido().areas.secretarias.length);
     expect(cards[0].getAttribute('href')).toContain('/areas#');
   });
 

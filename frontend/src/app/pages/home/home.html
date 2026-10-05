@@ -3,7 +3,7 @@
 <main>
   <section class="portal-hero" aria-labelledby="hero-title">
     <div class="hero-slides" aria-hidden="true">
-      @for (imagen of contenido.hero.imagenes; track imagen; let i = $index) {
+      @for (imagen of contenido().hero.imagenes; track imagen; let i = $index) {
         <div
           class="hero-slide"
           [class.active]="i === heroIndex()"
@@ -15,23 +15,23 @@
 
     <div class="hero-grid">
       <div class="hero-copy">
-        <span class="eyebrow">{{ contenido.hero.eyebrow }}</span>
-        <h1 id="hero-title">{{ contenido.hero.titulo }}</h1>
-        <p>{{ contenido.hero.bajada }}</p>
+        <span class="eyebrow">{{ contenido().hero.eyebrow }}</span>
+        <h1 id="hero-title">{{ contenido().hero.titulo }}</h1>
+        <p>{{ contenido().hero.bajada }}</p>
 
         <div class="hero-actions">
-          <a class="button primary" [href]="contenido.hero.ctaPrimarioUrl">
-            {{ contenido.hero.ctaPrimarioTexto }} <span aria-hidden="true">→</span>
+          <a class="button primary" [href]="contenido().hero.ctaPrimarioUrl">
+            {{ contenido().hero.ctaPrimarioTexto }} <span aria-hidden="true">→</span>
           </a>
-          <a class="button secondary" [href]="contenido.hero.ctaSecundarioUrl">
-            {{ contenido.hero.ctaSecundarioTexto }} <span aria-hidden="true">→</span>
+          <a class="button secondary" [href]="contenido().hero.ctaSecundarioUrl">
+            {{ contenido().hero.ctaSecundarioTexto }} <span aria-hidden="true">→</span>
           </a>
         </div>
       </div>
 
-      @if (contenido.hero.imagenes.length > 1) {
+      @if (contenido().hero.imagenes.length > 1) {
         <div class="hero-dots" aria-label="Imágenes del encabezado">
-          @for (imagen of contenido.hero.imagenes; track imagen; let i = $index) {
+          @for (imagen of contenido().hero.imagenes; track imagen; let i = $index) {
             <button
               type="button"
               [class.active]="i === heroIndex()"
@@ -48,33 +48,33 @@
   <section id="municipio" class="portal-section mayor-section" aria-labelledby="municipio-title">
     <div class="section-shell mayor-feature">
       <div class="mayor-copy">
-        <span class="section-kicker">{{ contenido.intendencia.kicker }}</span>
-        <h2 id="municipio-title">{{ contenido.intendencia.nombre }}</h2>
-        <p>{{ contenido.intendencia.descripcion }}</p>
+        <span class="section-kicker">{{ contenido().intendencia.kicker }}</span>
+        <h2 id="municipio-title">{{ contenido().intendencia.nombre }}</h2>
+        <p>{{ contenido().intendencia.descripcion }}</p>
         <div class="mayor-actions">
-          @if (esInterno(contenido.intendencia.botonUrl)) {
-            <a class="button primary" [routerLink]="contenido.intendencia.botonUrl">
-              {{ contenido.intendencia.botonTexto }} <span>→</span>
+          @if (esInterno(contenido().intendencia.botonUrl)) {
+            <a class="button primary" [routerLink]="contenido().intendencia.botonUrl">
+              {{ contenido().intendencia.botonTexto }} <span>→</span>
             </a>
           } @else {
-            <a class="button primary" [href]="contenido.intendencia.botonUrl" target="_blank" rel="noopener noreferrer">
-              {{ contenido.intendencia.botonTexto }} <span>→</span>
+            <a class="button primary" [href]="contenido().intendencia.botonUrl" target="_blank" rel="noopener noreferrer">
+              {{ contenido().intendencia.botonTexto }} <span>→</span>
             </a>
           }
-          @if (esInterno(contenido.intendencia.secundarioUrl)) {
-            <a class="button secondary" [routerLink]="contenido.intendencia.secundarioUrl">
-              {{ contenido.intendencia.secundarioTexto }} <span>→</span>
+          @if (esInterno(contenido().intendencia.secundarioUrl)) {
+            <a class="button secondary" [routerLink]="contenido().intendencia.secundarioUrl">
+              {{ contenido().intendencia.secundarioTexto }} <span>→</span>
             </a>
           } @else {
-            <a class="button secondary" [href]="contenido.intendencia.secundarioUrl" target="_blank" rel="noopener noreferrer">
-              {{ contenido.intendencia.secundarioTexto }} <span>→</span>
+            <a class="button secondary" [href]="contenido().intendencia.secundarioUrl" target="_blank" rel="noopener noreferrer">
+              {{ contenido().intendencia.secundarioTexto }} <span>→</span>
             </a>
           }
         </div>
       </div>
 
       <div class="mayor-photo">
-        <img [src]="contenido.intendencia.imagen" [alt]="contenido.intendencia.nombre" />
+        <img [src]="contenido().intendencia.imagen" [alt]="contenido().intendencia.nombre" />
       </div>
     </div>
   </section>
@@ -85,12 +85,12 @@
     <div class="section-shell">
       <div class="quick-access-heading">
         <span class="section-kicker">Servicios destacados</span>
-        <h2 id="accesos-title">{{ contenido.accesosTitulo }}</h2>
+        <h2 id="accesos-title">{{ contenido().accesosTitulo }}</h2>
         <p class="quick-access-lead">Accedé de forma rápida a los servicios municipales más utilizados.</p>
       </div>
 
       <div class="quick-access-grid">
-        @for (item of contenido.accesos; track $index) {
+        @for (item of contenido().accesos; track $index) {
           @if (esInterno(item.url)) {
             <a class="quick-access-card" [routerLink]="item.url">
               <span class="icon-box"><app-portal-icon [name]="item.icono"></app-portal-icon></span>
@@ -112,13 +112,13 @@
   <section id="areas" class="portal-section areas-section" aria-labelledby="areas-title">
     <div class="section-shell section-with-intro areas-layout">
       <div class="section-intro">
-        <span class="section-kicker">{{ contenido.areas.kicker }}</span>
-        <h2 id="areas-title">{{ contenido.areas.titulo }}</h2>
-        <p>{{ contenido.areas.bajada }}</p>
+        <span class="section-kicker">{{ contenido().areas.kicker }}</span>
+        <h2 id="areas-title">{{ contenido().areas.titulo }}</h2>
+        <p>{{ contenido().areas.bajada }}</p>
       </div>
 
       <div class="areas-grid">
-        @for (secretaria of contenido.areas.secretarias; track secretaria.id) {
+        @for (secretaria of contenido().areas.secretarias; track secretaria.id) {
           <a class="area-card" routerLink="/areas" [fragment]="secretaria.id">
             <span class="area-icon"><app-portal-icon [name]="iconoSecretaria(secretaria.id)"></app-portal-icon></span>
             <span>
@@ -135,13 +135,13 @@
   <section class="portal-section agenda-section" aria-labelledby="agenda-title">
     <div class="section-shell agenda-layout">
       <div class="section-intro compact">
-        <span class="section-kicker">{{ contenido.agenda.kicker }}</span>
-        <h2 id="agenda-title">{{ contenido.agenda.titulo }}</h2>
-        <p>{{ contenido.agenda.bajada }}</p>
+        <span class="section-kicker">{{ contenido().agenda.kicker }}</span>
+        <h2 id="agenda-title">{{ contenido().agenda.titulo }}</h2>
+        <p>{{ contenido().agenda.bajada }}</p>
       </div>
 
       <div class="event-grid">
-        @for (evento of contenido.agenda.items; track $index) {
+        @for (evento of contenido().agenda.items; track $index) {
           <article class="event-card">
             <div class="event-date"><strong>{{ evento.dia }}</strong><span>{{ evento.mes }}</span></div>
             <div class="event-copy"><strong>{{ evento.titulo }}</strong><span>⌖ {{ evento.lugar }}</span><span>◷ {{ evento.hora }}</span></div>
@@ -159,7 +159,7 @@
           <h2 id="map-title">Explorá Ensenada</h2>
           <p>Ubicá la ciudad y recorré servicios, instituciones y puntos de interés desde el mapa.</p>
         </div>
-        <a class="button secondary" [href]="contenido.footer.mapaUrl" target="_blank" rel="noopener noreferrer">Abrir mapa completo <span aria-hidden="true">→</span></a>
+        <a class="button secondary" [href]="contenido().footer.mapaUrl" target="_blank" rel="noopener noreferrer">Abrir mapa completo <span aria-hidden="true">→</span></a>
       </div>
 
       <div class="map-shell">

@@ -19,7 +19,7 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'areas',
-    renderMode: RenderMode.Server,
+    renderMode: RenderMode.Client,
   },
   {
     path: 'intendencia',

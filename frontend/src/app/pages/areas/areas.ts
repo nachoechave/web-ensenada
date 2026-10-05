@@ -1,5 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Component, DestroyRef, PLATFORM_ID, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Footer } from '../../components/footer/footer';
@@ -16,15 +15,12 @@ import { PortalContentService } from '../../services/portal-content.service';
 export class Areas {
   private readonly portalContentService = inject(PortalContentService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly platformId = inject(PLATFORM_ID);
 
   contenido: PortalContent | null = null;
   cargando = true;
   errorCarga = '';
 
   constructor() {
-    if (!isPlatformBrowser(this.platformId)) return;
-
     this.portalContentService
       .obtenerPublico(true)
       .pipe(takeUntilDestroyed(this.destroyRef))

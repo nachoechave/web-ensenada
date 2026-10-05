@@ -1,4 +1,4 @@
-import { Component, DestroyRef, afterNextRender, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Footer } from '../../components/footer/footer';
@@ -21,7 +21,7 @@ export class Areas {
   errorCarga = '';
 
   constructor() {
-    afterNextRender(() => {
+    queueMicrotask(() => {
       this.portalContentService
         .obtenerPublico(true)
         .pipe(takeUntilDestroyed(this.destroyRef))

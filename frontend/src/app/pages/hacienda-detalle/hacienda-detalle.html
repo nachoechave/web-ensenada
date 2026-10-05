@@ -43,7 +43,7 @@
                   <a class="button-link" [href]="a.url + '?descargar=true'">Descargar</a>
                 </div>
               } @else {
-                <img [src]="a.url" alt="Documento de Hacienda" loading="lazy" />
+                <img [src]="a.url" [alt]="'Documento escaneado: ' + a.nombreOriginal" loading="lazy" />
                 <div class="document-actions">
                   <a class="button-link" [href]="a.url + '?descargar=true'">Descargar imagen</a>
                 </div>

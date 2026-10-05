@@ -21,7 +21,7 @@ export class PortalContentService {
 
   obtenerPublico(force = false): Observable<PortalContent> {
     if (!this.publicContent$ || force) {
-      this.publicContent$ = this.http.get<Partial<PortalContent>>(`${this.apiUrl}/site-content`).pipe(
+      this.publicContent$ = this.http.get<Partial<PortalContent>>(`${this.apiUrl}/site-content`, { transferCache: false }).pipe(
         timeout({ first: 8000 }),
         map((contenido) => this.normalizar(contenido)),
         catchError(() => of(cloneDefaultPortalContent())),

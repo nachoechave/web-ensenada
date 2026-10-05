@@ -58,7 +58,8 @@ export class Home {
   private iniciarCarousel(): void {
     this.detenerCarousel();
     if (this.contenido.hero.imagenes.length < 2) return;
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const intervalo = Math.max(3, this.contenido.hero.intervaloSegundos) * 1000;
     this.carouselTimer = setInterval(() => {

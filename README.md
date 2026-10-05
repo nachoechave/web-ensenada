@@ -19,7 +19,7 @@ npm ci
 npm start
 ```
 
-La API se centraliza en `src/environments/environment*.ts` (`/api`). El proxy de desarrollo redirige `/api` y `/uploads` al backend en 8080. Producción debe publicar ambos detrás del mismo origen. `CORS_ALLOWED_ORIGINS` acepta orígenes separados por coma; está vacío por defecto en producción.
+La API se centraliza en `src/environments/environment*.ts` (`/api`). El proxy de desarrollo redirige `/api` y `/uploads` al backend en 8080. El build de producción genera navegador + servidor Angular; para ejecutar SSR usar `npm run build` y luego `npm run serve:ssr:frontend`. En producción, el reverse proxy debe enviar `/api` y `/uploads` a Spring Boot y el resto al servidor SSR de Angular, manteniendo un único origen público. `CORS_ALLOWED_ORIGINS` acepta orígenes separados por coma; está vacío por defecto en producción.
 
 ## Validación
 
@@ -87,6 +87,6 @@ La sesión administrativa usa una cookie JWT `HttpOnly`, `SameSite=Strict` y `Se
 
 Los uploads huérfanos de Noticias, Hacienda y Sitio se limpian diariamente después de una retención configurable de 7 días por defecto (`UPLOAD_CLEANUP_ENABLED`, `UPLOAD_CLEANUP_RETENTION_HOURS`, `UPLOAD_CLEANUP_CRON`). Deuda restante: recuperación por correo y revisión periódica de la política de almacenamiento.
 
-SEO inicial en español argentino, títulos y metadatos de noticia. Las noticias nuevas reciben un `slug` único y estable derivado del título; el endpoint público acepta slug o ID para conservar compatibilidad con enlaces históricos. El frontend usa el slug como URL pública y completa Open Graph/Twitter/canonical en cliente. SSR/prerender de noticias sigue pendiente: los crawlers sociales que no ejecutan JavaScript ven solo metadata inicial.
+SEO en español argentino, títulos y metadatos de noticia. Las noticias nuevas reciben un `slug` único y estable derivado del título; el endpoint público acepta slug o ID para conservar compatibilidad con enlaces históricos. Las rutas públicas principales y, en especial, `/noticias/:slug`, se renderizan en servidor para entregar HTML con contenido y metadata Open Graph/Twitter/canonical desde la primera respuesta. El panel `/admin/**` permanece en modo cliente.
 
 El historial contiene antiguas configuraciones de contraseña/JWT (`5424a10`, `c6742d6`, retiradas parcialmente en `de1bedf`). Si se usaron fuera del desarrollo, rotarlas. No se reescribió historia Git.

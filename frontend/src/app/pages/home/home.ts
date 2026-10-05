@@ -67,7 +67,7 @@ export class Home {
     this.detenerCarousel();
     if (this.contenido().hero.imagenes.length < 2) return;
     if (typeof window === 'undefined') return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // El CSS elimina las transiciones con movimiento reducido, sin detener la rotación.
 
     const intervalo = Math.max(3, this.contenido().hero.intervaloSegundos) * 1000;
     this.carouselTimer = setInterval(() => {

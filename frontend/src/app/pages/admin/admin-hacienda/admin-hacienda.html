@@ -1,25 +1,30 @@
-<div class="admin-page-header">
+<div class="dashboard-header">
   <div>
     <span>Hacienda</span>
     <h2>Publicaciones de Hacienda</h2>
     <p>Administrá la documentación económica y financiera.</p>
   </div>
-  <a routerLink="/admin/hacienda/nueva" class="primary-button">Nueva publicación</a>
+  <a routerLink="/admin/hacienda/nueva" class="primary-button">+ Nueva publicación</a>
 </div>
-<label
-  >Estado
-  <select (change)="filtro.set($any($event.target).value)">
-    <option value="TODAS">Todas</option>
-    <option value="PUBLICADA">Publicadas</option>
-    <option value="BORRADOR">Borradores</option>
-    <option value="ARCHIVADA">Archivadas</option>
-  </select></label
->
+
+<div class="hacienda-toolbar">
+  <label class="filter-control">
+    <span>Estado</span>
+    <select (change)="filtro.set($any($event.target).value)">
+      <option value="TODAS">Todas</option>
+      <option value="PUBLICADA">Publicadas</option>
+      <option value="BORRADOR">Borradores</option>
+      <option value="ARCHIVADA">Archivadas</option>
+    </select>
+  </label>
+</div>
+
 @if (error()) {
-  <p role="alert">{{ error() }}</p>
+  <p class="admin-alert" role="alert">{{ error() }}</p>
 }
+
 @if (cargando()) {
-  <p role="status">Cargando publicaciones…</p>
+  <p class="admin-loading" role="status">Cargando publicaciones…</p>
 } @else {
   <div class="table-card">
     <table>
@@ -36,32 +41,47 @@
       <tbody>
         @for (p of filtradas(); track p.id) {
           <tr>
-            <td>{{ p.titulo }}</td>
+            <td class="title-cell">{{ p.titulo }}</td>
             <td>{{ tipos[p.tipo] }}</td>
             <td>{{ p.fechaPublicacion }}</td>
-            <td>{{ p.estado }}</td>
-            <td>{{ p.archivos.length }}</td>
-            <td class="actions">
-              <a [routerLink]="['/admin/hacienda/editar', p.id]">Editar</a>
-              <button
-                type="button"
-                (click)="cambiarEstado(p)"
-                [disabled]="ocupado() || !p.archivos.length"
+            <td>
+              <span
+                class="status-badge"
+                [class.status-published]="p.estado === 'PUBLICADA'"
+                [class.status-draft]="p.estado === 'BORRADOR'"
+                [class.status-archived]="p.estado === 'ARCHIVADA'"
               >
-                {{ p.estado === 'PUBLICADA' ? 'Despublicar' : 'Publicar' }}
-              </button>
-              <button
-                type="button"
-                (click)="archivar(p)"
-                [disabled]="ocupado() || p.estado === 'ARCHIVADA'"
-              >
-                Archivar
-              </button>
+                {{ p.estado }}
+              </span>
+            </td>
+            <td>
+              <span class="file-count">{{ p.archivos.length }}</span>
+            </td>
+            <td>
+              <div class="actions">
+                <a class="action-link" [routerLink]="['/admin/hacienda/editar', p.id]">Editar</a>
+                <button
+                  class="action-button"
+                  type="button"
+                  (click)="cambiarEstado(p)"
+                  [disabled]="ocupado() || !p.archivos.length"
+                >
+                  {{ p.estado === 'PUBLICADA' ? 'Despublicar' : 'Publicar' }}
+                </button>
+                <button
+                  class="action-button action-danger"
+                  type="button"
+                  (click)="archivar(p)"
+                  [disabled]="ocupado() || p.estado === 'ARCHIVADA'"
+                >
+                  Archivar
+                </button>
+              </div>
             </td>
           </tr>
         } @empty {
           <tr>
-            <td colspan="6">No hay publicaciones para este filtro.</td>
+            <td class="empty-cell" colspan="6">No hay publicaciones para este filtro.</td>
           </tr>
         }
       </tbody>

@@ -6,6 +6,7 @@ frontend/.angular/
 # Spring Boot / Maven
 backend/target/
 backend/uploads/
+backend/data/
 
 # IDE
 .vscode/

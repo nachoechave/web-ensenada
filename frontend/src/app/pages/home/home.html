@@ -1,12 +1,7 @@
 <app-navbar></app-navbar>
 
 <main>
-  <section
-    class="portal-hero"
-    aria-labelledby="hero-title"
-    (mouseenter)="pausarCarousel()"
-    (mouseleave)="reanudarCarousel()"
-  >
+  <section class="portal-hero" aria-labelledby="hero-title">
     <div class="hero-slides" aria-hidden="true">
       @for (imagen of contenido.hero.imagenes; track imagen; let i = $index) {
         <div

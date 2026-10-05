@@ -52,12 +52,24 @@
         <h2 id="municipio-title">{{ contenido.intendencia.nombre }}</h2>
         <p>{{ contenido.intendencia.descripcion }}</p>
         <div class="mayor-actions">
-          <a class="button primary" [href]="contenido.intendencia.botonUrl" target="_blank" rel="noopener noreferrer">
-            {{ contenido.intendencia.botonTexto }} <span>→</span>
-          </a>
-          <a class="button secondary" [href]="contenido.intendencia.secundarioUrl" target="_blank" rel="noopener noreferrer">
-            {{ contenido.intendencia.secundarioTexto }} <span>→</span>
-          </a>
+          @if (esInterno(contenido.intendencia.botonUrl)) {
+            <a class="button primary" [routerLink]="contenido.intendencia.botonUrl">
+              {{ contenido.intendencia.botonTexto }} <span>→</span>
+            </a>
+          } @else {
+            <a class="button primary" [href]="contenido.intendencia.botonUrl" target="_blank" rel="noopener noreferrer">
+              {{ contenido.intendencia.botonTexto }} <span>→</span>
+            </a>
+          }
+          @if (esInterno(contenido.intendencia.secundarioUrl)) {
+            <a class="button secondary" [routerLink]="contenido.intendencia.secundarioUrl">
+              {{ contenido.intendencia.secundarioTexto }} <span>→</span>
+            </a>
+          } @else {
+            <a class="button secondary" [href]="contenido.intendencia.secundarioUrl" target="_blank" rel="noopener noreferrer">
+              {{ contenido.intendencia.secundarioTexto }} <span>→</span>
+            </a>
+          }
         </div>
       </div>
 

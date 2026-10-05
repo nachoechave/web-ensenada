@@ -17,12 +17,22 @@ export class Areas {
   private readonly destroyRef = inject(DestroyRef);
 
   contenido = cloneDefaultPortalContent();
+  errorCarga = '';
 
   constructor() {
     this.portalContentService
       .obtenerPublico(true)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((contenido) => (this.contenido = contenido));
+      .subscribe({
+        next: (contenido) => {
+          this.contenido = contenido;
+          this.errorCarga = '';
+        },
+        error: () => {
+          this.errorCarga =
+            'No se pudo cargar la información pública actualizada. Revisá que el backend esté disponible.';
+        },
+      });
   }
 
   get secretarias() {

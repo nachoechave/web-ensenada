@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { afterNextRender, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
@@ -19,13 +19,13 @@ export class Home {
   private readonly portalContentService = inject(PortalContentService);
   private readonly destroyRef = inject(DestroyRef);
   private carouselTimer?: ReturnType<typeof setInterval>;
-  private pausado = false;
 
   contenido = cloneDefaultPortalContent();
   readonly heroIndex = signal(0);
 
   constructor() {
     this.destroyRef.onDestroy(() => this.detenerCarousel());
+    afterNextRender(() => this.iniciarCarousel());
 
     this.portalContentService
       .obtenerPublico()
@@ -42,14 +42,6 @@ export class Home {
     return url.startsWith('/') && !url.startsWith('//');
   }
 
-  pausarCarousel(): void {
-    this.pausado = true;
-  }
-
-  reanudarCarousel(): void {
-    this.pausado = false;
-  }
-
   seleccionarHero(index: number): void {
     if (index < 0 || index >= this.contenido.hero.imagenes.length) return;
     this.heroIndex.set(index);
@@ -63,7 +55,6 @@ export class Home {
 
     const intervalo = Math.max(3, this.contenido.hero.intervaloSegundos) * 1000;
     this.carouselTimer = setInterval(() => {
-      if (this.pausado) return;
       this.heroIndex.update((actual) => (actual + 1) % this.contenido.hero.imagenes.length);
     }, intervalo);
   }

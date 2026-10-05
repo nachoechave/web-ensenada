@@ -25,15 +25,18 @@
 
 .detalle-imagen {
   width: 100%;
-  height: 28rem;
-  background: #e9f4ed;
+  min-height: 20rem;
+  max-height: 42rem;
+  background: #f2f6f4;
 }
 
 .detalle-imagen img {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  max-height: 42rem;
+  object-fit: contain;
+  object-position: center;
 }
 
 .detalle-contenido {
@@ -120,7 +123,12 @@
   }
 
   .detalle-imagen {
-    height: 16rem;
+    min-height: 0;
+    max-height: 28rem;
+  }
+
+  .detalle-imagen img {
+    max-height: 28rem;
   }
 
   .detalle-contenido {

@@ -1,7 +1,9 @@
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, of, shareReplay, switchMap, tap, timeout } from 'rxjs';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { Observable, catchError, map, of, shareReplay, switchMap, tap, throwError, timeout } from 'rxjs';
+
+import { isPlatformServer } from '@angular/common';
 
 import { cloneDefaultPortalContent } from '../config/site-content';
 import { PortalContent } from '../models/portal-content.model';
@@ -16,6 +18,7 @@ export interface PortalImageUploadResponse {
 @Injectable({ providedIn: 'root' })
 export class PortalContentService {
   private readonly http = inject(HttpClient);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly apiUrl = environment.apiUrl;
   private publicContent$?: Observable<PortalContent>;
 
@@ -24,7 +27,11 @@ export class PortalContentService {
       this.publicContent$ = this.http.get<Partial<PortalContent>>(`${this.apiUrl}/site-content`, { transferCache: false }).pipe(
         timeout({ first: 8000 }),
         map((contenido) => this.normalizar(contenido)),
-        catchError(() => of(cloneDefaultPortalContent())),
+        catchError((error) =>
+          isPlatformServer(this.platformId)
+            ? of(cloneDefaultPortalContent())
+            : throwError(() => error),
+        ),
         shareReplay({ bufferSize: 1, refCount: false }),
       );
     }

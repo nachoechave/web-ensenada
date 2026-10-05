@@ -21,6 +21,10 @@
         <p>{{ secretarias.length }} dependencias principales con información de contacto.</p>
       </div>
 
+      @if (errorCarga) {
+        <p class="source-note">{{ errorCarga }}</p>
+      }
+
       <div class="secretarias-grid">
         @for (secretaria of secretarias; track secretaria.id) {
           <article class="secretaria-card" [id]="secretaria.id">

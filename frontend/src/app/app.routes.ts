@@ -1,4 +1,5 @@
 import { Hacienda } from './pages/hacienda/hacienda';
+import { Areas } from './pages/areas/areas';
 import { HaciendaDetalle } from './pages/hacienda-detalle/hacienda-detalle';
 import { AdminHacienda } from './pages/admin/admin-hacienda/admin-hacienda';
 import { AdminHaciendaForm } from './pages/admin/admin-hacienda-form/admin-hacienda-form';
@@ -26,6 +27,11 @@ export const routes: Routes = [
     path: 'hacienda',
     component: Hacienda,
     title: 'Hacienda | Municipalidad de Ensenada',
+  },
+  {
+    path: 'areas',
+    component: Areas,
+    title: 'Secretarías y áreas | Municipalidad de Ensenada',
   },
   {
     path: 'registro-proveedores',

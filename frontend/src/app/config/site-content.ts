@@ -84,12 +84,12 @@ export const defaultPortalContent: PortalContent = {
     titulo: 'Conocé nuestras áreas',
     bajada: 'Información, programas y servicios de cada área del Municipio.',
     items: [
-      { titulo: 'Hacienda', descripcion: 'Información fiscal y presupuesto.', url: '/hacienda', icono: 'building' },
-      { titulo: 'Cultura', descripcion: 'Actividades y patrimonio.', url: 'https://www.ensenada.gov.ar/', icono: 'culture' },
-      { titulo: 'Deportes', descripcion: 'Escuelas y eventos deportivos.', url: 'https://www.ensenada.gov.ar/', icono: 'ball' },
-      { titulo: 'Salud', descripcion: 'Centros de salud y prevención.', url: 'https://www.ensenada.gov.ar/', icono: 'heart' },
-      { titulo: 'Obras Públicas', descripcion: 'Infraestructura y espacio urbano.', url: 'https://www.ensenada.gov.ar/', icono: 'hardhat' },
-      { titulo: 'Desarrollo Social', descripcion: 'Inclusión y apoyo a la comunidad.', url: 'https://www.ensenada.gov.ar/', icono: 'users' },
+      { titulo: 'Hacienda', descripcion: 'Información fiscal y presupuesto.', url: '/areas#hacienda-produccion', icono: 'building' },
+      { titulo: 'Cultura', descripcion: 'Actividades y patrimonio.', url: '/areas#gestion-publica', icono: 'culture' },
+      { titulo: 'Deportes', descripcion: 'Escuelas y eventos deportivos.', url: '/areas#gestion-publica', icono: 'ball' },
+      { titulo: 'Salud', descripcion: 'Centros de salud y prevención.', url: '/areas#salud-medio-ambiente', icono: 'heart' },
+      { titulo: 'Obras Públicas', descripcion: 'Infraestructura y espacio urbano.', url: '/areas#obras-publicas', icono: 'hardhat' },
+      { titulo: 'Desarrollo Social', descripcion: 'Inclusión y apoyo a la comunidad.', url: '/areas#desarrollo-social', icono: 'users' },
     ],
   },
   intendencia: {

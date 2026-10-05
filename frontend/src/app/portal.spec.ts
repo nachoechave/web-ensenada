@@ -21,6 +21,7 @@ import { AdminAuditoriaNoticias } from './pages/admin/admin-auditoria-noticias/a
 import { AdminNoticiaForm } from './pages/admin/admin-noticia-form/admin-noticia-form';
 import { Noticias } from './pages/noticias/noticias';
 import { Home } from './pages/home/home';
+import { Areas } from './pages/areas/areas';
 import { NoticiasDestacadas } from './components/noticias-destacadas/noticias-destacadas';
 import { Noticia } from './models/noticia.model';
 import { AdminLayout } from './pages/admin/admin-layout/admin-layout';
@@ -44,6 +45,7 @@ describe('Portal de prensa', () => {
     expect(routes.map((route) => route.path)).toEqual([
       'hacienda/:id',
       'hacienda',
+      'areas',
       'registro-proveedores',
       '',
       'noticias',
@@ -265,6 +267,17 @@ describe('Portal de prensa', () => {
 
     expect(fixture.componentInstance.pagina).toBe(1);
     expect(fixture.componentInstance.noticias[0].id).toBe(2);
+  });
+
+  it('Áreas muestra el directorio completo de secretarías', () => {
+    const fixture = TestBed.createComponent(Areas);
+    fixture.detectChanges();
+
+    const cards = fixture.nativeElement.querySelectorAll('.secretaria-card');
+    expect(cards.length).toBe(10);
+    expect(fixture.nativeElement.textContent).toContain('Secretaría de Gobierno');
+    expect(fixture.nativeElement.textContent).toContain('Dra. María Alejandra Sabio');
+    expect(fixture.nativeElement.textContent).toContain('Secretaría de Obras Públicas');
   });
 
   it('Home conserva la jerarquía institucional antes de los accesos', () => {

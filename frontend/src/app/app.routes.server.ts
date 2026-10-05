@@ -18,6 +18,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server,
   },
   {
+    path: 'areas',
+    renderMode: RenderMode.Server,
+  },
+  {
     path: 'registro-proveedores',
     renderMode: RenderMode.Server,
   },

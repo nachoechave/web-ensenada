@@ -1,7 +1,7 @@
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, of, shareReplay, tap, timeout } from 'rxjs';
+import { Observable, catchError, map, of, shareReplay, switchMap, tap, timeout } from 'rxjs';
 
 import { cloneDefaultPortalContent } from '../config/site-content';
 import { PortalContent } from '../models/portal-content.model';
@@ -41,7 +41,8 @@ export class PortalContentService {
   guardar(contenido: PortalContent): Observable<PortalContent> {
     return this.http.put<PortalContent>(`${this.apiUrl}/admin/site-content`, contenido).pipe(
       timeout({ first: 10000 }),
-      map((respuesta) => this.normalizar(respuesta)),
+      switchMap(() => this.http.get<Partial<PortalContent>>(`${this.apiUrl}/admin/site-content`)),
+      map((persistido) => this.normalizar(persistido)),
       tap(() => {
         this.publicContent$ = undefined;
       }),

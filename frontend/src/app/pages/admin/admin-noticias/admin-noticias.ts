@@ -122,6 +122,8 @@ export class AdminNoticias {
     if (error.status === 401 || error.status === 403) {
       localStorage.removeItem('admin-token');
       localStorage.removeItem('admin-user');
+      sessionStorage.removeItem('admin-token');
+      sessionStorage.removeItem('admin-user');
       this.router.navigate(['/admin/login']);
       return 'Tu sesion vencio o no tiene permisos. Volve a iniciar sesion.';
     }

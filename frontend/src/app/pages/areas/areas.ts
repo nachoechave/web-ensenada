@@ -20,7 +20,7 @@ export class Areas {
 
   constructor() {
     this.portalContentService
-      .obtenerPublico()
+      .obtenerPublico(true)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((contenido) => (this.contenido = contenido));
   }

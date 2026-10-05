@@ -20,7 +20,7 @@ export class Home {
   private readonly destroyRef = inject(DestroyRef);
   private carouselTimer?: ReturnType<typeof setInterval>;
 
-  contenido = cloneDefaultPortalContent();
+  readonly contenido = signal(cloneDefaultPortalContent());
   readonly heroIndex = signal(0);
 
   constructor() {
@@ -31,7 +31,7 @@ export class Home {
       .obtenerPublico(true)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((contenido) => {
-        this.contenido = contenido;
+        this.contenido.set(contenido);
         this.heroIndex.set(0);
         this.precargarHero();
         this.iniciarCarousel();
@@ -59,19 +59,19 @@ export class Home {
   }
 
   seleccionarHero(index: number): void {
-    if (index < 0 || index >= this.contenido.hero.imagenes.length) return;
+    if (index < 0 || index >= this.contenido().hero.imagenes.length) return;
     this.heroIndex.set(index);
   }
 
   private iniciarCarousel(): void {
     this.detenerCarousel();
-    if (this.contenido.hero.imagenes.length < 2) return;
+    if (this.contenido().hero.imagenes.length < 2) return;
     if (typeof window === 'undefined') return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const intervalo = Math.max(3, this.contenido.hero.intervaloSegundos) * 1000;
+    const intervalo = Math.max(3, this.contenido().hero.intervaloSegundos) * 1000;
     this.carouselTimer = setInterval(() => {
-      this.heroIndex.update((actual) => (actual + 1) % this.contenido.hero.imagenes.length);
+      this.heroIndex.update((actual) => (actual + 1) % this.contenido().hero.imagenes.length);
     }, intervalo);
   }
 
@@ -83,7 +83,7 @@ export class Home {
 
   private precargarHero(): void {
     if (typeof Image === 'undefined') return;
-    for (const url of this.contenido.hero.imagenes) {
+    for (const url of this.contenido().hero.imagenes) {
       const image = new Image();
       image.src = url;
     }

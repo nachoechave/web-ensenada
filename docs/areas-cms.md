@@ -34,3 +34,9 @@ El servicio ya excluía esta petición de HTTP TransferCache. Se conserva esa ex
 - `mvn test`: 35 tests ejecutados sin fallos y uno de validación MySQL omitido por su condición de entorno.
 
 Para repetir el diagnóstico, dejar finalizar el primer render antes de resolver HTTP en los tests. No agregar `fixture.detectChanges()` después de `flush()`: volvería a ocultar una regresión del scheduler.
+
+## Título de Áreas en la Home
+
+`Título Home` edita `areas.titulo`; `Título de /areas` edita `areas.paginaTitulo`. Son encabezados independientes. La Home también necesitaba almacenar el contenido como signal: asignar la propiedad común y llamar `heroIndex.set(0)` no notificaba nada cuando el índice ya era cero. El título guardado podía aparecer recién con otra interacción o con un cambio del carrusel.
+
+`home.spec.ts` reproduce la respuesta tardía del CMS después de completar la carga de noticias, sin carrusel ni detección manual. Antes esperaba “Conocé nuestras secretarías.” y recibía “Conocé nuestras áreas”. Con el contenido reactivo pasan los 54 tests frontend y el build. Se verificó en navegador `http://localhost:4200/#areas` y el recorrido Home → Áreas → Home: cada página muestra su título correspondiente.

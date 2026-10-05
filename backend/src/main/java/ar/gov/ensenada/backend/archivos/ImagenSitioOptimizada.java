@@ -8,6 +8,7 @@ import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageReadParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
@@ -27,7 +28,7 @@ import java.util.Iterator;
  */
 public final class ImagenSitioOptimizada {
     private static final long MAX_INPUT_BYTES = 30L * 1024 * 1024;
-    private static final long MAX_PIXELS = 60_000_000L;
+    private static final long MAX_PIXELS = 180_000_000L;
     private static final int MAX_DIMENSION = 2560;
     private static final int MAX_OUTPUT_BYTES = 5 * 1024 * 1024;
 
@@ -56,7 +57,14 @@ public final class ImagenSitioOptimizada {
                 if (width < 1 || height < 1 || (long) width * height > MAX_PIXELS) {
                     throw invalida("La imagen supera el límite de resolución permitido");
                 }
-                original = reader.read(0);
+
+                ImageReadParam readParam = reader.getDefaultReadParam();
+                int mayor = Math.max(width, height);
+                int subsampling = Math.max(1, (int) Math.floor((double) mayor / (MAX_DIMENSION * 2)));
+                if (subsampling > 1) {
+                    readParam.setSourceSubsampling(subsampling, subsampling, 0, 0);
+                }
+                original = reader.read(0, readParam);
                 if (original == null) throw invalida("El archivo no es una imagen compatible");
             } finally {
                 reader.dispose();

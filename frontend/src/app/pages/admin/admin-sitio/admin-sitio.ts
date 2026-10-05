@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -159,14 +160,24 @@ export class AdminSitio {
         input.value = '';
         this.cdr.markForCheck();
       },
-      error: () => {
-        this.error =
-          'No se pudo procesar la imagen. Probá con una imagen raster común de hasta 30 MB; el servidor la comprime automáticamente.';
+      error: (error: HttpErrorResponse) => {
+        this.error = this.obtenerMensajeUpload(error);
         this.subiendoImagen = false;
         input.value = '';
         this.cdr.markForCheck();
       },
     });
+  }
+
+  private obtenerMensajeUpload(error: HttpErrorResponse): string {
+    const detalle =
+      typeof error.error === 'string'
+        ? error.error
+        : error.error?.detail || error.error?.message || error.error?.error;
+
+    if (typeof detalle === 'string' && detalle.trim()) return detalle.trim();
+    if (error.status === 413) return 'La imagen supera el límite de 30 MB.';
+    return 'No se pudo procesar la imagen. Probá con JPG o PNG; el sistema la redimensiona y comprime automáticamente.';
   }
 
   private nuevoLink(titulo: string): PortalLinkItem {

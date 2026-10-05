@@ -22,6 +22,8 @@ export class AdminUsuarios {
   usuarios: UsuarioAdmin[] = [];
   cargando = false;
   error = '';
+  mensaje = '';
+  passwordsTemporales: Record<number, string> = {};
 
   usuario: UsuarioCrearRequest = {
     nombre: '',
@@ -89,6 +91,29 @@ export class AdminUsuarios {
       error: () => {
         this.cdr.markForCheck();
         this.error = 'No se pudieron actualizar los roles.';
+      },
+    });
+  }
+
+  resetearPassword(usuario: UsuarioAdmin): void {
+    const password = (this.passwordsTemporales[usuario.id] ?? '').trim();
+    if (password.length < 12 || password.length > 72) {
+      this.error = 'La contraseña temporal debe tener entre 12 y 72 caracteres.';
+      this.cdr.markForCheck();
+      return;
+    }
+
+    this.error = '';
+    this.mensaje = '';
+    this.usuariosService.resetearPassword(usuario.id, password).subscribe({
+      next: () => {
+        delete this.passwordsTemporales[usuario.id];
+        this.mensaje = `Contraseña de ${usuario.nombre} actualizada. Las sesiones anteriores quedaron revocadas.`;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.error = 'No se pudo restablecer la contraseña.';
+        this.cdr.markForCheck();
       },
     });
   }

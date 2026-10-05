@@ -113,6 +113,19 @@ export class AdminSitio {
     this.contenido.areas.secretarias.splice(index, 1);
   }
 
+  actualizarCampoSecretaria(
+    index: number,
+    campo: Exclude<keyof PortalSecretariaItem, 'id'>,
+    valor: string,
+  ): void {
+    const secretaria = this.contenido.areas.secretarias[index];
+    if (!secretaria) return;
+    this.contenido.areas.secretarias[index] = {
+      ...secretaria,
+      [campo]: valor,
+    };
+  }
+
   eliminarImagenIntendencia(index: number): void {
     this.contenido.intendencia.galeria.splice(index, 1);
   }

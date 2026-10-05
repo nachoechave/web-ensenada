@@ -1,7 +1,11 @@
 package ar.gov.ensenada.backend.auth;
 
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,31 +15,40 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Duration;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    static final String SESSION_COOKIE = "WEB_ENSENADA_SESSION";
+
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final boolean secureCookie;
+    private final long expirationMinutes;
 
     public AuthController(
             AuthenticationManager authenticationManager,
             JwtService jwtService,
             UsuarioRepository usuarioRepository,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            @Value("${app.auth.secure-cookie:true}") boolean secureCookie,
+            @Value("${app.jwt.expiration-minutes}") long expirationMinutes
     ) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.secureCookie = secureCookie;
+        this.expirationMinutes = expirationMinutes;
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         String email = normalizarEmail(request.email());
 
         Authentication authentication = authenticationManager.authenticate(
@@ -43,7 +56,15 @@ public class AuthController {
         );
 
         Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email).orElseThrow();
-        return crearLoginResponse(usuario, authentication);
+        LoginResponse response = crearLoginResponse(usuario, authentication);
+        return conCookie(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        return ResponseEntity.noContent()
+                .header(HttpHeaders.SET_COOKIE, cookie("", Duration.ZERO).toString())
+                .build();
     }
 
     @GetMapping("/me")
@@ -53,7 +74,7 @@ public class AuthController {
     }
 
     @PutMapping("/me")
-    public LoginResponse actualizarPerfil(@Valid @RequestBody ActualizarPerfilRequest request) {
+    public ResponseEntity<LoginResponse> actualizarPerfil(@Valid @RequestBody ActualizarPerfilRequest request) {
         Usuario usuario = obtenerUsuarioAutenticado();
         String email = normalizarEmail(request.email());
 
@@ -66,12 +87,11 @@ public class AuthController {
         usuario.setNombre(request.nombre());
         usuario.setEmail(email);
         Usuario usuarioGuardado = usuarioRepository.save(usuario);
-        return crearLoginResponse(usuarioGuardado);
+        return conCookie(crearLoginResponse(usuarioGuardado));
     }
 
     @PutMapping("/me/password")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cambiarPassword(@Valid @RequestBody CambiarPasswordRequest request) {
+    public ResponseEntity<Void> cambiarPassword(@Valid @RequestBody CambiarPasswordRequest request) {
         Usuario usuario = obtenerUsuarioAutenticado();
 
         if (!passwordEncoder.matches(request.passwordActual(), usuario.getPassword())) {
@@ -81,6 +101,10 @@ public class AuthController {
         usuario.setPassword(passwordEncoder.encode(request.passwordNueva()));
         usuario.incrementarTokenVersion();
         usuarioRepository.save(usuario);
+
+        return ResponseEntity.noContent()
+                .header(HttpHeaders.SET_COOKIE, cookie("", Duration.ZERO).toString())
+                .build();
     }
 
     private Usuario obtenerUsuarioAutenticado() {
@@ -100,6 +124,22 @@ public class AuthController {
     private LoginResponse crearLoginResponse(Usuario usuario, Authentication authentication) {
         String token = jwtService.generarToken(authentication);
         return new LoginResponse(token, usuario.getNombre(), usuario.getEmail(), obtenerRolPrincipal(usuario), usuario.getRoles());
+    }
+
+    private ResponseEntity<LoginResponse> conCookie(LoginResponse response) {
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie(response.token(), Duration.ofMinutes(expirationMinutes)).toString())
+                .body(response);
+    }
+
+    private ResponseCookie cookie(String value, Duration maxAge) {
+        return ResponseCookie.from(SESSION_COOKIE, value)
+                .httpOnly(true)
+                .secure(secureCookie)
+                .sameSite("Strict")
+                .path("/api")
+                .maxAge(maxAge)
+                .build();
     }
 
     private String obtenerRolPrincipal(Usuario usuario) {

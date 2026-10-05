@@ -76,9 +76,16 @@ export class AdminSitio {
 
     this.portalContentService.guardar(enviado).subscribe({
       next: (contenido) => {
+        const enviadoJson = JSON.stringify(enviado);
+        const persistidoJson = JSON.stringify(contenido);
         this.contenido = contenido;
         this.guardando = false;
-        this.mensaje = 'Cambios guardados y verificados contra la base de datos.';
+        if (enviadoJson !== persistidoJson) {
+          this.error = 'El servidor respondió, pero lo persistido no coincide con lo enviado. Revisá los cambios antes de continuar.';
+          this.mensaje = '';
+        } else {
+          this.mensaje = 'Cambios guardados y verificados contra la base de datos.';
+        }
         this.cdr.markForCheck();
       },
       error: () => {
@@ -113,6 +120,19 @@ export class AdminSitio {
 
   eliminarSecretaria(index: number): void {
     this.contenido.areas.secretarias.splice(index, 1);
+  }
+
+  actualizarCampoSecretaria(
+    index: number,
+    campo: Exclude<keyof PortalSecretariaItem, 'id'>,
+    valor: string,
+  ): void {
+    const secretaria = this.contenido.areas.secretarias[index];
+    if (!secretaria) return;
+    this.contenido.areas.secretarias[index] = {
+      ...secretaria,
+      [campo]: valor,
+    };
   }
 
   eliminarImagenIntendencia(index: number): void {

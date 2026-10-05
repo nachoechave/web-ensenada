@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class PortalSiteContentService {
 
     private static final long SINGLETON_ID = 1L;
-    private static final int MAX_JSON_LENGTH = 60_000;
+    private static final int MAX_JSON_LENGTH = 160_000;
 
     private final PortalSiteContentRepository repository;
 

@@ -44,6 +44,7 @@ describe('Portal de prensa', () => {
     expect(routes.map((route) => route.path)).toEqual([
       'hacienda/:id',
       'hacienda',
+      'areas',
       'registro-proveedores',
       '',
       'noticias',

@@ -20,7 +20,7 @@ export class Intendencia {
 
   constructor() {
     this.portalContentService
-      .obtenerPublico()
+      .obtenerPublico(true)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((contenido) => (this.contenido = contenido));
   }

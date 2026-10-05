@@ -34,4 +34,8 @@ export class UsuariosAdminService {
   actualizarRoles(id: number, roles: RolUsuario[]): Observable<UsuarioAdmin> {
     return this.http.put<UsuarioAdmin>(`${this.apiUrl}/${id}/roles`, { roles });
   }
+
+  resetearPassword(id: number, password: string): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/password`, { password });
+  }
 }

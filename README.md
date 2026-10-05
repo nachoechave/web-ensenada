@@ -1,6 +1,6 @@
 # Web Ensenada — portal editorial
 
-Home institucional, noticias y publicaciones de Hacienda, con administración por roles. Angular 21 + Spring Boot 4 / Java 21. Boletín Oficial sigue siendo externo y Proveedores mantiene su acceso pendiente. Hacienda tiene un dominio propio de publicaciones y documentos; no es un CMS municipal genérico.
+Home institucional, noticias, Registro Municipal de Proveedores y publicaciones de Hacienda, con administración por roles. Angular 21 + Spring Boot 4 / Java 21. Boletín Oficial sigue siendo externo. Hacienda tiene un dominio propio de publicaciones y documentos; no es un CMS municipal genérico.
 
 ## Desarrollo
 
@@ -38,13 +38,13 @@ En Windows usar `mvnw.cmd`. El adaptador de tests traduce `--run` a `ng test --w
 ## Configuración institucional
 
 - Home/footer: el contenido publicado se administra desde `/admin/sitio` por `SUPER_ADMIN` y se persiste mediante `/api/admin/site-content`. `frontend/src/app/config/site-content.ts` conserva únicamente los valores base/fallback.
-- Sistemas externos: `frontend/src/app/config/external-links.ts`. Completar la URL oficial de Proveedores antes de habilitar ese acceso. Los enlaces externos abren otra pestaña con `noopener noreferrer`.
-- Hacienda es un acceso interno a `/hacienda`, con detalle en `/hacienda/:id`. `/registro-proveedores` conserva la página informativa de acceso pendiente.
+- Sistemas externos: `frontend/src/app/config/external-links.ts`. Los enlaces externos abren otra pestaña con `noopener noreferrer`.
+- Hacienda es un acceso interno a `/hacienda`, con detalle en `/hacienda/:id`. `/registro-proveedores` es una página nativa del portal con información y documentación del trámite.
 - `Conocé más` lleva a la información institucional de Home.
 
 ## Roles y publicación
 
-`PRENSA` administra noticias y su propia cuenta. `HACIENDA` administra publicaciones de Hacienda y su propia cuenta. `SUPER_ADMIN` administra ambos dominios y usuarios. Las altas y los cambios de rol admiten exactamente un rol operativo: PRENSA o HACIENDA. No se pueden crear, degradar ni desactivar superadministradores desde el panel. Las respuestas de usuarios nunca contienen hashes. El cambio de contraseña propio pide la contraseña actual; no hay infraestructura de recuperación por correo ni reset administrativo.
+`PRENSA` administra noticias y su propia cuenta. `HACIENDA` administra publicaciones de Hacienda y su propia cuenta. `SUPER_ADMIN` administra ambos dominios y usuarios. Las altas y los cambios de rol admiten exactamente un rol operativo: PRENSA o HACIENDA. No se pueden crear, degradar ni desactivar superadministradores desde el panel. Las respuestas de usuarios nunca contienen hashes. El cambio de contraseña propio pide la contraseña actual; el SuperAdmin puede restablecer la contraseña de cuentas operativas y ese cambio revoca sus sesiones anteriores. La recuperación por correo sigue fuera de alcance.
 
 La noticia se guarda con `BORRADOR`, `PUBLICADA` o `ARCHIVADA`. Publicar/despublicar y destacar se guardan en la API. `DELETE /api/admin/noticias/{id}` archiva, no destruye. Para recuperar una archivada se cambia su estado en el formulario. Solo `PUBLICADA` aparece en endpoints públicos y solo `PUBLICADA + destacada` en Home. La fecha es editorial, no programa publicación automática.
 
@@ -65,6 +65,7 @@ Imágenes: JPEG/PNG, máximo 5 MB y 20 megapíxeles. Se decodifican, verifican y
 | GET / POST | `/admin/usuarios` | SUPER_ADMIN; altas PRENSA o HACIENDA |
 | PUT | `/admin/usuarios/{id}/roles` | SUPER_ADMIN; un rol operativo, sin modificar administradores |
 | PUT | `/admin/usuarios/{id}/activo` | SUPER_ADMIN; sin modificar superadministradores |
+| PUT | `/admin/usuarios/{id}/password` | SUPER_ADMIN; restablece contraseña de PRENSA/HACIENDA y revoca JWT anteriores |
 | GET | `/hacienda`, `/hacienda/{id}` | Público; solo publicadas |
 | GET / POST | `/admin/hacienda` | HACIENDA / SUPER_ADMIN |
 | GET / PUT / DELETE | `/admin/hacienda/{id}` | HACIENDA / SUPER_ADMIN; DELETE archiva |
@@ -80,9 +81,11 @@ Rutas administrativas: `/admin/login`, `/admin` (dashboard), `/admin/sitio`, `/a
 
 Flyway V1 crea usuarios, roles y noticias y permanece sin cambios. V2 agrega publicaciones y archivos de Hacienda, V3 agrega la versión de token JWT y V4 persiste el contenido administrable del portal y V5 agrega slugs únicos y estables a noticias y V6 incorpora la auditoría editorial de noticias. `ddl-auto=validate` en todos los perfiles; no hay `update` ni baseline automático. Leer [la transición de bases existentes](docs/base-de-datos.md) antes de usar una base anterior. CI valida V1–V6 y el arranque Spring sobre MySQL 8.4 efímero.
 
-Antes de desplegar: configurar secretos nuevos, cuenta inicial, MySQL, backup y almacenamiento; completar URLs pendientes; validar migración en copia de la base real; configurar HTTPS, reverse proxy SPA (`index.html` para rutas frontend), límites de upload y orígenes permitidos. No usar el perfil de memoria `dev` en producción. El login tiene rate limiting configurable por IP (10 intentos / 300 segundos por defecto); revisar la política de proxy y los límites por instancia en [la guía operativa](docs/hacienda.md).
+Antes de desplegar: configurar secretos nuevos, cuenta inicial, MySQL, backup y almacenamiento; validar migración en copia de la base real; configurar HTTPS, reverse proxy SPA (`index.html` para rutas frontend), límites de upload y orígenes permitidos. No usar el perfil de memoria `dev` en producción. El login tiene rate limiting configurable por IP (10 intentos / 300 segundos por defecto); revisar la política de proxy y los límites por instancia en [la guía operativa](docs/hacienda.md).
 
-Deuda: limpieza programada de imágenes huérfanas, recuperación de cuentas y eventual uso de cookies HttpOnly. Actualmente los tokens tienen 120 minutos de vida; desactivar una cuenta revoca acceso inmediatamente porque el backend consulta sus roles/estado en cada petición. Cambiar la contraseña incrementa `tokenVersion`, por lo que los JWT emitidos anteriormente dejan de ser válidos.
+La sesión administrativa usa una cookie JWT `HttpOnly`, `SameSite=Strict` y `Secure` por defecto (`AUTH_SECURE_COOKIE=false` solo para desarrollo HTTP local). El backend conserva compatibilidad temporal con `Authorization: Bearer` para clientes/tests existentes, pero el frontend ya no persiste JWT en `localStorage`. Los tokens tienen 120 minutos de vida; desactivar una cuenta o restablecer/cambiar su contraseña revoca los JWT anteriores mediante `tokenVersion`.
+
+Los uploads huérfanos de Noticias, Hacienda y Sitio se limpian diariamente después de una retención configurable de 7 días por defecto (`UPLOAD_CLEANUP_ENABLED`, `UPLOAD_CLEANUP_RETENTION_HOURS`, `UPLOAD_CLEANUP_CRON`). Deuda restante: recuperación por correo y revisión periódica de la política de almacenamiento.
 
 SEO inicial en español argentino, títulos y metadatos de noticia. Las noticias nuevas reciben un `slug` único y estable derivado del título; el endpoint público acepta slug o ID para conservar compatibilidad con enlaces históricos. El frontend usa el slug como URL pública y completa Open Graph/Twitter/canonical en cliente. SSR/prerender de noticias sigue pendiente: los crawlers sociales que no ejecutan JavaScript ven solo metadata inicial.
 

@@ -151,7 +151,8 @@ describe('Portal de prensa', () => {
     http
       .expectOne('/api/auth/login')
       .flush({ token: 'jwt', nombre: 'P', email: 'p@example.test', roles: ['PRENSA'] });
-    expect(auth.obtenerToken()).toBe('jwt');
+    expect(localStorage.getItem('admin-token')).toBeNull();
+    expect(sessionStorage.getItem('admin-user')).toContain('p@example.test');
     expect(auth.tieneRol(['SUPER_ADMIN'])).toBe(false);
   });
 

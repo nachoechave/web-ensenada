@@ -19,33 +19,34 @@ export class AuthService {
   private readonly http = inject(HttpClient);
 
   private readonly apiUrl = environment.apiUrl + '/auth';
-  private readonly tokenKey = 'admin-token';
   private readonly userKey = 'admin-user';
+  private readonly legacyTokenKey = 'admin-token';
 
   login(credenciales: LoginRequest): Observable<LoginResponse> {
     return this.http
-      .post<LoginResponse>(`${this.apiUrl}/login`, credenciales)
+      .post<LoginResponse>(`${this.apiUrl}/login`, credenciales, { withCredentials: true })
       .pipe(tap((response) => this.guardarSesion(response)));
   }
 
   obtenerPerfil(): Observable<UsuarioActual> {
     return this.http
-      .get<UsuarioActual>(`${this.apiUrl}/me`)
+      .get<UsuarioActual>(`${this.apiUrl}/me`, { withCredentials: true })
       .pipe(tap((usuario) => this.guardarUsuario(usuario)));
   }
 
   actualizarPerfil(perfil: ActualizarPerfilRequest): Observable<LoginResponse> {
     return this.http
-      .put<LoginResponse>(`${this.apiUrl}/me`, perfil)
+      .put<LoginResponse>(`${this.apiUrl}/me`, perfil, { withCredentials: true })
       .pipe(tap((response) => this.guardarSesion(response)));
   }
 
   cambiarPassword(passwords: CambiarPasswordRequest): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/me/password`, passwords);
+    return this.http.put<void>(`${this.apiUrl}/me/password`, passwords, { withCredentials: true });
   }
 
   obtenerUsuarioActual(): UsuarioActual | null {
-    const usuarioGuardado = localStorage.getItem(this.userKey);
+    const usuarioGuardado =
+      sessionStorage.getItem(this.userKey) ?? localStorage.getItem(this.userKey);
 
     if (!usuarioGuardado) {
       return null;
@@ -56,7 +57,7 @@ export class AuthService {
       usuario = JSON.parse(usuarioGuardado);
       if (!usuario || typeof usuario !== 'object') return null;
     } catch {
-      this.logout();
+      this.limpiarSesionLocal();
       return null;
     }
 
@@ -68,12 +69,8 @@ export class AuthService {
     };
   }
 
-  obtenerToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
-  }
-
   estaAutenticado(): boolean {
-    return !!this.obtenerToken();
+    return !!this.obtenerUsuarioActual();
   }
 
   tieneRol(rolesPermitidos: RolUsuario[]): boolean {
@@ -90,12 +87,16 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.userKey);
+    this.http.post<void>(`${this.apiUrl}/logout`, null, { withCredentials: true }).subscribe({
+      error: () => undefined,
+    });
+    this.limpiarSesionLocal();
   }
 
   private guardarSesion(response: LoginResponse): void {
-    localStorage.setItem(this.tokenKey, response.token);
+    // El JWT viaja en cookie HttpOnly. Se elimina cualquier token heredado del navegador.
+    localStorage.removeItem(this.legacyTokenKey);
+    sessionStorage.removeItem(this.legacyTokenKey);
     this.guardarUsuario(response);
   }
 
@@ -104,7 +105,8 @@ export class AuthService {
   ): void {
     const roles = this.normalizarRoles(usuario.roles ?? usuario.rol ?? 'PRENSA');
 
-    localStorage.setItem(
+    localStorage.removeItem(this.userKey);
+    sessionStorage.setItem(
       this.userKey,
       JSON.stringify({
         nombre: usuario.nombre,
@@ -113,6 +115,13 @@ export class AuthService {
         roles,
       }),
     );
+  }
+
+  private limpiarSesionLocal(): void {
+    localStorage.removeItem(this.legacyTokenKey);
+    sessionStorage.removeItem(this.legacyTokenKey);
+    localStorage.removeItem(this.userKey);
+    sessionStorage.removeItem(this.userKey);
   }
 
   private normalizarRoles(roles: RolUsuario[] | string): RolUsuario[] {

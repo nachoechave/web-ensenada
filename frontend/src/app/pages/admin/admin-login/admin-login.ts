@@ -35,6 +35,8 @@ export class AdminLogin {
 
     localStorage.removeItem('admin-token');
     localStorage.removeItem('admin-user');
+    sessionStorage.removeItem('admin-token');
+    sessionStorage.removeItem('admin-user');
 
     this.timeoutLogin = setTimeout(() => {
       if (this.cargando) {

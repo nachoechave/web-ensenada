@@ -28,7 +28,7 @@ export class Home {
     afterNextRender(() => this.iniciarCarousel());
 
     this.portalContentService
-      .obtenerPublico()
+      .obtenerPublico(true)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((contenido) => {
         this.contenido = contenido;

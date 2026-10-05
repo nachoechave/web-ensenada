@@ -1,38 +1,56 @@
 <app-navbar />
-<main class="section-block">
+<main class="page-shell section-block">
   <div class="section-container">
-    <a routerLink="/hacienda">Volver a Hacienda</a>
+    <a routerLink="/hacienda" class="button-link back-link">← Volver a Hacienda</a>
+
     @if (cargando()) {
-      <p role="status">Cargando publicación…</p>
+      <p class="detail-state" role="status">Cargando publicación…</p>
     } @else if (error()) {
-      <h1>Publicación no disponible</h1>
-      <p role="alert">{{ error() }}</p>
+      <div class="content-card detail-state detail-state-error">
+        <h1>Publicación no disponible</h1>
+        <p role="alert">{{ error() }}</p>
+      </div>
     } @else if (publicacion(); as p) {
-      <article>
-        <header>
-          <p>{{ tipos[p.tipo] }}</p>
+      <article class="hacienda-detail">
+        <header class="detail-header">
+          <span class="section-kicker">{{ tipos[p.tipo] }}</span>
           <h1>{{ p.titulo }}</h1>
           <time [attr.datetime]="p.fechaPublicacion">{{ p.fechaPublicacion }}</time>
         </header>
-        <p class="description">{{ p.descripcion }}</p>
-        <h2>Documentos</h2>
-        @for (a of p.archivos; track a.id) {
-          <section class="document content-card" [attr.aria-label]="a.nombreOriginal">
-            <h3>{{ a.nombreOriginal }}</h3>
-            @if (a.tipoMime === 'application/pdf') {
-              <p>Documento PDF</p>
-              <a [href]="a.url" target="_blank" rel="noopener noreferrer">Ver documento PDF</a>
-              <a [href]="a.url + '?descargar=true'">Descargar documento</a>
-            } @else {
-              <img
-                [src]="a.url"
-                [alt]="'Documento escaneado: ' + a.nombreOriginal"
-                loading="lazy"
-              />
-              <a [href]="a.url + '?descargar=true'">Descargar imagen</a>
-            }
-          </section>
+
+        @if (p.descripcion) {
+          <p class="description">{{ p.descripcion }}</p>
         }
+
+        <div class="documents-heading">
+          <span class="section-kicker">Archivos públicos</span>
+          <h2>Documentos</h2>
+        </div>
+
+        <div class="documents-list">
+          @for (a of p.archivos; track a.id) {
+            <section class="document content-card" aria-label="Documento adjunto">
+              @if (a.tipoMime === 'application/pdf') {
+                <div class="document-info">
+                  <span class="document-badge">PDF</span>
+                  <strong>Documento disponible</strong>
+                  <p>Podés visualizarlo en una nueva pestaña o descargarlo.</p>
+                </div>
+                <div class="document-actions">
+                  <a class="button-link primary" [href]="a.url" target="_blank" rel="noopener noreferrer">
+                    Ver documento
+                  </a>
+                  <a class="button-link" [href]="a.url + '?descargar=true'">Descargar</a>
+                </div>
+              } @else {
+                <img [src]="a.url" alt="Documento de Hacienda" loading="lazy" />
+                <div class="document-actions">
+                  <a class="button-link" [href]="a.url + '?descargar=true'">Descargar imagen</a>
+                </div>
+              }
+            </section>
+          }
+        </div>
       </article>
     }
   </div>

@@ -42,6 +42,22 @@ export class Home {
     return url.startsWith('/') && !url.startsWith('//');
   }
 
+  iconoSecretaria(id: string): string {
+    const iconos: Record<string, string> = {
+      'hacienda-produccion': 'building',
+      'desarrollo-social': 'users',
+      'salud-medio-ambiente': 'heart',
+      'obras-publicas': 'hardhat',
+      'servicios-publicos': 'building',
+      'inspeccion-control-urbano': 'document',
+      'seguridad-justicia': 'document',
+      'gestion-publica': 'building',
+      'secretaria-privada': 'building',
+      gobierno: 'building',
+    };
+    return iconos[id] ?? 'building';
+  }
+
   seleccionarHero(index: number): void {
     if (index < 0 || index >= this.contenido.hero.imagenes.length) return;
     this.heroIndex.set(index);

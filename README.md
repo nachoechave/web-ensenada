@@ -10,7 +10,7 @@ En `backend`, definir `JWT_SECRET` (aleatoria, al menos 32 bytes); opcionalmente
 ./mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-El perfil `dev` usa H2 en memoria, Flyway y validación del esquema: los datos se pierden al reiniciar. Para persistencia usar MySQL con `DB_URL`, `DB_USERNAME` y `DB_PASSWORD` sin perfil `dev`.
+El perfil `dev` usa H2 persistente en `backend/data/`, Flyway y validación del esquema. Los cambios hechos desde el CMS local sobreviven los reinicios del backend. Para producción usar MySQL con `DB_URL`, `DB_USERNAME` y `DB_PASSWORD` sin perfil `dev`.
 
 En `frontend`:
 
@@ -81,7 +81,7 @@ Rutas administrativas: `/admin/login`, `/admin` (dashboard), `/admin/sitio`, `/a
 
 Flyway V1 crea usuarios, roles y noticias y permanece sin cambios. V2 agrega publicaciones y archivos de Hacienda, V3 agrega la versión de token JWT y V4 persiste el contenido administrable del portal y V5 agrega slugs únicos y estables a noticias y V6 incorpora la auditoría editorial de noticias. `ddl-auto=validate` en todos los perfiles; no hay `update` ni baseline automático. Leer [la transición de bases existentes](docs/base-de-datos.md) antes de usar una base anterior. CI valida V1–V6 y el arranque Spring sobre MySQL 8.4 efímero.
 
-Antes de desplegar: configurar secretos nuevos, cuenta inicial, MySQL, backup y almacenamiento; validar migración en copia de la base real; configurar HTTPS, reverse proxy SPA (`index.html` para rutas frontend), límites de upload y orígenes permitidos. No usar el perfil de memoria `dev` en producción. El login tiene rate limiting configurable por IP (10 intentos / 300 segundos por defecto); revisar la política de proxy y los límites por instancia en [la guía operativa](docs/hacienda.md).
+Antes de desplegar: configurar secretos nuevos, cuenta inicial, MySQL, backup y almacenamiento; validar migración en copia de la base real; configurar HTTPS, reverse proxy SPA (`index.html` para rutas frontend), límites de upload y orígenes permitidos. No usar el perfil `dev` en producción. El login tiene rate limiting configurable por IP (10 intentos / 300 segundos por defecto); revisar la política de proxy y los límites por instancia en [la guía operativa](docs/hacienda.md).
 
 La sesión administrativa usa una cookie JWT `HttpOnly`, `SameSite=Strict` y `Secure` por defecto (`AUTH_SECURE_COOKIE=false` solo para desarrollo HTTP local). El backend conserva compatibilidad temporal con `Authorization: Bearer` para clientes/tests existentes, pero el frontend ya no persiste JWT en `localStorage`. Los tokens tienen 120 minutos de vida; desactivar una cuenta o restablecer/cambiar su contraseña revoca los JWT anteriores mediante `tokenVersion`.
 

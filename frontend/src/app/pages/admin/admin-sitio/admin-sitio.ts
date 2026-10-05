@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { cloneDefaultPortalContent } from '../../../config/site-content';
-import { PortalLinkItem } from '../../../models/portal-content.model';
+import { PortalLinkItem, PortalSecretariaItem } from '../../../models/portal-content.model';
 import { PortalContentService } from '../../../services/portal-content.service';
 
 @Component({
@@ -105,6 +105,18 @@ export class AdminSitio {
     this.contenido.areas.items.push(this.nuevoLink('Nueva área'));
   }
 
+  agregarSecretaria(): void {
+    this.contenido.areas.secretarias.push(this.nuevaSecretaria());
+  }
+
+  eliminarSecretaria(index: number): void {
+    this.contenido.areas.secretarias.splice(index, 1);
+  }
+
+  eliminarImagenIntendencia(index: number): void {
+    this.contenido.intendencia.galeria.splice(index, 1);
+  }
+
   agregarEvento(): void {
     this.contenido.agenda.items.push({ dia: '01', mes: 'ENE', titulo: 'Nuevo evento', lugar: '', hora: '' });
   }
@@ -141,7 +153,7 @@ export class AdminSitio {
     [items[index], items[destino]] = [items[destino], items[index]];
   }
 
-  subirImagen(event: Event, destino: 'hero' | 'intendencia'): void {
+  subirImagen(event: Event, destino: 'hero' | 'intendencia' | 'intendenciaGaleria'): void {
     const input = event.target as HTMLInputElement;
     const archivo = input.files?.[0];
     if (!archivo) return;
@@ -153,8 +165,10 @@ export class AdminSitio {
         if (destino === 'hero') {
           this.contenido.hero.imagenes.push(respuesta.url);
           if (this.contenido.hero.imagenes.length === 1) this.contenido.hero.imagen = respuesta.url;
-        } else {
+        } else if (destino === 'intendencia') {
           this.contenido.intendencia.imagen = respuesta.url;
+        } else {
+          this.contenido.intendencia.galeria.push(respuesta.url);
         }
         this.subiendoImagen = false;
         input.value = '';
@@ -178,6 +192,18 @@ export class AdminSitio {
     if (typeof detalle === 'string' && detalle.trim()) return detalle.trim();
     if (error.status === 413) return 'La imagen supera el límite de 30 MB.';
     return 'No se pudo procesar la imagen. Probá con JPG o PNG; el sistema la redimensiona y comprime automáticamente.';
+  }
+
+  private nuevaSecretaria(): PortalSecretariaItem {
+    return {
+      id: 'nueva-secretaria-' + (this.contenido.areas.secretarias.length + 1),
+      nombre: 'Nueva secretaría',
+      responsable: '',
+      direccion: '',
+      telefono: '',
+      horario: '',
+      email: '',
+    };
   }
 
   private nuevoLink(titulo: string): PortalLinkItem {

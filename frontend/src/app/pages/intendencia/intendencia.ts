@@ -7,12 +7,12 @@ import { cloneDefaultPortalContent } from '../../config/site-content';
 import { PortalContentService } from '../../services/portal-content.service';
 
 @Component({
-  selector: 'app-areas',
+  selector: 'app-intendencia',
   imports: [Navbar, Footer],
-  templateUrl: './areas.html',
-  styleUrl: './areas.css',
+  templateUrl: './intendencia.html',
+  styleUrl: './intendencia.css',
 })
-export class Areas {
+export class Intendencia {
   private readonly portalContentService = inject(PortalContentService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -23,9 +23,5 @@ export class Areas {
       .obtenerPublico()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((contenido) => (this.contenido = contenido));
-  }
-
-  get secretarias() {
-    return this.contenido.areas.secretarias;
   }
 }

@@ -88,7 +88,10 @@ export class PortalContentService {
 
     combinado.tramites.items = contenido.tramites?.items ?? base.tramites.items;
     combinado.areas.items = contenido.areas?.items ?? base.areas.items;
+    combinado.areas.secretarias = contenido.areas?.secretarias?.length ? contenido.areas.secretarias : base.areas.secretarias;
     combinado.agenda.items = contenido.agenda?.items ?? base.agenda.items;
+    combinado.intendencia.galeria = contenido.intendencia?.galeria?.filter((url) => typeof url === 'string' && url.trim()) ?? base.intendencia.galeria;
+    if (combinado.intendencia.galeria.length === 0) combinado.intendencia.galeria = [combinado.intendencia.imagen];
 
     const legacyImage = combinado.hero.imagen || base.hero.imagen;
     combinado.hero.imagenes =

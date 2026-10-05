@@ -5,6 +5,16 @@ export interface PortalLinkItem {
   icono: string;
 }
 
+export interface PortalSecretariaItem {
+  id: string;
+  nombre: string;
+  responsable: string;
+  direccion: string;
+  telefono: string;
+  horario: string;
+  email: string;
+}
+
 export interface PortalAgendaItem {
   dia: string;
   mes: string;
@@ -63,6 +73,9 @@ export interface PortalContent {
     kicker: string;
     titulo: string;
     bajada: string;
+    paginaTitulo: string;
+    paginaBajada: string;
+    secretarias: PortalSecretariaItem[];
     items: PortalLinkItem[];
   };
   intendencia: {
@@ -75,6 +88,9 @@ export interface PortalContent {
     secundarioTexto: string;
     secundarioUrl: string;
     cita: string;
+    historiaTitulo: string;
+    historia: string;
+    galeria: string[];
   };
   agenda: {
     kicker: string;

@@ -193,20 +193,10 @@
             <label>Título de /areas<input [(ngModel)]="contenido.areas.paginaTitulo" /></label>
             <label>Bajada de /areas<input [(ngModel)]="contenido.areas.paginaBajada" /></label>
           </div>
-          <div class="repeater">
-            @for (item of contenido.areas.items; track $index) {
-              <article class="item-editor">
-                <div class="item-toolbar"><strong>Área {{ $index + 1 }}</strong><span><button type="button" (click)="mover(contenido.areas.items, $index, -1)">↑</button><button type="button" (click)="mover(contenido.areas.items, $index, 1)">↓</button><button type="button" class="danger" (click)="eliminar(contenido.areas.items, $index)">Eliminar</button></span></div>
-                <div class="fields four">
-                  <label>Nombre<input [(ngModel)]="item.titulo" /></label>
-                  <label>Descripción<input [(ngModel)]="item.descripcion" /></label>
-                  <label>URL<input [(ngModel)]="item.url" /></label>
-                  <label>Ícono<select [(ngModel)]="item.icono">@for (icono of iconos; track icono[0]) { <option [value]="icono[0]">{{ icono[1] }}</option> }</select></label>
-                </div>
-              </article>
-            }
+          <div class="helper-card">
+            <strong>Sincronización automática</strong>
+            <span>La grilla de Áreas de la Home se genera directamente con las secretarías de abajo. Cada tarjeta abre /areas en la secretaría correspondiente, así no tenés que mantener dos listas.</span>
           </div>
-          <button type="button" class="add-button" (click)="agregarArea()">+ Agregar área destacada</button>
 
           <h3>Directorio de secretarías</h3>
           <p class="helper">Estos datos alimentan directamente la pantalla pública /areas.</p>

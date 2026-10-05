@@ -136,10 +136,12 @@
           </div>
           <p class="helper">Esta imagen se usa en la Home y como cabecera de /intendencia.</p>
 
-          <div class="fields four">
-            <label>Botón principal<input [(ngModel)]="contenido.intendencia.botonTexto" /></label><label>URL principal<input [(ngModel)]="contenido.intendencia.botonUrl" /></label>
-            <label>Botón secundario<input [(ngModel)]="contenido.intendencia.secundarioTexto" /></label><label>URL secundario<input [(ngModel)]="contenido.intendencia.secundarioUrl" /></label>
+          <div class="fields three">
+            <label>Botón principal<input [(ngModel)]="contenido.intendencia.botonTexto" /></label>
+            <label>Botón secundario<input [(ngModel)]="contenido.intendencia.secundarioTexto" /></label>
+            <label>URL secundario<input [(ngModel)]="contenido.intendencia.secundarioUrl" /></label>
           </div>
+          <p class="helper">El botón principal de Intendencia abre siempre la página interna <strong>/intendencia</strong>.</p>
 
           <h3>Página /intendencia</h3>
           <label>Título de historia<input [(ngModel)]="contenido.intendencia.historiaTitulo" /></label>

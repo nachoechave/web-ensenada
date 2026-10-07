@@ -40,9 +40,14 @@ export const routes: Routes = [
     title: 'Intendencia | Municipalidad de Ensenada',
   },
   {
-    path: 'registro-proveedores',
+    path: 'proveedores',
     component: RegistroProveedores,
     title: 'Registro Municipal de Proveedores | Municipalidad de Ensenada',
+  },
+  {
+    path: 'registro-proveedores',
+    redirectTo: 'proveedores',
+    pathMatch: 'full',
   },
   {
     path: '',

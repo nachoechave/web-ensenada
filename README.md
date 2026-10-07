@@ -39,7 +39,7 @@ En Windows usar `mvnw.cmd`. El adaptador de tests traduce `--run` a `ng test --w
 
 - Home/footer: el contenido publicado se administra desde `/admin/sitio` por `SUPER_ADMIN` y se persiste mediante `/api/admin/site-content`. `frontend/src/app/config/site-content.ts` conserva únicamente los valores base/fallback.
 - Sistemas externos: `frontend/src/app/config/external-links.ts`. Los enlaces externos abren otra pestaña con `noopener noreferrer`.
-- Hacienda es un acceso interno a `/hacienda`, con detalle en `/hacienda/:id`. `/registro-proveedores` es una página nativa del portal con información y documentación del trámite.
+- Hacienda es un acceso interno a `/hacienda`, con detalle en `/hacienda/:id`. `/proveedores` es una página nativa del portal con información y documentación del trámite.
 - `Conocé más` lleva a la información institucional de Home.
 
 ## Roles y publicación
@@ -74,7 +74,7 @@ Imágenes: JPEG/PNG, máximo 5 MB y 20 megapíxeles. Se decodifican, verifican y
 | PUT | `/admin/hacienda/{id}/archivos/orden` | HACIENDA / SUPER_ADMIN; body `{ "ids": [1, 2] }` |
 | GET | `/admin/hacienda/{id}/archivos/{archivoId}/contenido` | HACIENDA / SUPER_ADMIN; descarga privada |
 
-Rutas públicas: `/`, `/noticias`, `/noticias/:slug` (acepta IDs históricos), `/hacienda`, `/hacienda/:id`, `/registro-proveedores`.
+Rutas públicas: `/`, `/noticias`, `/noticias/:slug` (acepta IDs históricos), `/hacienda`, `/hacienda/:id`, `/proveedores`. La ruta histórica `/registro-proveedores` redirige a `/proveedores`.
 Rutas administrativas: `/admin/login`, `/admin` (dashboard), `/admin/sitio`, `/admin/noticias`, `/admin/noticias/auditoria`, `/admin/noticias/nueva`, `/admin/noticias/editar/:id`, `/admin/hacienda`, `/admin/hacienda/nueva`, `/admin/hacienda/editar/:id`, `/admin/mi-cuenta`, `/admin/usuarios`.
 
 ## Base de datos y producción

@@ -47,6 +47,7 @@ describe('Portal de prensa', () => {
       'hacienda',
       'areas',
       'intendencia',
+      'proveedores',
       'registro-proveedores',
       '',
       'noticias',

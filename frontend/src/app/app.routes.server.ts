@@ -26,7 +26,7 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server,
   },
   {
-    path: 'registro-proveedores',
+    path: 'proveedores',
     renderMode: RenderMode.Server,
   },
   {

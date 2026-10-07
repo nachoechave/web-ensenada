@@ -1,11 +1,12 @@
 .admin-layout {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 17.5rem 1fr;
+  grid-template-columns: 17.5rem minmax(0, 1fr);
   background: #f4f7f5;
 }
 
 .admin-sidebar {
+  min-width: 0;
   background: #0f3d2e;
   color: white;
   padding: 1.5rem;
@@ -23,6 +24,7 @@
 .admin-logo {
   width: 2.8rem;
   height: 2.8rem;
+  flex: 0 0 2.8rem;
   border-radius: 0.8rem;
   background: #30a46c;
   display: grid;
@@ -41,6 +43,10 @@
   margin-top: 0.2rem;
   color: #cde7dc;
   font-size: 0.8rem;
+}
+
+.sidebar-close {
+  display: none;
 }
 
 .admin-nav {
@@ -129,7 +135,12 @@
 }
 
 .admin-main {
+  min-width: 0;
   padding: 2rem;
+}
+
+.admin-mobile-header {
+  display: none;
 }
 
 .admin-header {
@@ -152,22 +163,155 @@
 }
 
 .admin-content {
+  min-width: 0;
   background: white;
   border-radius: 1.2rem;
   padding: 1.5rem;
   box-shadow: 0 0.6rem 1.5rem rgba(15, 61, 46, 0.08);
+  overflow-x: auto;
 }
 
-@media (max-width: 48rem) {
+.admin-backdrop {
+  display: none;
+}
+
+@media (max-width: 60rem) {
   .admin-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .admin-sidebar {
-    position: static;
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 50;
+    width: min(84vw, 20rem);
+    height: 100dvh;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.22s ease;
+    box-shadow: 1rem 0 2rem rgba(0, 0, 0, 0.22);
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-close {
+    display: grid;
+    place-items: center;
+    margin-left: auto;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0;
+    border-radius: 0.7rem;
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+    font: inherit;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .admin-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    border: 0;
+    background: rgba(4, 22, 17, 0.52);
+    cursor: pointer;
   }
 
   .admin-main {
     padding: 1rem;
+  }
+
+  .admin-mobile-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: -1rem -1rem 1rem;
+    padding: 0.85rem 1rem;
+    background: #0f3d2e;
+    color: white;
+    box-shadow: 0 0.35rem 1rem rgba(15, 61, 46, 0.16);
+  }
+
+  .admin-mobile-header strong,
+  .admin-mobile-header small {
+    display: block;
+  }
+
+  .admin-mobile-header strong {
+    font-size: 0.9rem;
+  }
+
+  .admin-mobile-header small {
+    margin-top: 0.15rem;
+    color: #cde7dc;
+    font-size: 0.72rem;
+  }
+
+  .menu-toggle {
+    width: 2.7rem;
+    height: 2.7rem;
+    flex: 0 0 2.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.08);
+    display: grid;
+    place-content: center;
+    gap: 0.25rem;
+    cursor: pointer;
+  }
+
+  .menu-toggle span {
+    display: block;
+    width: 1.25rem;
+    height: 0.13rem;
+    border-radius: 999rem;
+    background: white;
+  }
+
+  .admin-header {
+    padding: 1.1rem;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .admin-header h1 {
+    font-size: 1.35rem;
+  }
+
+  .admin-header p {
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .admin-content {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+}
+
+@media (max-width: 36rem) {
+  .admin-main {
+    padding: 0.75rem;
+  }
+
+  .admin-mobile-header {
+    margin: -0.75rem -0.75rem 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .admin-header {
+    padding: 1rem;
+  }
+
+  .admin-content {
+    padding: 0.8rem;
   }
 }

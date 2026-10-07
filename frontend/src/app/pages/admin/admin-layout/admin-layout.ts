@@ -22,6 +22,7 @@ export class AdminLayout {
   private readonly router = inject(Router);
 
   usuario = this.authService.obtenerUsuarioActual();
+  sidebarOpen = false;
 
   links: AdminNavItem[] = [
     {
@@ -61,6 +62,14 @@ export class AdminLayout {
 
   puedeVer(roles: RolUsuario[]): boolean {
     return this.authService.tieneRol(roles);
+  }
+
+  alternarSidebar(): void {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  cerrarSidebar(): void {
+    this.sidebarOpen = false;
   }
 
   logout(): void {

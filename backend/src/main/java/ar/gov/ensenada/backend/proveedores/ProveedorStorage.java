@@ -46,8 +46,11 @@ public class ProveedorStorage {
         } else if (lower.endsWith(".xls")) {
             extension = "xls";
             mime = "application/vnd.ms-excel";
+        } else if (lower.endsWith(".doc")) {
+            extension = "doc";
+            mime = "application/msword";
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato no permitido. Usá PDF, XLS o XLSX");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato no permitido. Usá PDF, DOC, XLS o XLSX");
         }
 
         try {
@@ -71,17 +74,17 @@ public class ProveedorStorage {
             if (bytes.length < 4 || bytes[0] != 'P' || bytes[1] != 'K') {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El archivo no es un XLSX válido");
             }
-        } else if ("xls".equals(extension)) {
+        } else if ("xls".equals(extension) || "doc".equals(extension)) {
             byte[] magic = {(byte)0xD0,(byte)0xCF,0x11,(byte)0xE0,(byte)0xA1,(byte)0xB1,0x1A,(byte)0xE1};
-            if (bytes.length < magic.length) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El archivo no es un XLS válido");
+            if (bytes.length < magic.length) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El archivo no es un documento Office válido");
             for (int i=0;i<magic.length;i++) if (bytes[i] != magic[i]) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El archivo no es un XLS válido");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El archivo no es un documento Office válido");
             }
         }
     }
 
     private Path resolver(String nombre) {
-        if (!nombre.matches("[a-f0-9-]{36}\\.(pdf|xls|xlsx)")) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        if (!nombre.matches("[a-f0-9-]{36}\\.(pdf|doc|xls|xlsx)")) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         Path result = directory.resolve(nombre).normalize();
         if (!result.startsWith(directory)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         return result;

@@ -79,6 +79,28 @@ export class PortalContentService {
 
     combinado.navbar.boletinUrl = base.navbar.boletinUrl;
 
+    const navbarGuardado = contenido.navbar?.items;
+    if (Array.isArray(navbarGuardado) && navbarGuardado.length > 0) {
+      combinado.navbar.items = navbarGuardado
+        .filter((item) => item && typeof item.texto === 'string' && typeof item.url === 'string')
+        .map((item) => ({
+          texto: item.texto.trim(),
+          url: item.url.trim(),
+          visible: item.visible !== false,
+        }))
+        .filter((item) => item.texto && item.url);
+    } else {
+      combinado.navbar.items = [
+        { texto: combinado.navbar.inicio, url: '/', visible: true },
+        { texto: combinado.navbar.municipio, url: '/#municipio', visible: true },
+        { texto: combinado.navbar.areas, url: '/areas', visible: true },
+        { texto: combinado.navbar.tramites, url: '/#accesos', visible: true },
+        { texto: combinado.navbar.noticias, url: '/noticias', visible: true },
+        { texto: combinado.navbar.hacienda, url: '/hacienda', visible: true },
+        { texto: combinado.navbar.contacto, url: '/#contacto', visible: true },
+      ];
+    }
+
     const accesosGuardados = contenido.accesos ?? [];
     const accesosLegacy = ['Licencias', 'Ambiente', 'Desarrollo Social', 'Obras Públicas', 'Salud', 'Deportes'];
     const conservaAccesosLegacy =

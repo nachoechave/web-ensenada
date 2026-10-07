@@ -48,13 +48,11 @@
     </button>
 
     <nav id="main-navigation" class="nav-links" [class.open]="menuAbierto" aria-label="Navegación principal">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="cerrarMenus()">{{ contenido.navbar.inicio }}</a>
-      <a routerLink="/" fragment="municipio" (click)="cerrarMenus()">{{ contenido.navbar.municipio }}</a>
-      <a routerLink="/areas" routerLinkActive="active" (click)="cerrarMenus()">{{ contenido.navbar.areas }}</a>
-      <a routerLink="/" fragment="accesos" (click)="cerrarMenus()">{{ contenido.navbar.tramites }}</a>
-      <a routerLink="/noticias" routerLinkActive="active" (click)="cerrarMenus()">{{ contenido.navbar.noticias }}</a>
-      <a routerLink="/hacienda" routerLinkActive="active" (click)="cerrarMenus()">{{ contenido.navbar.hacienda }}</a>
-      <a routerLink="/" fragment="contacto" (click)="cerrarMenus()">{{ contenido.navbar.contacto }}</a>
+      @for (item of contenido.navbar.items; track $index) {
+        @if (item.visible) {
+          <a [href]="item.url" (click)="cerrarMenus()">{{ item.texto }}</a>
+        }
+      }
 
       <button type="button" class="search-toggle" [class.active]="busquedaAbierta" aria-label="Abrir accesos de búsqueda" [attr.aria-expanded]="busquedaAbierta" (click)="alternarBusqueda()">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>

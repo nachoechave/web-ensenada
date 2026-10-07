@@ -1,3 +1,9 @@
+export interface PortalNavbarItem {
+  texto: string;
+  url: string;
+  visible: boolean;
+}
+
 export interface PortalLinkItem {
   titulo: string;
   descripcion: string;
@@ -42,6 +48,7 @@ export interface PortalContent {
     contacto: string;
     boletinTexto: string;
     boletinUrl: string;
+    items: PortalNavbarItem[];
   };
   hero: {
     eyebrow: string;

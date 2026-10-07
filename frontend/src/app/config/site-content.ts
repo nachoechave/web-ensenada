@@ -20,6 +20,16 @@ export const defaultPortalContent: PortalContent = {
     contacto: 'Contacto',
     boletinTexto: 'Boletín Oficial',
     boletinUrl: 'https://boletinoficial.ensenada.gov.ar/index.php',
+    items: [
+      { texto: 'Inicio', url: '/', visible: true },
+      { texto: 'Municipio', url: '/#municipio', visible: true },
+      { texto: 'Áreas', url: '/areas', visible: true },
+      { texto: 'Trámites', url: '/#accesos', visible: true },
+      { texto: 'Noticias', url: '/noticias', visible: true },
+      { texto: 'Hacienda', url: '/hacienda', visible: true },
+      { texto: 'Proveedores', url: '/proveedores', visible: false },
+      { texto: 'Contacto', url: '/#contacto', visible: true },
+    ],
   },
   hero: {
     eyebrow: 'Ensenada · Buenos Aires',

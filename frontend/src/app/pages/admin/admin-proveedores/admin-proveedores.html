@@ -18,8 +18,8 @@
       <input [(ngModel)]="descripcion" maxlength="500" placeholder="Descripción breve" />
     </label>
     <label class="file-field">
-      <span>Archivo PDF / XLS / XLSX</span>
-      <input type="file" accept=".pdf,.xls,.xlsx" (change)="seleccionarArchivo($event)" />
+      <span>Archivo PDF / DOC / XLS / XLSX</span>
+      <input type="file" accept=".pdf,.doc,.xls,.xlsx" (change)="seleccionarArchivo($event)" />
     </label>
     <button type="button" class="primary-button" (click)="agregar()" [disabled]="guardando() || !titulo.trim() || !archivo">
       {{ guardando() ? 'Cargando…' : '+ Cargar documento' }}

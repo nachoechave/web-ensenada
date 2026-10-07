@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { cloneDefaultPortalContent } from '../../../config/site-content';
-import { PortalLinkItem, PortalSecretariaItem } from '../../../models/portal-content.model';
+import { PortalLinkItem, PortalNavbarItem, PortalSecretariaItem } from '../../../models/portal-content.model';
 import { PortalContentService } from '../../../services/portal-content.service';
 
 @Component({
@@ -104,6 +104,15 @@ export class AdminSitio {
 
   agregarAcceso(): void {
     this.contenido.accesos.push(this.nuevoLink('Nuevo acceso'));
+  }
+
+  agregarNavbarItem(): void {
+    const item: PortalNavbarItem = {
+      texto: 'Nuevo botón',
+      url: '/',
+      visible: true,
+    };
+    this.contenido.navbar.items.push(item);
   }
 
   agregarTramite(): void {

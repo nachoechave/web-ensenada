@@ -2,24 +2,24 @@
 
 <main class="areas-page">
   @if (cargando()) {
-    <section class="areas-hero">
-      <div class="areas-shell">
-        <span class="eyebrow">Municipalidad de Ensenada</span>
+    <section class="route-hero">
+      <div class="route-hero-shell">
+        <span class="route-kicker">Municipalidad de Ensenada</span>
         <h1>Cargando áreas municipales…</h1>
       </div>
     </section>
   } @else if (errorCarga()) {
-    <section class="areas-hero">
-      <div class="areas-shell">
-        <span class="eyebrow">Municipalidad de Ensenada</span>
+    <section class="route-hero">
+      <div class="route-hero-shell">
+        <span class="route-kicker">Municipalidad de Ensenada</span>
         <h1>No pudimos cargar el directorio</h1>
         <p>{{ errorCarga() }}</p>
       </div>
     </section>
   } @else if (contenido(); as contenidoActual) {
-    <section class="areas-hero">
-      <div class="areas-shell">
-        <span class="eyebrow">Municipalidad de Ensenada</span>
+    <section class="route-hero">
+      <div class="route-hero-shell">
+        <span class="route-kicker">Municipalidad de Ensenada</span>
         <h1>{{ contenidoActual.areas.paginaTitulo }}</h1>
         <p>{{ contenidoActual.areas.paginaBajada }}</p>
       </div>

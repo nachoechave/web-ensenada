@@ -120,10 +120,9 @@
       <div class="areas-grid">
         @for (secretaria of contenido().areas.secretarias; track secretaria.id) {
           <a class="area-card" routerLink="/areas" [fragment]="secretaria.id">
-            <span class="area-icon"><app-portal-icon [name]="iconoSecretaria(secretaria.id)"></app-portal-icon></span>
-            <span>
+            <span class="area-card-copy">
               <strong>{{ secretaria.nombre }}</strong>
-              <small>{{ secretaria.responsable ? 'Responsable: ' + secretaria.responsable : secretaria.direccion }}</small>
+              <small>{{ secretaria.responsable || secretaria.direccion }}</small>
             </span>
             <span class="circle-arrow" aria-hidden="true">→</span>
           </a>

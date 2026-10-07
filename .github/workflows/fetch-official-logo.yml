@@ -1,0 +1,35 @@
+name: Fetch official municipal logo
+
+on:
+  push:
+    branches:
+      - fix/store-official-logo
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-logo:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/store-official-logo
+      - name: Download official logo
+        run: |
+          curl --fail --location --retry 3 \
+            https://pagos.ensenada.gov.ar/img/escudomuni.png \
+            --output frontend/public/assets/escudo-ensenada.png
+          file frontend/public/assets/escudo-ensenada.png
+          test "$(stat -c%s frontend/public/assets/escudo-ensenada.png)" -gt 1000
+      - name: Commit logo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add frontend/public/assets/escudo-ensenada.png
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "fix: store official municipal logo locally"
+          git push origin HEAD:fix/store-official-logo

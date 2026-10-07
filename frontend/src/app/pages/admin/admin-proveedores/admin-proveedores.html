@@ -1,0 +1,77 @@
+<div class="providers-admin-header">
+  <div>
+    <span>Proveedores</span>
+    <h2>Documentación del Registro de Proveedores</h2>
+    <p>Cargá y mantené los archivos que aparecen en la página pública de proveedores.</p>
+  </div>
+</div>
+
+<section class="upload-card">
+  <h3>Agregar documento</h3>
+  <div class="upload-grid">
+    <label>
+      <span>Título</span>
+      <input [(ngModel)]="titulo" maxlength="180" placeholder="Ej: Planilla de inscripción" />
+    </label>
+    <label>
+      <span>Descripción</span>
+      <input [(ngModel)]="descripcion" maxlength="500" placeholder="Descripción breve" />
+    </label>
+    <label class="file-field">
+      <span>Archivo PDF / XLS / XLSX</span>
+      <input type="file" accept=".pdf,.xls,.xlsx" (change)="seleccionarArchivo($event)" />
+    </label>
+    <button type="button" class="primary-button" (click)="agregar()" [disabled]="guardando() || !titulo.trim() || !archivo">
+      {{ guardando() ? 'Cargando…' : '+ Cargar documento' }}
+    </button>
+  </div>
+</section>
+
+@if (error()) {
+  <p class="admin-alert" role="alert">{{ error() }}</p>
+}
+@if (mensaje()) {
+  <p class="admin-success">{{ mensaje() }}</p>
+}
+
+@if (cargando()) {
+  <p>Cargando documentación…</p>
+} @else {
+  <div class="documents-list">
+    @for (documento of documentos(); track documento.id; let i = $index) {
+      <article class="document-editor">
+        <div class="document-meta">
+          <strong>{{ documento.nombreOriginal }}</strong>
+          <small>{{ (documento.tamanio / 1024 / 1024).toFixed(2) }} MB</small>
+        </div>
+
+        <label>
+          <span>Título</span>
+          <input [(ngModel)]="documento.titulo" maxlength="180" />
+        </label>
+
+        <label>
+          <span>Descripción</span>
+          <textarea [(ngModel)]="documento.descripcion" maxlength="500" rows="2"></textarea>
+        </label>
+
+        <label class="active-check">
+          <input type="checkbox" [(ngModel)]="documento.activo" />
+          <span>Visible en la página pública</span>
+        </label>
+
+        <div class="document-actions">
+          <button type="button" (click)="mover(i, -1)" [disabled]="i === 0">↑</button>
+          <button type="button" (click)="mover(i, 1)" [disabled]="i === documentos().length - 1">↓</button>
+          <a [href]="documento.url" target="_blank" rel="noopener noreferrer">Ver archivo</a>
+          <button type="button" class="save" (click)="guardar(documento)" [disabled]="guardando()">Guardar</button>
+          <button type="button" class="danger" (click)="eliminar(documento)">Eliminar</button>
+        </div>
+      </article>
+    } @empty {
+      <div class="empty-state">
+        Todavía no hay documentos cargados. Usá el formulario superior para agregar el primero.
+      </div>
+    }
+  </div>
+}

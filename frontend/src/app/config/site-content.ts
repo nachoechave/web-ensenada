@@ -45,7 +45,7 @@ export const defaultPortalContent: PortalContent = {
     {
       titulo: 'Registro de proveedores',
       descripcion: 'Requisitos, formularios e información para proveedores municipales.',
-      url: '/registro-proveedores',
+      url: '/proveedores',
       icono: 'providers',
     },
     {

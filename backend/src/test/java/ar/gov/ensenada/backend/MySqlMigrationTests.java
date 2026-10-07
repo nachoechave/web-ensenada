@@ -17,10 +17,11 @@ class MySqlMigrationTests {
     @Autowired EntityManagerFactory entityManagerFactory;
     @Test void v1Av6EnMySqlRealConHibernateValidate(){
         assertTrue(entityManagerFactory.isOpen());
-        assertEquals("6",flyway.info().current().getVersion().toString());
-        assertEquals(6,flyway.info().applied().length);
+        assertEquals("7",flyway.info().current().getVersion().toString());
+        assertEquals(7,flyway.info().applied().length);
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM publicaciones_hacienda",Integer.class));
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM archivos_hacienda",Integer.class));
+        assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM documentos_proveedores",Integer.class));
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM usuarios WHERE token_version <> 0",Integer.class));
         assertEquals(1,jdbc.queryForObject("SELECT COUNT(*) FROM portal_site_content",Integer.class));
         assertTrue(jdbc.queryForObject("SELECT VERSION()",String.class).startsWith("8."));

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Footer } from '../../components/footer/footer';
@@ -16,12 +16,12 @@ export class Intendencia {
   private readonly portalContentService = inject(PortalContentService);
   private readonly destroyRef = inject(DestroyRef);
 
-  contenido = cloneDefaultPortalContent();
+  readonly contenido = signal(cloneDefaultPortalContent());
 
   constructor() {
     this.portalContentService
       .obtenerPublico(true)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((contenido) => (this.contenido = contenido));
+      .subscribe((contenido) => this.contenido.set(contenido));
   }
 }

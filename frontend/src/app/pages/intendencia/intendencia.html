@@ -4,12 +4,12 @@
   <section class="intendencia-hero">
     <div class="intendencia-shell hero-layout">
       <div class="hero-copy">
-        <span class="eyebrow">{{ contenido.intendencia.kicker }}</span>
-        <h1>{{ contenido.intendencia.nombre }}</h1>
-        <p>{{ contenido.intendencia.descripcion }}</p>
+        <span class="eyebrow">{{ contenido().intendencia.kicker }}</span>
+        <h1>{{ contenido().intendencia.nombre }}</h1>
+        <p>{{ contenido().intendencia.descripcion }}</p>
       </div>
       <div class="hero-photo">
-        <img [src]="contenido.intendencia.imagen" [alt]="contenido.intendencia.nombre" />
+        <img [src]="contenido().intendencia.imagen" [alt]="contenido().intendencia.nombre" />
       </div>
     </div>
   </section>
@@ -18,10 +18,10 @@
     <div class="intendencia-shell historia-layout">
       <div>
         <span class="section-kicker">Intendencia</span>
-        <h2>{{ contenido.intendencia.historiaTitulo }}</h2>
+        <h2>{{ contenido().intendencia.historiaTitulo }}</h2>
       </div>
       <div class="historia-texto">
-        @for (parrafo of contenido.intendencia.historia.split('\n'); track $index) {
+        @for (parrafo of contenido().intendencia.historia.split('\n'); track $index) {
           @if (parrafo.trim()) {
             <p>{{ parrafo }}</p>
           }
@@ -30,7 +30,7 @@
     </div>
   </section>
 
-  @if (contenido.intendencia.galeria.length) {
+  @if (contenido().intendencia.galeria.length) {
     <section class="galeria-section" aria-labelledby="galeria-title">
       <div class="intendencia-shell">
         <div class="galeria-heading">
@@ -38,9 +38,9 @@
           <h2 id="galeria-title">Imágenes de la gestión</h2>
         </div>
         <div class="galeria-grid">
-          @for (imagen of contenido.intendencia.galeria; track $index) {
+          @for (imagen of contenido().intendencia.galeria; track $index) {
             <figure>
-              <img [src]="imagen" [alt]="contenido.intendencia.nombre + ' · imagen ' + ($index + 1)" loading="lazy" />
+              <img [src]="imagen" [alt]="contenido().intendencia.nombre + ' · imagen ' + ($index + 1)" loading="lazy" />
             </figure>
           }
         </div>
@@ -48,10 +48,10 @@
     </section>
   }
 
-  @if (contenido.intendencia.cita) {
+  @if (contenido().intendencia.cita) {
     <section class="cita-section">
       <div class="intendencia-shell">
-        <blockquote>“{{ contenido.intendencia.cita }}”</blockquote>
+        <blockquote>“{{ contenido().intendencia.cita }}”</blockquote>
       </div>
     </section>
   }

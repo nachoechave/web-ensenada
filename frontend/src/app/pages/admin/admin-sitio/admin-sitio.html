@@ -33,18 +33,37 @@
             <label>Instagram<input [(ngModel)]="contenido.topbar.instagram" /></label>
             <label>YouTube<input [(ngModel)]="contenido.topbar.youtube" /></label>
           </div>
-          <h3>Etiquetas del navbar</h3>
-          <div class="fields four">
-            <label>Inicio<input [(ngModel)]="contenido.navbar.inicio" /></label>
-            <label>Municipio<input [(ngModel)]="contenido.navbar.municipio" /></label>
-            <label>Áreas<input [(ngModel)]="contenido.navbar.areas" /></label>
-            <label>Accesos / Trámites<input [(ngModel)]="contenido.navbar.tramites" /></label>
-            <label>Noticias<input [(ngModel)]="contenido.navbar.noticias" /></label>
-            <label>Hacienda<input [(ngModel)]="contenido.navbar.hacienda" /></label>
-            <label>Contacto<input [(ngModel)]="contenido.navbar.contacto" /></label>
-            <label>Botón Boletín<input [(ngModel)]="contenido.navbar.boletinTexto" /></label>
+          <h3>Botones del navbar</h3>
+          <p class="helper">Podés cambiar el texto, la URL, ocultar botones, reordenarlos o agregar nuevos. Para secciones de la Home usá URLs como <strong>/#municipio</strong> o <strong>/#accesos</strong>.</p>
+          <div class="repeater">
+            @for (item of contenido.navbar.items; track $index) {
+              <article class="item-editor">
+                <div class="item-toolbar">
+                  <strong>Botón {{ $index + 1 }}</strong>
+                  <span>
+                    <button type="button" (click)="mover(contenido.navbar.items, $index, -1)" [disabled]="$index === 0">↑</button>
+                    <button type="button" (click)="mover(contenido.navbar.items, $index, 1)" [disabled]="$index === contenido.navbar.items.length - 1">↓</button>
+                    <button type="button" class="danger" (click)="eliminar(contenido.navbar.items, $index)">Eliminar</button>
+                  </span>
+                </div>
+                <div class="fields two">
+                  <label>Texto<input [(ngModel)]="item.texto" placeholder="Ej: Proveedores" /></label>
+                  <label>URL<input [(ngModel)]="item.url" placeholder="/proveedores" /></label>
+                </div>
+                <label class="toggle-field">
+                  <input type="checkbox" [(ngModel)]="item.visible" />
+                  <span>Mostrar en el navbar</span>
+                </label>
+              </article>
+            }
           </div>
-          <label class="wide">URL Boletín Oficial<input [(ngModel)]="contenido.navbar.boletinUrl" /></label>
+          <button type="button" class="add-button" (click)="agregarNavbarItem()">+ Agregar botón</button>
+
+          <h3>Botón destacado</h3>
+          <div class="fields two">
+            <label>Texto del botón<input [(ngModel)]="contenido.navbar.boletinTexto" /></label>
+            <label>URL<input [(ngModel)]="contenido.navbar.boletinUrl" /></label>
+          </div>
         </div>
       </details>
 

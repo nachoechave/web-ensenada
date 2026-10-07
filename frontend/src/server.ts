@@ -30,8 +30,8 @@ function proxyToBackend(req: express.Request, res: express.Response): void {
 
   const headers = {
     ...req.headers,
-    host: target.host,
-    'x-forwarded-host': req.headers.host ?? '',
+    host: req.headers.host ?? 'ensenada.comercioflex.com.ar',
+    'x-forwarded-host': req.headers.host ?? 'ensenada.comercioflex.com.ar',
     'x-forwarded-proto': req.headers['x-forwarded-proto'] ?? req.protocol,
     ...(xForwardedFor ? { 'x-forwarded-for': xForwardedFor } : {}),
   };

@@ -82,15 +82,22 @@ describe('Áreas con HTTP asíncrono y render zoneless', () => {
     }
   });
 
-  it.each([{}, { areas: { secretarias: [] } }])('no inventa contactos para %j', async (body) => {
-    const fixture = TestBed.createComponent(Areas);
-    await fixture.whenStable();
-    http.expectOne('/api/site-content').flush(body);
-    await fixture.whenStable();
-    expect(fixture.nativeElement.querySelectorAll('.secretaria-card')).toHaveLength(0);
-    expect(fixture.nativeElement.textContent).not.toContain('Cargando áreas municipales');
-    expect(fixture.nativeElement.textContent).not.toContain('(0221) 469-3155');
-  });
+  it.each([{}, { areas: { secretarias: [] } }])(
+    'usa el directorio institucional base cuando el CMS público no tiene secretarías para %j',
+    async (body) => {
+      const fixture = TestBed.createComponent(Areas);
+      await fixture.whenStable();
+      http.expectOne('/api/site-content').flush(body);
+      await fixture.whenStable();
+
+      const secretariasBase = cloneDefaultPortalContent().areas.secretarias;
+      expect(fixture.nativeElement.querySelectorAll('.secretaria-card')).toHaveLength(
+        secretariasBase.length,
+      );
+      expect(fixture.nativeElement.textContent).toContain(secretariasBase[0].nombre);
+      expect(fixture.nativeElement.textContent).not.toContain('Cargando áreas municipales');
+    },
+  );
 
   it('vuelve a consultar después de editar en AdminSitio sin reiniciar el servicio', async () => {
     const service = TestBed.inject(PortalContentService);

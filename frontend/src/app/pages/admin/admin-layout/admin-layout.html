@@ -1,5 +1,5 @@
 <div class="admin-layout">
-  <aside class="admin-sidebar">
+  <aside class="admin-sidebar" [class.open]="sidebarOpen">
     <div class="admin-brand">
       <span class="admin-logo">E</span>
 
@@ -7,6 +7,15 @@
         <strong>Municipio de Ensenada</strong>
         <small>Panel de administración</small>
       </div>
+
+      <button
+        type="button"
+        class="sidebar-close"
+        aria-label="Cerrar menú"
+        (click)="cerrarSidebar()"
+      >
+        ×
+      </button>
     </div>
 
     <nav class="admin-nav">
@@ -16,6 +25,7 @@
             [routerLink]="link.ruta"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: link.exacta ?? false }"
+            (click)="cerrarSidebar()"
           >
             {{ link.texto }}
           </a>
@@ -37,11 +47,39 @@
       }
 
       <button type="button" class="logout-button" (click)="logout()">Cerrar sesión</button>
-      <a class="public-link" routerLink="/">Volver al sitio público</a>
+      <a class="public-link" routerLink="/" (click)="cerrarSidebar()">Volver al sitio público</a>
     </div>
   </aside>
 
+  @if (sidebarOpen) {
+    <button
+      type="button"
+      class="admin-backdrop"
+      aria-label="Cerrar menú"
+      (click)="cerrarSidebar()"
+    ></button>
+  }
+
   <main class="admin-main">
+    <header class="admin-mobile-header">
+      <button
+        type="button"
+        class="menu-toggle"
+        aria-label="Abrir menú de administración"
+        [attr.aria-expanded]="sidebarOpen"
+        (click)="alternarSidebar()"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div>
+        <strong>Municipio de Ensenada</strong>
+        <small>Panel de administración</small>
+      </div>
+    </header>
+
     <header class="admin-header">
       <div>
         <h1>Panel de administración</h1>

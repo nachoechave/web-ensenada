@@ -37,6 +37,7 @@ export class AdminLayout {
       roles: ['SUPER_ADMIN'],
     },
     { texto: 'Hacienda', ruta: '/admin/hacienda', roles: ['HACIENDA'] },
+    { texto: 'Proveedores', ruta: '/admin/proveedores', roles: ['SUPER_ADMIN', 'HACIENDA'] },
     { texto: 'Nueva publicación', ruta: '/admin/hacienda/nueva', roles: ['HACIENDA'] },
     {
       texto: 'Noticias',

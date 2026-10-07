@@ -63,6 +63,7 @@ describe('Portal de prensa', () => {
       'hacienda/editar/:id',
       '',
       'sitio',
+      'proveedores',
       'noticias',
       'noticias/auditoria',
       'noticias/nueva',

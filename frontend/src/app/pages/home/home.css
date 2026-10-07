@@ -209,23 +209,62 @@ main {
 .service-card strong { font-size:1rem; }
 .service-card small { font-size:.76rem; }
 
-.areas-layout { align-items:center; }
-.areas-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.9rem; }
-.area-card {
-  min-height:6.8rem;
-  display:grid;
-  grid-template-columns:auto minmax(0,1fr) auto;
-  align-items:center;
-  gap:.85rem;
-  padding:1.05rem;
-  border:1px solid #dfeae4;
-  border-radius:1rem;
-  color:inherit;
-  background:rgba(255,255,255,.9);
-  text-decoration:none;
+.areas-layout {
+  align-items: center;
+  grid-template-columns: minmax(14rem,.34fr) minmax(0,1.66fr);
+  gap: 3rem;
 }
-.area-card:hover { border-color:#c5dfd3; background:#fff; }
-.area-icon { width:2.5rem; height:2.5rem; }
+.areas-grid {
+  display: grid;
+  grid-template-columns: repeat(5,minmax(0,1fr));
+  gap: .9rem;
+}
+.area-card {
+  min-height: 7rem;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  align-items: center;
+  gap: .8rem;
+  padding: 1rem 1.05rem;
+  border: 1px solid #dfeae4;
+  border-radius: 1rem;
+  color: inherit;
+  background: rgba(255,255,255,.92);
+  text-decoration: none;
+  box-shadow: 0 .55rem 1.35rem rgba(2,42,31,.035);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+}
+.area-card:hover {
+  transform: translateY(-3px);
+  border-color: #bcd9cb;
+  background: #fff;
+  box-shadow: 0 .85rem 1.8rem rgba(2,42,31,.07);
+}
+.area-card-copy {
+  min-width: 0;
+}
+.area-card strong,
+.area-card small {
+  display: block;
+}
+.area-card strong {
+  color: #153f34;
+  font-size: .9rem;
+  font-weight: 760;
+  line-height: 1.25;
+}
+.area-card small {
+  margin-top: .35rem;
+  color: #6a7b76;
+  font-size: .72rem;
+  line-height: 1.4;
+}
+.area-card .circle-arrow {
+  width: 1.6rem;
+  height: 1.6rem;
+  box-shadow: none;
+  border: 1px solid #e0ece6;
+}
 
 .mayor-grid { display:grid; grid-template-columns:minmax(20rem,.7fr) minmax(0,1fr) minmax(19rem,.78fr); gap:2.8rem; align-items:center; }
 .mayor-photo { min-height:21rem; overflow:hidden; border-radius:1.35rem; box-shadow:0 1rem 2.5rem rgba(2,42,31,.1); }
@@ -267,7 +306,8 @@ main {
   .hero-grid { grid-template-columns:minmax(0,.9fr) minmax(27rem,1.1fr); gap:2.5rem; }
   .hero-photo-strip { width:28%; }
   .section-with-intro { grid-template-columns:1fr; gap:2rem; }
-  .service-grid,.areas-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .service-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .areas-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
   .mayor-grid { grid-template-columns:minmax(20rem,.8fr) minmax(0,1.2fr); }
   .mayor-quote { grid-column:1/-1; }
   .agenda-layout { grid-template-columns:1fr; gap:2rem; }

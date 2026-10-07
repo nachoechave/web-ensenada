@@ -1,60 +1,38 @@
 <app-navbar></app-navbar>
 
 <main class="noticias-page page-shell">
-  <section class="section-block">
-    <div class="section-container">
-      <div class="section-header centered">
-        <span class="section-kicker">Actualidad municipal</span>
-        <h1>Noticias de Ensenada</h1>
-        <p>
-          Conocé las últimas novedades, obras, actividades y programas impulsados por el Municipio.
-        </p>
-      </div>
+  <section class="route-hero">
+    <div class="route-hero-shell">
+      <span class="route-kicker">Actualidad municipal</span>
+      <h1>Noticias de Ensenada</h1>
+      <p>Conocé las últimas novedades, obras, actividades y programas impulsados por el Municipio.</p>
+    </div>
+  </section>
 
+  <section class="route-content">
+    <div class="section-container">
       @if (!error && totalElementos > 0) {
         <p class="news-count">{{ totalElementos }} noticias publicadas</p>
       }
 
       <div class="noticias-grid" [attr.aria-busy]="cargando">
-        @if (error) {
-          <p role="alert">{{ error }}</p>
-        }
+        @if (error) { <p role="alert">{{ error }}</p> }
         @for (noticia of noticias; track noticia.id) {
           <app-noticia-card [noticia]="noticia"></app-noticia-card>
         } @empty {
-          @if (!error) {
-            <p>No hay noticias publicadas.</p>
-          }
+          @if (!error) { <p>No hay noticias publicadas.</p> }
         }
       </div>
 
       @if (totalPaginas > 1) {
         <nav class="pagination" aria-label="Paginación de noticias">
-          <button type="button" (click)="cambiarPagina(pagina - 1)" [disabled]="pagina === 0 || cargando">
-            ← Anterior
-          </button>
-
+          <button type="button" (click)="cambiarPagina(pagina - 1)" [disabled]="pagina === 0 || cargando">← Anterior</button>
           <div class="page-numbers">
             @for (paginaVisible of paginasVisibles; track paginaVisible) {
-              <button
-                type="button"
-                [class.active]="paginaVisible === pagina"
-                [attr.aria-current]="paginaVisible === pagina ? 'page' : null"
-                (click)="cambiarPagina(paginaVisible)"
-                [disabled]="cargando"
-              >
-                {{ paginaVisible + 1 }}
-              </button>
+              <button type="button" [class.active]="paginaVisible === pagina" [attr.aria-current]="paginaVisible === pagina ? 'page' : null" (click)="cambiarPagina(paginaVisible)" [disabled]="cargando">{{ paginaVisible + 1 }}</button>
             }
           </div>
-
-          <button
-            type="button"
-            (click)="cambiarPagina(pagina + 1)"
-            [disabled]="pagina >= totalPaginas - 1 || cargando"
-          >
-            Siguiente →
-          </button>
+          <button type="button" (click)="cambiarPagina(pagina + 1)" [disabled]="pagina >= totalPaginas - 1 || cargando">Siguiente →</button>
         </nav>
       }
     </div>

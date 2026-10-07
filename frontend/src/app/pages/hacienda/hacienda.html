@@ -1,34 +1,35 @@
 <app-navbar />
-<main class="page-shell section-block">
-  <div class="section-container">
-    <header class="section-header">
-      <span class="section-kicker">Documentación pública</span>
+<main class="page-shell">
+  <section class="route-hero">
+    <div class="route-hero-shell">
+      <span class="route-kicker">Documentación pública</span>
       <h1>Hacienda</h1>
-      <p>
-        Publicaciones económicas, presupuestarias y financieras de la Municipalidad de Ensenada.
-      </p>
-    </header>
-    @if (cargando()) {
-      <p role="status">Cargando publicaciones…</p>
-    } @else if (error()) {
-      <p role="alert">{{ error() }}</p>
-      <button type="button" (click)="cargar()">Reintentar</button>
-    } @else {
-      <div class="publication-grid">
-        @for (p of publicaciones(); track p.id) {
-          <article class="content-card publication-card">
-            <span>{{ tipos[p.tipo] }}</span>
-            <h2>
-              <a [routerLink]="['/hacienda', p.id]">{{ p.titulo }}</a>
-            </h2>
-            <time [attr.datetime]="p.fechaPublicacion">{{ p.fechaPublicacion }}</time>
-            <p>{{ p.archivos.length }} documento(s)</p>
-          </article>
-        } @empty {
-          <p>No hay publicaciones de Hacienda disponibles.</p>
-        }
-      </div>
-    }
-  </div>
+      <p>Publicaciones económicas, presupuestarias y financieras de la Municipalidad de Ensenada.</p>
+    </div>
+  </section>
+
+  <section class="route-content">
+    <div class="section-container">
+      @if (cargando()) {
+        <p role="status">Cargando publicaciones…</p>
+      } @else if (error()) {
+        <p role="alert">{{ error() }}</p>
+        <button type="button" (click)="cargar()">Reintentar</button>
+      } @else {
+        <div class="publication-grid">
+          @for (p of publicaciones(); track p.id) {
+            <article class="content-card publication-card">
+              <span>{{ tipos[p.tipo] }}</span>
+              <h2><a [routerLink]="['/hacienda', p.id]">{{ p.titulo }}</a></h2>
+              <time [attr.datetime]="p.fechaPublicacion">{{ p.fechaPublicacion }}</time>
+              <p>{{ p.archivos.length }} documento(s)</p>
+            </article>
+          } @empty {
+            <p>No hay publicaciones de Hacienda disponibles.</p>
+          }
+        </div>
+      }
+    </div>
+  </section>
 </main>
 <app-footer />

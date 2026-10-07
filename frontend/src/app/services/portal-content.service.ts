@@ -27,10 +27,7 @@ export class PortalContentService {
           if (!contenido || typeof contenido !== 'object' || Array.isArray(contenido)) {
             throw new Error('El contenido público debe ser un objeto JSON');
           }
-          const normalizado = this.normalizar(contenido);
-          // Un directorio ausente o vacío nunca se reemplaza por contactos de ejemplo.
-          normalizado.areas.secretarias = contenido.areas?.secretarias ?? [];
-          return normalizado;
+          return this.normalizar(contenido);
         }),
         shareReplay({ bufferSize: 1, refCount: false }),
       );

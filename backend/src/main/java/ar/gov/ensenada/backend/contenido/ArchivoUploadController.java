@@ -1,6 +1,7 @@
 package ar.gov.ensenada.backend.contenido;
 
 import ar.gov.ensenada.backend.archivos.ImagenSegura;
+import ar.gov.ensenada.backend.archivos.ArchivoStorageService;
 import ar.gov.ensenada.backend.archivos.ImagenSitioOptimizada;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,11 @@ import java.util.UUID;
 @RequestMapping("/api/admin/archivos")
 public class ArchivoUploadController {
 
-    @Value("${app.uploads.dir:uploads}")
-    private String uploadsDir;
+    private final ArchivoStorageService storage;
+
+    public ArchivoUploadController(ArchivoStorageService storage) {
+        this.storage = storage;
+    }
 
     @PostMapping(value = "/noticias", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ArchivoUploadResponse subirNoticia(@RequestParam("archivo") MultipartFile archivo) {
@@ -39,18 +43,7 @@ public class ArchivoUploadController {
 
     private ArchivoUploadResponse guardarImagen(byte[] bytes, String extension, String mime, String carpeta) {
         String filename = UUID.randomUUID() + "." + extension;
-        Path directory = Path.of(uploadsDir, carpeta).toAbsolutePath().normalize();
-        try {
-            Files.createDirectories(directory);
-            Files.write(directory.resolve(filename), bytes, StandardOpenOption.CREATE_NEW);
-            return new ArchivoUploadResponse(
-                    "/uploads/" + carpeta + "/" + filename,
-                    filename,
-                    mime,
-                    bytes.length
-            );
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "No se pudo guardar la imagen");
-        }
+        storage.guardar(carpeta, filename, bytes, mime);
+        return new ArchivoUploadResponse("/uploads/" + carpeta + "/" + filename, filename, mime, bytes.length);
     }
 }

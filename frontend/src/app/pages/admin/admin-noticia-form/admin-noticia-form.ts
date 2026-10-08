@@ -162,8 +162,7 @@ export class AdminNoticiaForm {
     this.imagenes = this.imagenes.filter((imagen) => imagen !== url);
     if (this.noticia.imagen === url) {
       this.noticia.imagen = this.imagenes[0] ?? '';
-      this.imagenes = [...new Set(noticia.imagenes?.length ? noticia.imagenes : [noticia.imagen])].filter(Boolean);
-    this.imagenPreview = this.noticia.imagen;
+      this.imagenPreview = this.noticia.imagen;
     }
     this.cdr.markForCheck();
   }
@@ -171,6 +170,7 @@ export class AdminNoticiaForm {
   private asignarNoticia(noticia: Noticia): void {
     const { id, slug, ...noticiaSinId } = noticia;
     this.noticia = noticiaSinId;
+    this.imagenes = [...new Set(noticia.imagenes?.length ? noticia.imagenes : [noticia.imagen])].filter(Boolean);
     this.imagenPreview = this.noticia.imagen;
   }
 

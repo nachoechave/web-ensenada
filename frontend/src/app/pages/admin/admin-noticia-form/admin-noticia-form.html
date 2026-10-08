@@ -66,13 +66,14 @@
     </label>
 
     <div class="form-field">
-      <span>Imagen principal</span>
+      <span>Galería de imágenes ({{ imagenes.length }}/6)</span>
 
       <input
         #imagenInput
         class="file-input"
         type="file"
         accept="image/png, image/jpeg"
+        multiple
         (change)="seleccionarImagen($event)"
       />
 
@@ -80,20 +81,26 @@
         type="button"
         class="file-upload"
         (click)="imagenInput.click()"
-        [disabled]="subiendoImagen"
+        [disabled]="subiendoImagen || imagenes.length >= 6"
       >
-        {{ subiendoImagen ? 'Subiendo imagen...' : 'Seleccionar imagen desde el equipo' }}
+        {{ subiendoImagen ? 'Subiendo imágenes...' : 'Agregar imágenes desde el equipo' }}
       </button>
 
       @if (errorImagen) {
         <p class="field-error">{{ errorImagen }}</p>
       }
 
-      @if (imagenPreview) {
-        <div class="image-preview">
-          <img [src]="imagenPreview" alt="Vista previa de la noticia" />
-        </div>
-      }
+      <p class="gallery-help">Seleccioná hasta 6 fotos. Marcá una como portada para los listados y la página principal.</p>
+      <div class="admin-gallery">
+        @for (url of imagenes; track url; let i = $index) {
+          <div class="admin-gallery-item">
+            <img [src]="url" [alt]="'Imagen ' + (i + 1)" />
+            @if (noticia.imagen === url) { <strong>Portada</strong> }
+            <button type="button" (click)="elegirPrincipal(url)" [disabled]="noticia.imagen === url || subiendoImagen">Elegir portada</button>
+            <button type="button" (click)="eliminarImagen(url)" [disabled]="subiendoImagen">Quitar</button>
+          </div>
+        }
+      </div>
     </div>
 
     <label class="form-field full">

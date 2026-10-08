@@ -25,6 +25,7 @@ export class NoticiaDetalle {
   private readonly meta = inject(Meta);
 
   noticia?: Noticia;
+  imagenActiva = '';
   private readonly identificador = this.route.snapshot.paramMap.get('id') ?? '';
 
   constructor() {
@@ -39,6 +40,7 @@ export class NoticiaDetalle {
     this.noticiasService.obtenerPublicaDesdeApi(this.identificador).subscribe({
       next: (noticia) => {
         this.noticia = noticia;
+        this.imagenActiva = noticia.imagen;
         this.actualizarSeo(noticia);
         this.normalizarUrl(noticia);
         this.cdr.markForCheck();
@@ -49,6 +51,15 @@ export class NoticiaDetalle {
         this.cdr.markForCheck();
       },
     });
+  }
+
+  get galeria(): string[] {
+    if (!this.noticia) return [];
+    return [...new Set([this.noticia.imagen, ...(this.noticia.imagenes ?? [])])].filter(Boolean);
+  }
+
+  mostrarImagen(url: string): void {
+    if (this.galeria.includes(url)) this.imagenActiva = url;
   }
 
   private actualizarSeo(noticia: Noticia): void {

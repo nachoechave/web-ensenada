@@ -15,6 +15,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.text.Normalizer;
 import java.time.Instant;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 
 @RestController
@@ -193,7 +195,14 @@ public class NoticiaController {
         noticia.setTitulo(request.titulo());
         noticia.setBajada(request.bajada());
         noticia.setContenido(request.contenido());
+        List<String> imagenes = request.imagenes() == null || request.imagenes().isEmpty()
+                ? new ArrayList<>(List.of(request.imagen()))
+                : new ArrayList<>(new LinkedHashSet<>(request.imagenes()));
+        if (imagenes.size() > 6 || !imagenes.contains(request.imagen())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La portada debe pertenecer a una galeria de hasta 6 imagenes");
+        }
         noticia.setImagen(request.imagen());
+        noticia.setImagenes(imagenes);
         noticia.setCategoria(request.categoria());
         noticia.setFechaPublicacion(request.fechaPublicacion());
         noticia.setEstado(request.estado());

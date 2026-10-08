@@ -36,6 +36,13 @@ function proxyToBackend(req: express.Request, res: express.Response): void {
     ...(xForwardedFor ? { 'x-forwarded-for': xForwardedFor } : {}),
   };
 
+  // Las imagenes publicas no requieren credenciales del panel administrativo.
+  // Una cookie o token vencido no debe convertir su descarga en un 401.
+  if (req.method === 'GET' && /^\/uploads\/(noticias|sitio)\//.test(req.originalUrl)) {
+    delete headers.cookie;
+    delete headers.authorization;
+  }
+
   const proxyRequest = transport.request(
     target,
     {

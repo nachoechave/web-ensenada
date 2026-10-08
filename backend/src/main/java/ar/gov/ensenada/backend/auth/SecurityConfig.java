@@ -88,6 +88,14 @@ public class SecurityConfig {
     BearerTokenResolver bearerTokenResolver() {
         DefaultBearerTokenResolver headerResolver = new DefaultBearerTokenResolver();
         return request -> {
+            // Las imagenes publicas deben funcionar incluso si el navegador conserva
+            // una cookie de administrador vencida o invalida.
+            if ("GET".equalsIgnoreCase(request.getMethod())
+                    && (request.getServletPath().startsWith("/uploads/noticias/")
+                        || request.getServletPath().startsWith("/uploads/sitio/"))) {
+                return null;
+            }
+
             String headerToken = headerResolver.resolve(request);
             if (headerToken != null) return headerToken;
 

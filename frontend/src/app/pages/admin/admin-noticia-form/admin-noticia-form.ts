@@ -26,6 +26,7 @@ export class AdminNoticiaForm {
   noticiaId = Number(this.route.snapshot.paramMap.get('id'));
   esEdicion = !!this.noticiaId;
   imagenPreview = '';
+  imagenes: string[] = [];
   subiendoImagen = false;
   errorImagen = '';
   errorGuardado = '';
@@ -66,7 +67,7 @@ export class AdminNoticiaForm {
   guardarNoticia(): void {
     if (this.guardando || this.subiendoImagen) return;
     this.errorGuardado = '';
-    if (!this.noticia.imagen) {
+    if (!this.noticia.imagen || !this.imagenes.includes(this.noticia.imagen)) {
       this.errorImagen = 'Primero subi o indica una imagen principal.';
       return;
     }
@@ -83,6 +84,7 @@ export class AdminNoticiaForm {
       this.errorGuardado = 'Completá todos los campos obligatorios.';
       return;
     }
+    this.noticia.imagenes = [...this.imagenes];
     this.guardando = true;
     const peticion = this.esEdicion
       ? this.noticiasService.actualizarDesdeApi(this.noticiaId, this.noticia)
@@ -112,41 +114,58 @@ export class AdminNoticiaForm {
 
   seleccionarImagen(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const archivo = input.files?.[0];
-
-    if (!archivo) {
+    const archivos = Array.from(input.files ?? []);
+    input.value = '';
+    if (!archivos.length) return;
+    if (archivos.length + this.imagenes.length > 6) {
+      this.errorImagen = 'Podés cargar hasta 6 imágenes por noticia.';
       return;
     }
-
-    if (!['image/jpeg', 'image/png'].includes(archivo.type) || archivo.size > 5 * 1024 * 1024) {
-      this.errorImagen = 'Seleccioná una imagen JPEG o PNG de hasta 5 MB.';
-      input.value = '';
+    if (archivos.some((archivo) => !['image/jpeg', 'image/png'].includes(archivo.type) || archivo.size > 5 * 1024 * 1024)) {
+      this.errorImagen = 'Seleccioná imágenes JPEG o PNG de hasta 5 MB cada una.';
       return;
     }
-
     this.errorImagen = '';
     this.subiendoImagen = true;
+    this.subirSiguiente(archivos, 0);
+  }
 
-    this.archivoUploadService
-      .subir('noticias', archivo)
-      .pipe(
-        finalize(() => {
-          this.cdr.markForCheck();
-          this.subiendoImagen = false;
-          input.value = '';
-        }),
-      )
-      .subscribe({
-        next: (respuesta) => {
-          this.cdr.markForCheck();
-          this.noticia.imagen = respuesta.url;
-          this.imagenPreview = respuesta.url;
-        },
-        error: (error: HttpErrorResponse) => {
-          this.cdr.markForCheck();
-          this.errorImagen = this.obtenerMensajeUpload(error, 'No se pudo subir la imagen.');
-        },
-      });
+  private subirSiguiente(archivos: File[], indice: number): void {
+    if (indice >= archivos.length) {
+      this.subiendoImagen = false;
+      this.cdr.markForCheck();
+      return;
+    }
+    this.archivoUploadService.subir('noticias', archivos[indice]).subscribe({
+      next: (respuesta) => {
+        if (!this.imagenes.includes(respuesta.url)) this.imagenes.push(respuesta.url);
+        if (!this.noticia.imagen) this.elegirPrincipal(respuesta.url);
+        this.cdr.markForCheck();
+        this.subirSiguiente(archivos, indice + 1);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.errorImagen = this.obtenerMensajeUpload(error, 'No se pudo subir una imagen.');
+        this.subiendoImagen = false;
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  elegirPrincipal(url: string): void {
+    if (!this.imagenes.includes(url)) return;
+    this.noticia.imagen = url;
+    this.imagenPreview = url;
+  }
+
+  eliminarImagen(url: string): void {
+    if (this.subiendoImagen) return;
+    this.imagenes = this.imagenes.filter((imagen) => imagen !== url);
+    if (this.noticia.imagen === url) {
+      this.noticia.imagen = this.imagenes[0] ?? '';
+      this.imagenes = [...new Set(noticia.imagenes?.length ? noticia.imagenes : [noticia.imagen])].filter(Boolean);
+    this.imagenPreview = this.noticia.imagen;
+    }
+    this.cdr.markForCheck();
   }
 
   private asignarNoticia(noticia: Noticia): void {

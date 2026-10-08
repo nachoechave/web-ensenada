@@ -62,7 +62,12 @@ public class OrphanUploadCleanupService {
 
     private Set<String> referenciasNoticias() {
         Set<String> referencias = new HashSet<>();
-        noticias.findAll().forEach(noticia -> agregarNombreDesdeUrl(referencias, noticia.getImagen(), "/uploads/noticias/"));
+        noticias.findAll().forEach(noticia -> {
+            agregarNombreDesdeUrl(referencias, noticia.getImagen(), "/uploads/noticias/");
+            if (noticia.getImagenes() != null) {
+                noticia.getImagenes().forEach(url -> agregarNombreDesdeUrl(referencias, url, "/uploads/noticias/"));
+            }
+        });
         return referencias;
     }
 

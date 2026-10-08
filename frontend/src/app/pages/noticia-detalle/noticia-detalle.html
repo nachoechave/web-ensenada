@@ -7,8 +7,17 @@
     @if (noticia) {
       <article class="detalle-card content-card">
         <div class="detalle-imagen">
-          <img [src]="noticia.imagen" [alt]="noticia.titulo" />
+          <img [src]="imagenActiva || noticia.imagen" [alt]="noticia.titulo" />
         </div>
+        @if (galeria.length > 1) {
+          <div class="detalle-galeria" aria-label="Galería de fotos de la noticia">
+            @for (url of galeria; track url; let i = $index) {
+              <button type="button" (click)="mostrarImagen(url)" [class.activa]="imagenActiva === url" [attr.aria-label]="'Ver foto ' + (i + 1)" [attr.aria-pressed]="imagenActiva === url">
+                <img [src]="url" [alt]="'Foto ' + (i + 1) + ' de la noticia'" loading="lazy" />
+              </button>
+            }
+          </div>
+        }
 
         <div class="detalle-contenido">
           <div class="detalle-meta">

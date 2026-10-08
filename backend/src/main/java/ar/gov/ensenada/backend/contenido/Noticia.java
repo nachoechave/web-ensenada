@@ -1,6 +1,8 @@
 package ar.gov.ensenada.backend.contenido;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "noticias")
@@ -24,6 +26,12 @@ public class Noticia {
 
     @Column(nullable = false, length = 1000)
     private String imagen;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "noticia_imagenes", joinColumns = @JoinColumn(name = "noticia_id"))
+    @OrderColumn(name = "orden")
+    @Column(name = "url", nullable = false, length = 1000)
+    private List<String> imagenes = new ArrayList<>();
 
     @Column(nullable = false)
     private String categoria;
@@ -61,6 +69,14 @@ public class Noticia {
 
     public String getImagen() {
         return imagen;
+    }
+
+    public List<String> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(List<String> imagenes) {
+        this.imagenes = imagenes == null ? new ArrayList<>() : new ArrayList<>(imagenes);
     }
 
     public String getCategoria() {

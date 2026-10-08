@@ -15,10 +15,11 @@ class MySqlMigrationTests {
     @Autowired JdbcTemplate jdbc;
     @Autowired Flyway flyway;
     @Autowired EntityManagerFactory entityManagerFactory;
-    @Test void v1Av6EnMySqlRealConHibernateValidate(){
+    @Test void migracionesEnMySqlRealConHibernateValidate(){
         assertTrue(entityManagerFactory.isOpen());
-        assertEquals("7",flyway.info().current().getVersion().toString());
-        assertEquals(7,flyway.info().applied().length);
+        assertEquals("99",flyway.info().current().getVersion().toString());
+        assertEquals(8,flyway.info().applied().length);
+        assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM noticia_imagenes",Integer.class));
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM publicaciones_hacienda",Integer.class));
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM archivos_hacienda",Integer.class));
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM documentos_proveedores",Integer.class));

@@ -67,6 +67,9 @@ export class AdminNoticiaForm {
   guardarNoticia(): void {
     if (this.guardando || this.subiendoImagen) return;
     this.errorGuardado = '';
+    if (this.noticia.imagen && this.imagenes.length === 0) {
+      this.imagenes = [this.noticia.imagen];
+    }
     if (!this.noticia.imagen || !this.imagenes.includes(this.noticia.imagen)) {
       this.errorImagen = 'Primero subi o indica una imagen principal.';
       return;

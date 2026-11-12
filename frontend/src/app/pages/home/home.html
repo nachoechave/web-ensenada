@@ -2,17 +2,6 @@
 
 <main>
   <section class="portal-hero" aria-labelledby="hero-title">
-    <div class="hero-slides" aria-hidden="true">
-      @for (imagen of contenido().hero.imagenes; track imagen; let i = $index) {
-        <div
-          class="hero-slide"
-          [class.active]="i === heroIndex()"
-          [style.background-image]="'url(' + imagen + ')'"
-        ></div>
-      }
-    </div>
-    <div class="hero-shade" aria-hidden="true"></div>
-
     <div class="hero-grid">
       <div class="hero-copy">
         <span class="eyebrow">{{ contenido().hero.eyebrow }}</span>
@@ -29,19 +18,32 @@
         </div>
       </div>
 
-      @if (contenido().hero.imagenes.length > 1) {
-        <div class="hero-dots" aria-label="Imágenes del encabezado">
-          @for (imagen of contenido().hero.imagenes; track imagen; let i = $index) {
-            <button
-              type="button"
+      <div class="hero-media">
+        <div class="hero-slides" aria-hidden="true">
+          @for (imagen of contenido().hero.imagenes; track $index; let i = $index) {
+            <img
+              class="hero-slide"
+              [src]="imagen"
+              alt=""
+              [attr.fetchpriority]="i === 0 ? 'high' : null"
               [class.active]="i === heroIndex()"
-              [attr.aria-label]="'Mostrar imagen ' + (i + 1)"
-              [attr.aria-current]="i === heroIndex() ? 'true' : null"
-              (click)="seleccionarHero(i)"
-            ></button>
+            />
           }
         </div>
-      }
+        @if (contenido().hero.imagenes.length > 1) {
+          <div class="hero-dots" role="group" aria-label="Imágenes del encabezado">
+            @for (imagen of contenido().hero.imagenes; track $index; let i = $index) {
+              <button
+                type="button"
+                [class.active]="i === heroIndex()"
+                [attr.aria-label]="'Mostrar imagen ' + (i + 1)"
+                [attr.aria-current]="i === heroIndex() ? 'true' : null"
+                (click)="seleccionarHero(i)"
+              ></button>
+            }
+          </div>
+        }
+      </div>
     </div>
   </section>
 

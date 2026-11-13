@@ -61,6 +61,10 @@ describe('Hero: avance automático', () => {
     const hero: HTMLElement = fixture.nativeElement.querySelector('.portal-hero');
     const slides = [...hero.querySelectorAll<HTMLImageElement>('img.hero-slide')];
     const dots = [...hero.querySelectorAll<HTMLButtonElement>('.hero-dots button')];
+    expect(hero.querySelector('.hero-slides')?.parentElement).toBe(hero);
+    expect(hero.querySelector('.hero-shade')?.parentElement).toBe(hero);
+    expect(hero.querySelector('.hero-grid .hero-copy #hero-title')?.textContent)
+      .toContain('Una ciudad cerca de su gente');
     expect(slides.map((slide) => slide.getAttribute('src')))
       .toEqual(['/uploads/sitio/segunda.webp', '/uploads/sitio/primera.webp']);
     expect(slides[0].getAttribute('fetchpriority')).toBe('high');

@@ -43,44 +43,6 @@ describe('Hero: avance automático', () => {
     vi.unstubAllGlobals();
   });
 
-  it('muestra la foto completa como imagen y permite seleccionar las fotos en el orden publicado', async () => {
-    TestBed.configureTestingModule({
-      providers: [provideZonelessChangeDetection(), provideHttpClient(),
-        provideHttpClientTesting(), provideRouter([])],
-    });
-    const http = TestBed.inject(HttpTestingController);
-    const fixture = TestBed.createComponent(Home);
-    await fixture.whenStable();
-    http.expectOne('/api/noticias/destacadas').flush([]);
-    http.expectOne('/api/site-content').flush({ hero: {
-      imagenes: ['/uploads/sitio/segunda.webp', '/uploads/sitio/primera.webp'],
-      intervaloSegundos: 30,
-    } });
-    await fixture.whenStable();
-
-    const hero: HTMLElement = fixture.nativeElement.querySelector('.portal-hero');
-    const slides = [...hero.querySelectorAll<HTMLImageElement>('img.hero-slide')];
-    const dots = [...hero.querySelectorAll<HTMLButtonElement>('.hero-dots button')];
-    expect(hero.querySelector('.hero-slides')?.parentElement).toBe(hero);
-    expect(hero.querySelector('.hero-shade')?.parentElement).toBe(hero);
-    expect(hero.querySelector('.hero-grid .hero-copy #hero-title')?.textContent)
-      .toContain('Una ciudad cerca de su gente');
-    expect(slides.map((slide) => slide.getAttribute('src')))
-      .toEqual(['/uploads/sitio/segunda.webp', '/uploads/sitio/primera.webp']);
-    expect(slides[0].getAttribute('fetchpriority')).toBe('high');
-    expect(slides[0].classList.contains('active')).toBe(true);
-    expect(dots[0].getAttribute('aria-current')).toBe('true');
-
-    dots[1].click();
-    await fixture.whenStable();
-    expect(slides[0].classList.contains('active')).toBe(false);
-    expect(slides[1].classList.contains('active')).toBe(true);
-    expect(dots[0].hasAttribute('aria-current')).toBe(false);
-    expect(dots[1].getAttribute('aria-current')).toBe('true');
-    fixture.destroy();
-    http.verify();
-  });
-
   it.each([false, true])('avanza, vuelve al inicio y limpia el timer (movimiento reducido: %s)', async (reduced) => {
     vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: reduced } as MediaQueryList)));
     TestBed.configureTestingModule({

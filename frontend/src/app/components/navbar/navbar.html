@@ -1,35 +1,36 @@
+@let datos = contenido();
 <div class="topbar">
   <div class="topbar-container">
     <div class="topbar-info">
-      <a [href]="'tel:' + contenido.topbar.telefono.replaceAll(' ', '')">
+      <a [href]="'tel:' + datos.topbar.telefono.replaceAll(' ', '')">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.9z"/></svg>
-        <span>{{ contenido.topbar.telefono }}</span>
+        <span>{{ datos.topbar.telefono }}</span>
       </a>
       <span class="topbar-separator"></span>
       <span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 12-9 12S3 17 3 10a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        {{ contenido.topbar.direccion }}
+        {{ datos.topbar.direccion }}
       </span>
       <span class="topbar-separator"></span>
       <span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-        {{ contenido.topbar.horarios }}
+        {{ datos.topbar.horarios }}
       </span>
     </div>
 
     <div class="topbar-social" aria-label="Redes sociales">
-      @if (contenido.topbar.facebook) {
-        <a [href]="contenido.topbar.facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+      @if (datos.topbar.facebook) {
+        <a [href]="datos.topbar.facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
           <svg class="social-icon social-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.6 22v-9h3l.45-3.5H13.6V7.25c0-1.01.28-1.7 1.73-1.7H17.2V2.42c-.32-.04-1.43-.14-2.72-.14-2.69 0-4.53 1.64-4.53 4.65V9.5H6.9V13h3.05v9h3.65Z"/></svg>
         </a>
       }
-      @if (contenido.topbar.instagram) {
-        <a [href]="contenido.topbar.instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+      @if (datos.topbar.instagram) {
+        <a [href]="datos.topbar.instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
           <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" class="social-fill"/></svg>
         </a>
       }
-      @if (contenido.topbar.youtube) {
-        <a [href]="contenido.topbar.youtube" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+      @if (datos.topbar.youtube) {
+        <a [href]="datos.topbar.youtube" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
           <svg class="social-icon social-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 7.2a2.8 2.8 0 0 0-2-2C17.84 4.72 12 4.72 12 4.72s-5.84 0-7.6.48a2.8 2.8 0 0 0-2 2A29 29 0 0 0 1.92 12a29 29 0 0 0 .48 4.8 2.8 2.8 0 0 0 2 2c1.76.48 7.6.48 7.6.48s5.84 0 7.6-.48a2.8 2.8 0 0 0 2-2 29 29 0 0 0 .48-4.8 29 29 0 0 0-.48-4.8ZM9.9 15.1V8.9l5.4 3.1-5.4 3.1Z"/></svg>
         </a>
       }
@@ -39,7 +40,7 @@
 
 <header class="navbar">
   <div class="navbar-container">
-    <a routerLink="/" class="brand" aria-label="Ir al inicio" (click)="cerrarMenus()">
+    <a routerLink="/" class="brand" aria-label="Ir al inicio" (click)="cerrarMenu()">
       <img class="brand-logo" src="/assets/escudo-ensenada-v2.png" alt="Municipalidad de Ensenada - Gestión Mario Secco" />
     </a>
 
@@ -48,31 +49,16 @@
     </button>
 
     <nav id="main-navigation" class="nav-links" [class.open]="menuAbierto" aria-label="Navegación principal">
-      @for (item of contenido.navbar.items; track $index) {
+      @for (item of datos.navbar.items; track $index) {
         @if (item.visible) {
-          <a [href]="item.url" (click)="cerrarMenus()">{{ item.texto }}</a>
+          <a [href]="item.url" (click)="cerrarMenu()">{{ item.texto }}</a>
         }
       }
 
-      <button type="button" class="search-toggle" [class.active]="busquedaAbierta" aria-label="Abrir accesos de búsqueda" [attr.aria-expanded]="busquedaAbierta" (click)="alternarBusqueda()">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-      </button>
-
-      <a class="boletin-button" [href]="contenido.navbar.boletinUrl" target="_blank" rel="noopener noreferrer">
-        {{ contenido.navbar.boletinTexto }} <span aria-hidden="true">→</span>
+      <a class="boletin-button" [href]="datos.navbar.boletinUrl" target="_blank" rel="noopener noreferrer">
+        {{ datos.navbar.boletinTexto }} <span aria-hidden="true">→</span>
       </a>
     </nav>
   </div>
 
-  @if (busquedaAbierta) {
-    <div class="search-panel">
-      <div class="search-panel-inner">
-        <strong>¿Qué necesitás encontrar?</strong>
-        <a routerLink="/" fragment="accesos" (click)="cerrarMenus()">Accesos rápidos</a>
-        <a routerLink="/areas" (click)="cerrarMenus()">Áreas municipales</a>
-        <a routerLink="/noticias" (click)="cerrarMenus()">Noticias</a>
-        <a routerLink="/hacienda" (click)="cerrarMenus()">Hacienda</a>
-      </div>
-    </div>
-  }
 </header>

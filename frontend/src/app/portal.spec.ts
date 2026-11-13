@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import {
@@ -93,6 +94,7 @@ describe('Portal de prensa', () => {
           provide: PortalContentService,
           useValue: {
             obtenerPublico: () => of(cloneDefaultPortalContent()),
+            contenidoPublico: signal(null),
           },
         },
       ],

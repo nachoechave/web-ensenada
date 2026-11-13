@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import {
@@ -84,6 +85,7 @@ describe('Hacienda', () => {
           provide: PortalContentService,
           useValue: {
             obtenerPublico: () => of(cloneDefaultPortalContent()),
+            contenidoPublico: signal(null),
           },
         },
       ],

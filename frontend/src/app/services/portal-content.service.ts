@@ -1,10 +1,13 @@
 import { environment } from '../../environments/environment';
+import { isPlatformServer } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, makeStateKey, PLATFORM_ID, signal, TransferState } from '@angular/core';
 import { Observable, map, shareReplay, switchMap, tap, timeout } from 'rxjs';
 
 import { cloneDefaultPortalContent } from '../config/site-content';
 import { PortalContent } from '../models/portal-content.model';
+
+const PUBLIC_CONTENT = makeStateKey<PortalContent | null>('portal-content');
 
 export interface PortalImageUploadResponse {
   url: string;
@@ -16,12 +19,23 @@ export interface PortalImageUploadResponse {
 @Injectable({ providedIn: 'root' })
 export class PortalContentService {
   private readonly http = inject(HttpClient);
+  private readonly transferState = inject(TransferState);
+  private readonly isServer = isPlatformServer(inject(PLATFORM_ID));
   private readonly apiUrl = environment.apiUrl;
+  private readonly contenidoPublicado = signal<PortalContent | null>(
+    this.transferState.get(PUBLIC_CONTENT, null),
+  );
   private publicContent$?: Observable<PortalContent>;
+
+  readonly contenidoPublico = this.contenidoPublicado.asReadonly();
+
+  constructor() {
+    if (!this.isServer) this.transferState.remove(PUBLIC_CONTENT);
+  }
 
   obtenerPublico(force = false): Observable<PortalContent> {
     if (!this.publicContent$ || force) {
-      this.publicContent$ = this.http.get<Partial<PortalContent>>(`${this.apiUrl}/site-content`, { transferCache: false }).pipe(
+      const solicitud$ = this.http.get<Partial<PortalContent>>(`${this.apiUrl}/site-content`, { transferCache: false }).pipe(
         timeout({ first: 8000 }),
         map((contenido) => {
           if (!contenido || typeof contenido !== 'object' || Array.isArray(contenido)) {
@@ -29,8 +43,14 @@ export class PortalContentService {
           }
           return this.normalizar(contenido);
         }),
+        tap((contenido) => {
+          if (this.publicContent$ !== solicitud$) return;
+          this.contenidoPublicado.set(contenido);
+          if (this.isServer) this.transferState.set(PUBLIC_CONTENT, contenido);
+        }),
         shareReplay({ bufferSize: 1, refCount: false }),
       );
+      this.publicContent$ = solicitud$;
     }
     return this.publicContent$;
   }
@@ -49,6 +69,7 @@ export class PortalContentService {
       map((persistido) => this.normalizar(persistido)),
       tap(() => {
         this.publicContent$ = undefined;
+        this.contenidoPublicado.set(null);
       }),
     );
   }
@@ -80,7 +101,7 @@ export class PortalContentService {
     combinado.navbar.boletinUrl = base.navbar.boletinUrl;
 
     const navbarGuardado = contenido.navbar?.items;
-    if (Array.isArray(navbarGuardado) && navbarGuardado.length > 0) {
+    if (Array.isArray(navbarGuardado)) {
       combinado.navbar.items = navbarGuardado
         .filter((item) => item && typeof item.texto === 'string' && typeof item.url === 'string')
         .map((item) => ({

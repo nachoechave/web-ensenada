@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, computed, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
@@ -15,16 +15,13 @@ export class Footer {
   private readonly portalContentService = inject(PortalContentService);
   private readonly destroyRef = inject(DestroyRef);
 
-  contenido = cloneDefaultPortalContent();
+  private readonly contenidoBase = cloneDefaultPortalContent();
+  readonly contenido = computed(() => this.portalContentService.contenidoPublico() ?? this.contenidoBase);
 
   constructor() {
     this.portalContentService
       .obtenerPublico()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (contenido) => (this.contenido = contenido),
-        // Mantener los enlaces del sitio cuando la página informa un error del CMS.
-        error: () => {},
-      });
+      .subscribe({ error: () => {} });
   }
 }

@@ -56,6 +56,6 @@ export class NoticiasDestacadas {
 
   private actualizarDestacadas(): void {
     this.noticiaPrincipal = this.noticias[0];
-    this.noticiasSecundarias = this.noticias.slice(1, 3);
+    this.noticiasSecundarias = this.noticias.slice(1, 4);
   }
 }

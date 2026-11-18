@@ -1,0 +1,15 @@
+
+/* Portada híbrida, conserva destinos y datos administrables */
+.quick-access-section{padding:1.5rem 0 2.5rem;background:#fff}
+.quick-access-heading{margin-bottom:1rem}
+.quick-access-heading h2{margin:.4rem 0;font-size:clamp(1.4rem,2vw,1.9rem)}
+.quick-access-lead{margin:0;color:#667c73}
+.quick-access-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem}
+.quick-access-card{min-height:5.5rem;display:flex;align-items:center;gap:.75rem;padding:1rem;border:1px solid #e2eee8;border-radius:1rem;color:inherit;background:#f5faf7;text-decoration:none}
+.quick-access-card .quick-text{flex:1}
+.quick-access-card:hover{background:#e9f5ef}
+.areas-section{background:#fff}
+.agenda-section,.mayor-section{padding:3.5rem 0}
+.mayor-section{background:#f4f9f6}
+@media(max-width:58rem){.quick-access-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:38rem){.quick-access-grid{gap:.6rem}.quick-access-card{min-height:6rem;padding:.7rem;flex-wrap:wrap}.quick-access-card .circle-arrow{display:none}.quick-access-card .quick-text strong{font-size:.82rem}}

@@ -288,27 +288,21 @@ describe('Portal de prensa', () => {
     expect(fixture.nativeElement.textContent).toContain('Secretaría de Obras Públicas');
   });
 
-  it('Home conserva la jerarquía institucional antes de los accesos', () => {
+  it('Home muestra accesos y noticias antes de áreas e intendencia', () => {
     const fixture = TestBed.createComponent(Home);
     fixture.detectChanges();
     http.expectOne('/api/noticias/destacadas').flush([news]);
     fixture.detectChanges();
 
     const main = fixture.nativeElement.querySelector('main');
-    const municipio = main.querySelector('#municipio');
-    const destacadas = main.querySelector('app-noticias-destacadas');
     const accesos = main.querySelector('#accesos');
+    const destacadas = main.querySelector('app-noticias-destacadas');
     const areas = main.querySelector('#areas');
+    const municipio = main.querySelector('#municipio');
 
-    expect(
-      municipio.compareDocumentPosition(destacadas) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
-    expect(
-      destacadas.compareDocumentPosition(accesos) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
-    expect(
-      accesos.compareDocumentPosition(areas) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
+    expect(accesos.compareDocumentPosition(destacadas) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(destacadas.compareDocumentPosition(areas) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(areas.compareDocumentPosition(municipio) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it('Home sincroniza las tarjetas de áreas con el directorio de secretarías', () => {

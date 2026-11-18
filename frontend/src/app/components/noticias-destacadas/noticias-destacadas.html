@@ -16,13 +16,13 @@
         <div class="news-grid">
           <article class="news-card principal">
             <img class="news-image" [src]="noticiaPrincipal.imagen" [alt]="noticiaPrincipal.titulo" />
-            <div class="news-overlay"></div>
+            
             <div class="news-content">
               <span class="news-category">{{ noticiaPrincipal.categoria }}</span>
               <small>{{ noticiaPrincipal.fechaPublicacion }}</small>
               <h3>{{ noticiaPrincipal.titulo }}</h3>
               <p>{{ noticiaPrincipal.bajada }}</p>
-              <a [routerLink]="['/noticias', noticiaPrincipal.slug]" aria-label="Leer noticia principal">→</a>
+              <a [routerLink]="['/noticias', noticiaPrincipal.slug]" class="news-read-link">Leer noticia →</a>
             </div>
           </article>
 
@@ -34,7 +34,7 @@
                 <small>{{ noticia.fechaPublicacion }}</small>
                 <h3>{{ noticia.titulo }}</h3>
                 <p>{{ noticia.bajada }}</p>
-                <a [routerLink]="['/noticias', noticia.slug]" aria-label="Leer noticia">→</a>
+                <a [routerLink]="['/noticias', noticia.slug]" class="news-read-link">Leer noticia →</a>
               </div>
             </article>
           }

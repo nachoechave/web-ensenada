@@ -13,7 +13,7 @@
       }
 
       @if (noticiaPrincipal) {
-        <div class="news-grid">
+        <div class="news-grid" aria-label="Noticias destacadas">
           <article class="news-card principal">
             <div class="news-media" [style.--news-image]="'url(' + noticiaPrincipal.imagen + ')'">
               <img class="news-image" [src]="noticiaPrincipal.imagen" [alt]="noticiaPrincipal.titulo" loading="lazy" />

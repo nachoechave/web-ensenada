@@ -37,3 +37,45 @@
   .quick-access-card { transition: none; }
   .quick-access-card:hover { transform: none; }
 }
+
+/* Secretarías: mismo hover verde institucional que las noticias */
+.area-card {
+  transition: background-color .2s ease, border-color .2s ease,
+    box-shadow .2s ease, transform .2s ease;
+}
+.area-card strong,
+.area-card small,
+.area-card .circle-arrow {
+  transition: color .2s ease, background-color .2s ease, border-color .2s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .area-card:hover {
+    background: #007b59;
+    border-color: #007b59;
+  }
+  .area-card:hover strong,
+  .area-card:hover small { color: #fff; }
+  .area-card:hover .circle-arrow {
+    background: rgba(255,255,255,.16);
+    border-color: rgba(255,255,255,.35);
+    color: #fff;
+  }
+}
+.area-card:focus-visible {
+  outline: 3px solid #007b59;
+  outline-offset: 3px;
+  background: #007b59;
+  border-color: #007b59;
+}
+.area-card:focus-visible strong,
+.area-card:focus-visible small { color: #fff; }
+.area-card:focus-visible .circle-arrow {
+  background: rgba(255,255,255,.16);
+  border-color: rgba(255,255,255,.35);
+  color: #fff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .area-card, .area-card strong, .area-card small, .area-card .circle-arrow {
+    transition: none;
+  }
+}

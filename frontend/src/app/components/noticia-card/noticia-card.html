@@ -1,15 +1,12 @@
-<article class="noticia content-card">
-  <img [src]="noticia.imagen" [alt]="noticia.titulo" />
-
+<a class="noticia content-card" [routerLink]="['/noticias', noticia.slug]" [attr.aria-label]="'Leer noticia: ' + noticia.titulo">
+  <div class="noticia-imagen">
+    <img [src]="noticia.imagen" [alt]="noticia.titulo" loading="lazy" />
+  </div>
   <div class="noticia-contenido">
     <span class="categoria">{{ noticia.categoria }}</span>
-
+    <p class="fechaPublicacion">{{ noticia.fechaPublicacion | date:'d \'de\' MMMM \'de\' y':'':'es-AR' }}</p>
     <h2>{{ noticia.titulo }}</h2>
-
-    <p class="fechaPublicacion">{{ noticia.fechaPublicacion }}</p>
-
     <p class="bajada">{{ noticia.bajada }}</p>
-
-    <a [routerLink]="['/noticias', noticia.slug]">Leer noticia</a>
+    <span class="leer-noticia">Leer noticia <span aria-hidden="true">→</span></span>
   </div>
-</article>
+</a>

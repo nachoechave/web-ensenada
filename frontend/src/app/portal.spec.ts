@@ -288,7 +288,7 @@ describe('Portal de prensa', () => {
     expect(fixture.nativeElement.textContent).toContain('Secretaría de Obras Públicas');
   });
 
-  it('Home muestra accesos y noticias antes de áreas e intendencia', () => {
+  it('Home muestra intendencia antes de accesos, noticias y áreas', () => {
     const fixture = TestBed.createComponent(Home);
     fixture.detectChanges();
     http.expectOne('/api/noticias/destacadas').flush([news]);
@@ -300,9 +300,9 @@ describe('Portal de prensa', () => {
     const areas = main.querySelector('#areas');
     const municipio = main.querySelector('#municipio');
 
+    expect(municipio.compareDocumentPosition(accesos) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(accesos.compareDocumentPosition(destacadas) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(destacadas.compareDocumentPosition(areas) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(areas.compareDocumentPosition(municipio) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it('Home sincroniza las tarjetas de áreas con el directorio de secretarías', () => {

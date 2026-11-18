@@ -15,7 +15,9 @@
       @if (noticiaPrincipal) {
         <div class="news-grid">
           <article class="news-card principal">
-            <img class="news-image" [src]="noticiaPrincipal.imagen" [alt]="noticiaPrincipal.titulo" />
+            <div class="news-media" [style.--news-image]="'url(' + noticiaPrincipal.imagen + ')'">
+              <img class="news-image" [src]="noticiaPrincipal.imagen" [alt]="noticiaPrincipal.titulo" loading="lazy" />
+            </div>
             
             <div class="news-content">
               <span class="news-category">{{ noticiaPrincipal.categoria }}</span>
@@ -28,7 +30,9 @@
 
           @for (noticia of noticiasSecundarias; track noticia.id) {
             <article class="news-card secundaria">
-              <img class="news-image" [src]="noticia.imagen" [alt]="noticia.titulo" />
+              <div class="news-media" [style.--news-image]="'url(' + noticia.imagen + ')'">
+                <img class="news-image" [src]="noticia.imagen" [alt]="noticia.titulo" loading="lazy" />
+              </div>
               <div class="news-content">
                 <span class="news-category">{{ noticia.categoria }}</span>
                 <small>{{ noticia.fechaPublicacion }}</small>

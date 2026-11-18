@@ -13,3 +13,27 @@
 .mayor-section{background:#f4f9f6}
 @media(max-width:58rem){.quick-access-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:38rem){.quick-access-grid{gap:.6rem}.quick-access-card{min-height:6rem;padding:.7rem;flex-wrap:wrap}.quick-access-card .circle-arrow{display:none}.quick-access-card .quick-text strong{font-size:.82rem}}
+
+/* Pulido de la portada: accesos legibles y separación institucional */
+.quick-access-card {
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+.quick-access-card:hover {
+  border-color: #b8ddcc;
+  transform: translateY(-2px);
+}
+.quick-access-card:focus-visible {
+  outline: 3px solid #00875f;
+  outline-offset: 3px;
+}
+.mayor-section { padding: 3.5rem 0; }
+@media (max-width: 38rem) {
+  .quick-access-grid { grid-template-columns: 1fr; }
+  .quick-access-card { flex-wrap: nowrap; min-height: 4.75rem; padding: .85rem 1rem; }
+  .quick-access-card .circle-arrow { display: grid; }
+  .mayor-section { padding: 2.75rem 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quick-access-card { transition: none; }
+  .quick-access-card:hover { transform: none; }
+}

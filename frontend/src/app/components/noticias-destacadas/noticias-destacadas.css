@@ -66,3 +66,24 @@
   .news-card.principal { grid-column: auto; min-height: 24rem; }
   .principal .news-content { max-width: none; }
 }
+
+/* Portada híbrida: imagen completa y texto debajo, sin superposiciones */
+.news-section{background:#fff;padding:3.5rem 0}
+.news-shell{display:block;width:min(100% - 3rem,82rem)}
+.news-intro{display:grid;grid-template-columns:1fr auto;align-items:end;gap:.5rem 1rem;margin-bottom:1.5rem}
+.news-intro .news-kicker{grid-column:1/-1}
+.news-intro h2,.news-intro p{margin:0}
+.news-intro p{grid-column:1;max-width:40rem}
+.news-button{grid-column:2;grid-row:2/4;margin:0}
+.news-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.news-card.principal{grid-column:1/-1;min-height:0}
+.news-card.secundaria{min-height:0}
+.news-image,.principal .news-image,.secundaria .news-image{position:static;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;background:#edf5f0}
+.principal .news-image{aspect-ratio:21/9}
+.news-overlay{display:none}
+.principal .news-content,.secundaria .news-content{position:static;max-width:none;padding:1.25rem;background:#fff;display:flex;flex-direction:column;align-items:flex-start}
+.news-content h3,.principal .news-content h3{font-size:clamp(1.2rem,2vw,1.6rem);line-height:1.25}
+.news-content p{font-size:.88rem;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.news-content .news-read-link,.principal .news-content .news-read-link{position:static;width:auto;height:auto;margin:1rem 0 0;padding:0;border-radius:0;background:transparent;display:inline-flex;color:#007b59;font-weight:800;text-decoration:none}
+.news-content .news-read-link:hover{text-decoration:underline}
+@media(max-width:38rem){.news-shell{width:calc(100% - 1.5rem)}.news-intro{grid-template-columns:1fr}.news-intro .news-kicker,.news-intro p,.news-button{grid-column:1;grid-row:auto}.news-button{justify-self:start;margin-top:.5rem}.news-grid{grid-template-columns:1fr}.news-card.principal{grid-column:auto}.principal .news-image{aspect-ratio:16/10}.principal .news-content,.secundaria .news-content{padding:1rem}}

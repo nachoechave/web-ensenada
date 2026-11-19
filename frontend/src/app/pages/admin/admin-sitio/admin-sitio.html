@@ -125,7 +125,7 @@
         <summary>Accesos rápidos</summary>
         <div class="section-body">
           <label>Título del bloque<input [(ngModel)]="contenido.accesosTitulo" /></label>
-          <p class="helper">Este bloque aparece después de Intendencia y Noticias destacadas. Recomendado: 6 accesos para mantener una sola fila en escritorio.</p>
+          <p class="helper">El primer acceso es el destacado. Podés reordenar hasta 8 accesos. Elegí el ícono de cada uno y subí una fotografía para el principal.</p>
           <div class="repeater">
             @for (item of contenido.accesos; track $index) {
               <article class="item-editor">
@@ -136,10 +136,24 @@
                   <label>URL<input [(ngModel)]="item.url" /></label>
                   <label>Ícono<select [(ngModel)]="item.icono">@for (icono of iconos; track icono[0]) { <option [value]="icono[0]">{{ icono[1] }}</option> }</select></label>
                 </div>
+                <div class="access-icon-preview">
+                  <span class="access-icon-box"><app-portal-icon [name]="item.icono"></app-portal-icon></span>
+                  <span>Vista previa del ícono seleccionado</span>
+                </div>
+                @if ($index === 0) {
+                  <div class="image-field">
+                    <label>Fotografía del acceso destacado (opcional)<input [(ngModel)]="item.imagen" placeholder="/uploads/… o https://…" /></label>
+                    <label class="upload-button">Subir fotografía JPG, PNG o WebP<input type="file" accept="image/jpeg,image/png,image/webp" [disabled]="subiendoImagen" (change)="subirImagenAcceso($event, $index)" /></label>
+                    @if (item.imagen) {
+                      <img [src]="item.imagen" alt="Vista previa del acceso destacado" />
+                      <button type="button" class="secondary" (click)="item.imagen = ''">Quitar fotografía</button>
+                    }
+                  </div>
+                }
               </article>
             }
           </div>
-          <button type="button" class="add-button" (click)="agregarAcceso()">+ Agregar acceso</button>
+          <button type="button" class="add-button" [disabled]="contenido.accesos.length >= 8" (click)="agregarAcceso()">+ Agregar acceso ({{ contenido.accesos.length }}/8)</button>
         </div>
       </details>
 

@@ -180,3 +180,28 @@
   .quick-access-grid:has(> .quick-access-card:nth-child(5):last-child) { grid-template-columns: 1fr; }
   .quick-access-grid:has(> .quick-access-card:nth-child(5):last-child) .quick-access-card.featured { grid-column: 1; }
 }
+
+/* Intendencia compacta: mantiene foto y jerarquía, libera espacio vertical. */
+.mayor-section { padding: 2.25rem 0 !important; }
+.mayor-feature {
+  min-height: 0;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+}
+.mayor-feature .mayor-copy { padding: 2rem clamp(1.5rem, 3.4vw, 3.5rem); }
+.mayor-feature .mayor-copy h2 { font-size: clamp(2.1rem, 3.1vw, 3rem); }
+.mayor-feature .mayor-copy > p { margin-top: .7rem; }
+.mayor-feature .mayor-actions { margin-top: 1.5rem; }
+.mayor-feature .mayor-photo,
+.mayor-feature .mayor-photo img { min-height: 0; height: 23rem; }
+@media (max-width: 58rem) {
+  .mayor-feature { grid-template-columns: 1fr 1fr; }
+  .mayor-feature .mayor-photo,
+  .mayor-feature .mayor-photo img { height: 20rem; }
+}
+@media (max-width: 38rem) {
+  .mayor-section { padding: 1.6rem 0 !important; }
+  .mayor-feature { grid-template-columns: 1fr; }
+  .mayor-feature .mayor-copy { padding: 1.75rem 1.4rem; }
+  .mayor-feature .mayor-photo,
+  .mayor-feature .mayor-photo img { height: 15rem; }
+}

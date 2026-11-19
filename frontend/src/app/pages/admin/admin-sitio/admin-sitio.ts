@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { PortalIcon } from '../../../components/portal-icon/portal-icon';
 
 import { cloneDefaultPortalContent } from '../../../config/site-content';
 import { PortalLinkItem, PortalNavbarItem, PortalSecretariaItem } from '../../../models/portal-content.model';
@@ -8,7 +9,7 @@ import { PortalContentService } from '../../../services/portal-content.service';
 
 @Component({
   selector: 'app-admin-sitio',
-  imports: [FormsModule],
+  imports: [FormsModule, PortalIcon],
   templateUrl: './admin-sitio.html',
   styleUrl: './admin-sitio.css',
 })
@@ -25,6 +26,14 @@ export class AdminSitio {
   nuevaImagenHero = '';
 
   readonly iconos = [
+    ['providers-check', 'Proveedores / documento verificado'],
+    ['book', 'Libro / Boletín Oficial'],
+    ['receipt', 'Factura / comprobante'],
+    ['mail', 'Correo electrónico'],
+    ['paw-heart', 'Veterinaria / mascotas'],
+    ['car', 'Licencias de conducir'],
+    ['message-alert', 'Reclamos'],
+    ['clipboard-check', 'Habilitaciones'],
     ['document', 'Documento'],
     ['receipt', 'Recibo'],
     ['invoice', 'Factura'],
@@ -103,6 +112,10 @@ export class AdminSitio {
   }
 
   agregarAcceso(): void {
+    if (this.contenido.accesos.length >= 8) {
+      this.error = 'La portada admite hasta ocho accesos directos.';
+      return;
+    }
     this.contenido.accesos.push(this.nuevoLink('Nuevo acceso'));
   }
 
@@ -201,6 +214,33 @@ export class AdminSitio {
         } else {
           this.contenido.intendencia.galeria.push(respuesta.url);
         }
+        this.subiendoImagen = false;
+        input.value = '';
+        this.cdr.markForCheck();
+      },
+      error: (error: HttpErrorResponse) => {
+        this.error = this.obtenerMensajeUpload(error);
+        this.subiendoImagen = false;
+        input.value = '';
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  subirImagenAcceso(event: Event, index: number): void {
+    const input = event.target as HTMLInputElement;
+    const archivo = input.files?.[0];
+    if (!archivo || !this.contenido.accesos[index]) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(archivo.type)) {
+      this.error = 'Usá una imagen JPG, PNG o WebP.';
+      input.value = '';
+      return;
+    }
+    this.subiendoImagen = true;
+    this.error = '';
+    this.portalContentService.subirImagen(archivo).subscribe({
+      next: (respuesta) => {
+        if (this.contenido.accesos[index]) this.contenido.accesos[index].imagen = respuesta.url;
         this.subiendoImagen = false;
         input.value = '';
         this.cdr.markForCheck();

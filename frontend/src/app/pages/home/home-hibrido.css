@@ -79,3 +79,71 @@
     transition: none;
   }
 }
+
+/* Accesos Bento: un servicio protagonista y hasta siete accesos compactos */
+.quick-access-section { padding: 3.5rem 0 3.75rem; }
+.quick-access-heading { margin-bottom: 1.65rem; }
+.quick-access-heading h2 { font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -.035em; }
+.quick-access-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) repeat(4, minmax(0, 1fr));
+  grid-auto-flow: row dense;
+  gap: .85rem;
+}
+.quick-access-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-height: 10rem;
+  padding: 1.2rem;
+  gap: .8rem;
+  background: #fff;
+  border: 1px solid #dce9e2;
+  border-radius: 1.15rem;
+  box-shadow: 0 .5rem 1.5rem rgba(1,45,32,.045);
+}
+.quick-access-card .icon-box { width: 3rem; height: 3rem; flex-shrink: 0; }
+.quick-access-card .quick-text { flex: initial; width: 100%; }
+.quick-access-card .quick-text strong { display: block; font-size: clamp(.92rem, 1.2vw, 1.15rem); line-height: 1.2; }
+.quick-access-card .quick-text small { display: block; font-size: .78rem; }
+.quick-access-card .circle-arrow { position: absolute; right: .9rem; bottom: .9rem; }
+.quick-access-card:hover { background: #f0f8f3; border-color: #9bcfba; }
+.quick-access-card.featured {
+  grid-row: span 2;
+  min-height: 21rem;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.8rem;
+  color: #fff;
+  background: linear-gradient(145deg, #007d59 0%, #00523d 80%);
+  border-color: #006b4d;
+  overflow: hidden;
+}
+.quick-access-card.featured::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 90% 18%, rgba(106,209,169,.35), transparent 53%);
+  pointer-events: none;
+}
+.quick-access-card.featured .icon-box { width: 4rem; height: 4rem; color: #fff; background: transparent; font-size: 1.6rem; }
+.quick-access-card.featured .quick-text strong { color: #fff; font-size: clamp(1.4rem, 2vw, 2rem); }
+.quick-access-card.featured .quick-text small { color: #e4f5ed; font-size: .9rem; }
+.quick-access-card.featured .circle-arrow { position: static; width: auto; height: auto; padding: .65rem 1.25rem; border-radius: 2rem; color: #006d50; font-size: 1rem; font-weight: 800; }
+.quick-access-card.featured:hover { background: linear-gradient(145deg, #009269, #005a43); border-color: #005a43; }
+@media (max-width: 70rem) {
+  .quick-access-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .quick-access-card.featured { grid-column: span 2; grid-row: span 2; }
+}
+@media (max-width: 45rem) {
+  .quick-access-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .quick-access-card.featured { grid-column: span 2; grid-row: auto; min-height: 16rem; }
+  .quick-access-card { min-height: 10rem; }
+}
+@media (max-width: 30rem) {
+  .quick-access-grid { grid-template-columns: 1fr; }
+  .quick-access-card.featured { grid-column: 1; }
+  .quick-access-card { min-height: 8.5rem; }
+}

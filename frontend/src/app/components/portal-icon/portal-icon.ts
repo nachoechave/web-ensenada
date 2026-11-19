@@ -5,6 +5,12 @@ import { Component, Input } from '@angular/core';
   template: `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       @switch (name) {
+        @case ('providers-check') { <path d="M5 3h10l4 4v6M15 3v5h4M5 3v18h9M8 12h6M8 16h3"></path><circle cx="17" cy="18" r="4"></circle><path d="m15.5 18 1 1 2-2"></path> }
+        @case ('book') { <path d="M12 6c-2.8-2-5.6-2.3-9-1.5v14c3.4-.8 6.2-.5 9 1.5 2.8-2 5.6-2.3 9-1.5v-14C17.6 3.7 14.8 4 12 6zM12 6v14"></path> }
+        @case ('paw-heart') { <path d="M20.4 6.7c-2-2-4.5-.6-5.2.6-.8-1.2-3.3-2.6-5.3-.6-2.2 2.2-.6 4.6 1.1 6.2l4.2 4 4.2-4c1.7-1.6 3.2-4 .9-6.2z"></path><circle cx="5.5" cy="8" r="1"></circle><circle cx="7.5" cy="4.5" r="1"></circle><path d="M7 14c-2 1-2 4 0 5 1.5 1 3-.5 4.5-.5"></path> }
+        @case ('car') { <path d="M5 16H3v-5l2-6h14l2 6v5h-2M5 16h14M5 16v3h3v-3M16 16v3h3v-3M3 11h18M7 13h2M15 13h2"></path> }
+        @case ('message-alert') { <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 21l1.9-5.5A8.5 8.5 0 1 1 21 11.5z"></path><path d="M12 7v5M12 15h.01"></path> }
+        @case ('clipboard-check') { <rect x="5" y="5" width="14" height="17" rx="2"></rect><path d="M9 5V3h6v2M9 11h6M9 15l2 2 4-4"></path> }
         @case ('coins') { <ellipse cx="12" cy="6" rx="7" ry="3"></ellipse><path d="M5 6v4c0 1.7 3.1 3 7 3s7-1.3 7-3V6"></path><path d="M5 10v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"></path><path d="M5 14v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"></path> }
         @case ('calendar') { <rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4M8 3v4M3 10h18"></path><path d="M8 14h3v3H8z"></path> }
         @case ('building') { <path d="M3 21h18M5 21V10M9 21V10M15 21V10M19 21V10M3 10h18L12 3 3 10z"></path> }

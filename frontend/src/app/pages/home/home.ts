@@ -42,6 +42,19 @@ export class Home {
     return url.startsWith('/') && !url.startsWith('//');
   }
 
+  iconoAcceso(titulo: string, fallback: string): string {
+    const nombre = titulo.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (nombre.includes('proveedor')) return 'providers-check';
+    if (nombre.includes('boletin')) return 'book';
+    if (nombre.includes('factura')) return 'receipt';
+    if (nombre.includes('mail') || nombre.includes('correo')) return 'mail';
+    if (nombre.includes('veterinar') || nombre.includes('castracion')) return 'paw-heart';
+    if (nombre.includes('licencia') || nombre.includes('conducir')) return 'car';
+    if (nombre.includes('reclamo')) return 'message-alert';
+    if (nombre.includes('habilitacion')) return 'clipboard-check';
+    return fallback;
+  }
+
   iconoSecretaria(id: string): string {
     const iconos: Record<string, string> = {
       'hacienda-produccion': 'building',

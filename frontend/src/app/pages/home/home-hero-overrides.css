@@ -477,3 +477,41 @@
     transition: none;
   }
 }
+
+/* Hero de primera pantalla: conserva carrusel, contenidos y navegación. */
+@media (min-width: 59rem) {
+  .portal-hero,
+  .portal-hero .hero-grid {
+    min-height: calc(100svh - var(--portal-header-height, 6rem));
+  }
+  .portal-hero .hero-grid {
+    padding-top: clamp(3rem, 6vh, 6rem);
+    padding-bottom: clamp(3rem, 6vh, 6rem);
+  }
+  .portal-hero .hero-copy {
+    width: min(42rem, 53%);
+  }
+  .portal-hero .hero-shade {
+    background:
+      linear-gradient(90deg,
+        rgba(255,255,255,.94) 0%,
+        rgba(255,255,255,.84) 20%,
+        rgba(255,255,255,.60) 35%,
+        rgba(255,255,255,.16) 55%,
+        rgba(255,255,255,0) 73%),
+      linear-gradient(180deg, rgba(5,57,43,.01), rgba(5,57,43,.07));
+  }
+}
+@media (min-width: 59rem) and (max-height: 650px) {
+  .portal-hero,
+  .portal-hero .hero-grid { min-height: 34rem; }
+}
+@media (max-width: 58rem) {
+  .portal-hero,
+  .portal-hero .hero-grid { min-height: clamp(30rem, 72svh, 43rem); }
+}
+@media (max-width: 38rem) {
+  .portal-hero,
+  .portal-hero .hero-grid { min-height: clamp(33rem, 78svh, 43rem); }
+  .portal-hero .hero-grid { padding-bottom: 5rem; }
+}

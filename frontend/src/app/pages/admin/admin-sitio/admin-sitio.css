@@ -80,3 +80,6 @@ input:focus, textarea:focus, select:focus { border-color: #66af93; box-shadow: 0
   .hero-image-actions { grid-column: auto; justify-content: flex-start; flex-wrap: wrap; }
   .sticky-save { align-items: stretch; flex-direction: column; }
 }
+
+.access-icon-preview { display:flex; align-items:center; gap:.7rem; margin:.65rem 0; color:#58746a; font-size:.82rem; }
+.access-icon-box { display:grid; place-items:center; width:3rem; height:3rem; border:1px solid #cde5d8; border-radius:.8rem; background:#edf7f1; color:#007b59; }

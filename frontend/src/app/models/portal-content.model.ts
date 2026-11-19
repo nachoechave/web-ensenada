@@ -9,6 +9,7 @@ export interface PortalLinkItem {
   descripcion: string;
   url: string;
   icono: string;
+  imagen?: string;
 }
 
 export interface PortalSecretariaItem {

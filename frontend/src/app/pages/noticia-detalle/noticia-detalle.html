@@ -4,7 +4,11 @@
   <div class="detalle-container">
     <a routerLink="/noticias" class="breadcrumb"> Volver a noticias </a>
 
-    @if (noticia) {
+    @if (estadoCarga === 'cargando') {
+      <section class="detalle-card detalle-empty content-card" role="status" aria-live="polite">
+        <p>Cargando noticia…</p>
+      </section>
+    } @else if (noticia) {
       <article class="detalle-card content-card">
         <div class="detalle-imagen">
           <img [src]="imagenActiva || noticia.imagen" [alt]="noticia.titulo" />

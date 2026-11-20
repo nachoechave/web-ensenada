@@ -80,6 +80,14 @@ export class AdminSitio {
       Math.max(3, Number(this.contenido.hero.intervaloSegundos) || 4),
     );
     this.contenido.hero.imagen = this.contenido.hero.imagenes[0] ?? this.contenido.hero.imagen;
+    const invalido = this.contenido.telefonosUtiles.items.find((item) =>
+      item.visible && item.numero.trim() && !/^\+?[\d\s().-]{2,24}$/.test(item.numero.trim()),
+    );
+    if (invalido) {
+      this.guardando = false;
+      this.error = 'Revisá el teléfono de ' + invalido.nombre + '. Solo se admiten números, espacios y los signos + ( ) . -';
+      return;
+    }
 
     const enviado = structuredClone(this.contenido);
 
@@ -109,6 +117,16 @@ export class AdminSitio {
     if (!window.confirm('¿Restaurar en el formulario los valores base? Después deberás guardar.')) return;
     this.contenido = cloneDefaultPortalContent();
     this.mensaje = 'Valores base cargados en el formulario. Guardá para publicarlos.';
+  }
+
+  agregarTelefonoUtil(): void {
+    if (this.contenido.telefonosUtiles.items.length >= 12) {
+      this.error = 'Se admiten hasta 12 teléfonos útiles.';
+      return;
+    }
+    this.contenido.telefonosUtiles.items.push({
+      nombre: 'Nuevo contacto', numero: '', descripcion: '', icono: 'telefono', visible: true,
+    });
   }
 
   agregarAcceso(): void {

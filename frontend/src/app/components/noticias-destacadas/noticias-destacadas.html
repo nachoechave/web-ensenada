@@ -14,7 +14,7 @@
 
       @if (noticiaPrincipal) {
         <div class="news-grid" aria-label="Noticias destacadas">
-          <article class="news-card principal">
+          <a class="news-card principal" [routerLink]="['/noticias', noticiaPrincipal.slug]" [attr.aria-label]="'Leer noticia: ' + noticiaPrincipal.titulo">
             <div class="news-media" [style.--news-image]="'url(' + noticiaPrincipal.imagen + ')'">
               <img class="news-image" [src]="noticiaPrincipal.imagen" [alt]="noticiaPrincipal.titulo" loading="lazy" />
             </div>
@@ -24,12 +24,12 @@
               <small>{{ noticiaPrincipal.fechaPublicacion }}</small>
               <h3>{{ noticiaPrincipal.titulo }}</h3>
               <p>{{ noticiaPrincipal.bajada }}</p>
-              <a [routerLink]="['/noticias', noticiaPrincipal.slug]" class="news-read-link">Leer noticia →</a>
+              <span class="news-read-link" aria-hidden="true">Leer noticia →</span>
             </div>
-          </article>
+          </a>
 
           @for (noticia of noticiasSecundarias; track noticia.id) {
-            <article class="news-card secundaria">
+            <a class="news-card secundaria" [routerLink]="['/noticias', noticia.slug]" [attr.aria-label]="'Leer noticia: ' + noticia.titulo">
               <div class="news-media" [style.--news-image]="'url(' + noticia.imagen + ')'">
                 <img class="news-image" [src]="noticia.imagen" [alt]="noticia.titulo" loading="lazy" />
               </div>
@@ -38,9 +38,9 @@
                 <small>{{ noticia.fechaPublicacion }}</small>
                 <h3>{{ noticia.titulo }}</h3>
                 <p>{{ noticia.bajada }}</p>
-                <a [routerLink]="['/noticias', noticia.slug]" class="news-read-link">Leer noticia →</a>
+                <span class="news-read-link" aria-hidden="true">Leer noticia →</span>
               </div>
-            </article>
+            </a>
           }
         </div>
       } @else if (!error) {

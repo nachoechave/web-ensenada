@@ -22,6 +22,13 @@ export interface PortalSecretariaItem {
   email: string;
 }
 
+export interface PortalTelefonoUtil {
+  nombre: string;
+  numero: string;
+  descripcion: string;
+  icono: 'salud' | 'policia' | 'bomberos' | 'proteccion' | 'telefono';
+  visible: boolean;
+}
 export interface PortalAgendaItem {
   dia: string;
   mes: string;
@@ -63,6 +70,7 @@ export interface PortalContent {
     ctaSecundarioTexto: string;
     ctaSecundarioUrl: string;
   };
+  telefonosUtiles: { titulo: string; visible: boolean; items: PortalTelefonoUtil[] };
   accesosTitulo: string;
   accesos: PortalLinkItem[];
   tramites: {

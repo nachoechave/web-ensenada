@@ -38,6 +38,11 @@ export class Home {
       });
   }
 
+  enlaceTelefono(numero: string): string | null {
+    const limpio = (numero ?? '').replace(/[\s().-]/g, '');
+    return /^\+?\d{2,15}$/.test(limpio) ? 'tel:' + limpio : null;
+  }
+
   esInterno(url: string): boolean {
     return url.startsWith('/') && !url.startsWith('//');
   }

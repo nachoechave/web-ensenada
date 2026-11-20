@@ -90,6 +90,7 @@ export class PortalContentService {
       topbar: { ...base.topbar, ...contenido.topbar },
       navbar: { ...base.navbar, ...contenido.navbar },
       hero: { ...base.hero, ...contenido.hero },
+      telefonosUtiles: { ...base.telefonosUtiles, ...contenido.telefonosUtiles },
       tramites: { ...base.tramites, ...contenido.tramites },
       noticias: { ...base.noticias, ...contenido.noticias },
       areas: { ...base.areas, ...contenido.areas },
@@ -97,6 +98,18 @@ export class PortalContentService {
       agenda: { ...base.agenda, ...contenido.agenda },
       footer: { ...base.footer, ...contenido.footer },
     } as PortalContent;
+
+    combinado.telefonosUtiles.items = Array.isArray(contenido.telefonosUtiles?.items)
+      ? contenido.telefonosUtiles.items
+          .filter((item) => item && typeof item.nombre === 'string' && typeof item.numero === 'string')
+          .map((item) => ({
+            nombre: item.nombre,
+            numero: item.numero,
+            descripcion: typeof item.descripcion === 'string' ? item.descripcion : '',
+            icono: (['salud', 'policia', 'bomberos', 'proteccion', 'telefono'].includes(item.icono) ? item.icono : 'telefono') as typeof item.icono,
+            visible: item.visible !== false,
+          }))
+      : base.telefonosUtiles.items;
 
     combinado.navbar.boletinUrl = base.navbar.boletinUrl;
 

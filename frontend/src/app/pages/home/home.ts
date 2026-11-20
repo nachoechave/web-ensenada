@@ -38,6 +38,13 @@ export class Home {
       });
   }
 
+  iconoTelefono(icono: string): string {
+    const iconos: Record<string, string> = {
+      salud: '✚', policia: '★', bomberos: '♨', proteccion: '♡', telefono: '☎',
+    };
+    return iconos[icono] ?? '☎';
+  }
+
   enlaceTelefono(numero: string): string | null {
     const limpio = (numero ?? '').replace(/[\s().-]/g, '');
     return /^\+?\d{2,15}$/.test(limpio) ? 'tel:' + limpio : null;

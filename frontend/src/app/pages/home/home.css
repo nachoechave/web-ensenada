@@ -335,25 +335,3 @@ main {
   .map-info { padding:1.8rem; }
   .interactive-map-frame,.interactive-map-frame iframe { min-height:22rem; }
 }
-
-
-/* Telefonos utiles: banda institucional debajo del hero */
-.telefonos-utiles { padding: 1.5rem 0 1.8rem; background: #232323; border-bottom: .25rem solid #78c539; }
-.telefonos-shell { width: min(100% - 3rem, 82rem); margin: auto; }
-.telefonos-shell h2 { margin: 0 0 1.35rem; color: #fff; font-size: 1.15rem; font-weight: 750; }
-.telefonos-grid { display: flex; flex-wrap: wrap; justify-content: space-around; gap: 1rem; }
-.telefono-card { min-width: 10rem; flex: 1 1 11rem; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: .55rem; color: #fff; text-align: center; text-decoration: none; border-radius: .7rem; transition: background .2s ease, transform .2s ease; }
-.telefono-card[href]:hover { background: rgba(255,255,255,.08); transform: translateY(-2px); }
-.telefono-card[href]:focus-visible { outline: 3px solid #a1d85d; outline-offset: 3px; }
-.telefono-icono { display: grid; place-items: center; width: 3rem; height: 3rem; margin-bottom: .65rem; border: 2px solid #fff; border-radius: 50%; font-size: 1.5rem; line-height: 1; }
-.telefono-card strong { color: #85cc43; font-size: clamp(1.45rem, 2.2vw, 2rem); line-height: 1.12; font-weight: 850; overflow-wrap: anywhere; }
-.telefono-nombre { margin-top: .2rem; font-size: .88rem; font-weight: 650; }
-.telefono-card small { margin-top: .2rem; color: #f0f0f0; font-size: .75rem; line-height: 1.4; }
-.telefono-card.sin-llamada { cursor: default; }
-@media (max-width: 40rem) {
-  .telefonos-shell { width: min(100% - 1.5rem, 82rem); }
-  .telefonos-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
-  .telefono-card { min-width: 0; padding: .85rem .3rem; }
-  .telefono-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
-}
-@media (prefers-reduced-motion: reduce) { .telefono-card { transition: none; } .telefono-card[href]:hover { transform: none; } }

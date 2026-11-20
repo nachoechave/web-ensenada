@@ -122,6 +122,47 @@
       </details>
 
       <details class="editor-section">
+        <summary>Teléfonos útiles</summary>
+        <div class="section-body">
+          <p class="helper">Los teléfonos aparecen debajo del hero. En celulares, tocarlos abre la aplicación de llamadas. Dejá el número vacío para mostrar un contacto informativo sin llamada.</p>
+          <div class="fields two">
+            <label>Título del bloque<input [(ngModel)]="contenido.telefonosUtiles.titulo" /></label>
+            <label class="toggle-field"><input type="checkbox" [(ngModel)]="contenido.telefonosUtiles.visible" /><span>Mostrar teléfonos útiles en la portada</span></label>
+          </div>
+          <div class="repeater">
+            @for (item of contenido.telefonosUtiles.items; track $index) {
+              <article class="item-editor">
+                <div class="item-toolbar">
+                  <strong>Contacto {{ $index + 1 }}</strong>
+                  <span>
+                    <button type="button" (click)="mover(contenido.telefonosUtiles.items, $index, -1)" [disabled]="$index === 0">↑</button>
+                    <button type="button" (click)="mover(contenido.telefonosUtiles.items, $index, 1)" [disabled]="$index === contenido.telefonosUtiles.items.length - 1">↓</button>
+                    <button type="button" class="danger" (click)="eliminar(contenido.telefonosUtiles.items, $index)">Eliminar</button>
+                  </span>
+                </div>
+                <div class="fields three">
+                  <label>Nombre<input [(ngModel)]="item.nombre" placeholder="Ej: SAME" /></label>
+                  <label>Número<input [(ngModel)]="item.numero" type="tel" placeholder="Ej: 107 o 0800-333-3218" /></label>
+                  <label>Ícono
+                    <select [(ngModel)]="item.icono">
+                      <option value="salud">Salud / cruz</option>
+                      <option value="policia">Policía / estrella</option>
+                      <option value="bomberos">Bomberos</option>
+                      <option value="proteccion">Protección / corazón</option>
+                      <option value="telefono">Teléfono</option>
+                    </select>
+                  </label>
+                </div>
+                <label>Descripción<input [(ngModel)]="item.descripcion" placeholder="Texto debajo del número" /></label>
+                <label class="toggle-field"><input type="checkbox" [(ngModel)]="item.visible" /><span>Mostrar contacto</span></label>
+              </article>
+            }
+          </div>
+          <button type="button" class="add-button" (click)="agregarTelefonoUtil()" [disabled]="contenido.telefonosUtiles.items.length >= 12">+ Agregar teléfono</button>
+        </div>
+      </details>
+
+      <details class="editor-section">
         <summary>Accesos rápidos</summary>
         <div class="section-body">
           <label>Título del bloque<input [(ngModel)]="contenido.accesosTitulo" /></label>

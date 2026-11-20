@@ -44,6 +44,17 @@ export const defaultPortalContent: PortalContent = {
     ctaSecundarioTexto: 'Últimas noticias',
     ctaSecundarioUrl: '#actualidad',
   },
+  telefonosUtiles: {
+    titulo: 'Teléfonos útiles',
+    visible: true,
+    items: [
+      { nombre: 'Defensa Civil', numero: '0800-333-3218', descripcion: 'Defensa Civil / Emergencia Vial', icono: 'salud', visible: true },
+      { nombre: 'Policía', numero: '911', descripcion: 'Emergencias policiales', icono: 'policia', visible: true },
+      { nombre: 'Bomberos', numero: '', descripcion: 'Consultar listado de cuarteles', icono: 'bomberos', visible: true },
+      { nombre: 'Violencia de Género', numero: '144', descripcion: 'Línea de atención y asesoramiento', icono: 'proteccion', visible: true },
+      { nombre: 'SAME', numero: '107', descripcion: 'Emergencias médicas', icono: 'telefono', visible: true },
+    ],
+  },
   accesosTitulo: 'Accesos directos',
   accesos: [
     {

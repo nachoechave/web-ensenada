@@ -13,7 +13,7 @@ import { PortalContentService } from '../../services/portal-content.service';
   selector: 'app-home',
   imports: [RouterLink, Navbar, NoticiasDestacadas, Footer, PortalIcon],
   templateUrl: './home.html',
-  styleUrls: ['./home.css', './home-hero-overrides.css', './home-intendencia-overrides.css', './home-hibrido.css'],
+  styleUrls: ['./home.css', './home-telefonos.css', './home-hero-overrides.css', './home-intendencia-overrides.css', './home-hibrido.css'],
 })
 export class Home {
   private readonly portalContentService = inject(PortalContentService);
@@ -36,6 +36,18 @@ export class Home {
         this.precargarHero();
         this.iniciarCarousel();
       });
+  }
+
+  iconoTelefono(icono: string): string {
+    const iconos: Record<string, string> = {
+      salud: '✚', policia: '★', bomberos: '♨', proteccion: '♡', telefono: '☎',
+    };
+    return iconos[icono] ?? '☎';
+  }
+
+  enlaceTelefono(numero: string): string | null {
+    const limpio = (numero ?? '').replace(/[\s().-]/g, '');
+    return /^\+?\d{2,15}$/.test(limpio) ? 'tel:' + limpio : null;
   }
 
   esInterno(url: string): boolean {

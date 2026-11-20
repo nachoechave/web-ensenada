@@ -37,6 +37,34 @@
     </div>
   </section>
 
+  @if (contenido().telefonosUtiles.visible) {
+    <section class="telefonos-utiles" aria-labelledby="telefonos-utiles-title">
+      <div class="telefonos-shell">
+        <h2 id="telefonos-utiles-title">{{ contenido().telefonosUtiles.titulo }}</h2>
+        <div class="telefonos-grid">
+          @for (item of contenido().telefonosUtiles.items; track $index) {
+            @if (item.visible) {
+              @if (enlaceTelefono(item.numero); as enlace) {
+                <a class="telefono-card" [href]="enlace" [attr.aria-label]="'Llamar al ' + item.numero + ' - ' + item.nombre">
+                  <span class="telefono-icono" aria-hidden="true">{{ iconoTelefono(item.icono) }}</span>
+                  <strong>{{ item.numero }}</strong>
+                  <span class="telefono-nombre">{{ item.nombre }}</span>
+                  <small>{{ item.descripcion }}</small>
+                </a>
+              } @else {
+                <div class="telefono-card sin-llamada">
+                  <span class="telefono-icono" aria-hidden="true">{{ iconoTelefono(item.icono) }}</span>
+                  <strong>{{ item.nombre }}</strong>
+                  <small>{{ item.descripcion }}</small>
+                </div>
+              }
+            }
+          }
+        </div>
+      </div>
+    </section>
+  }
+
   <section id="municipio" class="portal-section mayor-section" aria-labelledby="municipio-title">
     <div class="section-shell mayor-feature">
       <div class="mayor-copy">

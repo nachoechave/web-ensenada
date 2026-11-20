@@ -72,3 +72,35 @@ describe('Hero: avance automático', () => {
     http.verify();
   });
 });
+
+
+describe('Teléfonos útiles', () => {
+  it('muestra enlaces tel seguros y contactos sin número no clickeables', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection(), provideHttpClient(),
+        provideHttpClientTesting(), provideRouter([])],
+    });
+    const http = TestBed.inject(HttpTestingController);
+    const fixture = TestBed.createComponent(Home);
+    await fixture.whenStable();
+    http.expectOne('/api/noticias/destacadas').flush([]);
+    await fixture.whenStable();
+    http.expectOne('/api/site-content').flush({ telefonosUtiles: {
+      titulo: 'Contactos de emergencia',
+      visible: true,
+      items: [
+        { nombre: 'Policía', numero: '911', descripcion: 'Urgencias', icono: 'policia', visible: true },
+        { nombre: 'Bomberos', numero: '', descripcion: 'Ver cuarteles', icono: 'bomberos', visible: true },
+        { nombre: 'Oculto', numero: '107', descripcion: '', icono: 'telefono', visible: false },
+      ],
+    } });
+    await fixture.whenStable();
+    const tarjetas = fixture.nativeElement.querySelectorAll('.telefono-card');
+    expect(tarjetas.length).toBe(2);
+    expect(tarjetas[0].getAttribute('href')).toBe('tel:911');
+    expect(tarjetas[1].getAttribute('href')).toBeNull();
+    expect(fixture.componentInstance.enlaceTelefono('0800-333-3218')).toBe('tel:08003333218');
+    expect(fixture.componentInstance.enlaceTelefono('javascript:alert(1)')).toBeNull();
+    http.verify();
+  });
+});

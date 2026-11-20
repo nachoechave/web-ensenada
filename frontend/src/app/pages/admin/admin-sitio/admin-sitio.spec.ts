@@ -74,7 +74,6 @@ describe('AdminSitio CMS', () => {
     nuevo.nombre = 'Guardia';
     nuevo.numero = '+54 221 555-1234';
     nuevo.descripcion = 'Atención';
-    admin.mover(admin.contenido.telefonosUtiles.items, admin.contenido.telefonosUtiles.items.length - 1, 0);
     // Reordenamiento válido hacia arriba
     admin.mover(admin.contenido.telefonosUtiles.items, admin.contenido.telefonosUtiles.items.length - 1, -1);
     admin.guardar();

@@ -25,6 +25,7 @@ export class NoticiaDetalle {
   private readonly meta = inject(Meta);
 
   noticia?: Noticia;
+  estadoCarga: 'cargando' | 'lista' | 'no-encontrada' = 'cargando';
   imagenActiva = '';
   private readonly identificador = this.route.snapshot.paramMap.get('id') ?? '';
 
@@ -37,9 +38,11 @@ export class NoticiaDetalle {
   }
 
   private cargarNoticia(): void {
+    this.estadoCarga = 'cargando';
     this.noticiasService.obtenerPublicaDesdeApi(this.identificador).subscribe({
       next: (noticia) => {
         this.noticia = noticia;
+        this.estadoCarga = 'lista';
         this.imagenActiva = noticia.imagen;
         this.actualizarSeo(noticia);
         this.normalizarUrl(noticia);
@@ -47,6 +50,7 @@ export class NoticiaDetalle {
       },
       error: () => {
         this.noticia = undefined;
+        this.estadoCarga = 'no-encontrada';
         this.title.setTitle('Noticia no encontrada | Municipalidad de Ensenada');
         this.cdr.markForCheck();
       },

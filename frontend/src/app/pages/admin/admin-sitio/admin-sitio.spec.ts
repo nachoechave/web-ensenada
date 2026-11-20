@@ -63,4 +63,26 @@ describe('AdminSitio CMS', () => {
     expect(fixture.componentInstance.mensaje).toContain('verificados');
     expect(fixture.componentInstance.error).toBe('');
   });
+  it('permite agregar, reordenar y publicar teléfonos útiles', () => {
+    const fixture = TestBed.createComponent(AdminSitio);
+    http.expectOne('/api/admin/site-content').flush(cloneDefaultPortalContent());
+    fixture.detectChanges();
+
+    const admin = fixture.componentInstance;
+    admin.agregarTelefonoUtil();
+    const nuevo = admin.contenido.telefonosUtiles.items.at(-1)!;
+    nuevo.nombre = 'Guardia';
+    nuevo.numero = '+54 221 555-1234';
+    nuevo.descripcion = 'Atención';
+    admin.mover(admin.contenido.telefonosUtiles.items, admin.contenido.telefonosUtiles.items.length - 1, 0);
+    // Reordenamiento válido hacia arriba
+    admin.mover(admin.contenido.telefonosUtiles.items, admin.contenido.telefonosUtiles.items.length - 1, -1);
+    admin.guardar();
+    const put = http.expectOne('/api/admin/site-content');
+    expect(put.request.body.telefonosUtiles.items.some((item: { nombre: string }) => item.nombre === 'Guardia')).toBe(true);
+    put.flush(put.request.body);
+    http.expectOne('/api/admin/site-content').flush(put.request.body);
+    expect(admin.error).toBe('');
+  });
+
 });

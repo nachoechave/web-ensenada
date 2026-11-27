@@ -13,7 +13,7 @@ Se trabajó en `feat/iwinds-production-cutover`, a partir de `origin/main` `fb59
 | Build de la corrección indispensable de imágenes | Aprobado, main-5AVB2EQE.js; CSS sin cambios |
 | HTTP real Apache 2.4.68 + PHP 8.3.36 + MariaDB 10.11.19 | 131 comprobaciones aprobadas |
 | Aislamiento, cierre, preview y rollback | 25 comprobaciones aprobadas, incluido rechazo de candidato obsoleto con SHA actual y preservación del cambio concurrente |
-| EXIF, transparencia, límites y galería | 16 comprobaciones aprobadas |
+| EXIF, transparencia, límites, galería y fotos de accesos institucionales | 22 comprobaciones aprobadas |
 | Angular real en Chromium con HTTPS | 18 comprobaciones aprobadas, cero errores JavaScript |
 | ZIP real, instalación repetida y reversión | 15 comprobaciones aprobadas, incluidas actualización Angular idempotente y restitución exacta de su índice |
 | Schema-check | Doce tablas InnoDB/utf8mb4_unicode_520_ci, mutexes y grants por tabla aprobados |
@@ -35,6 +35,7 @@ Chromium utilizó el build real corregido. Ingresó como SUPER_ADMIN sintético,
 - Un `.htaccess` hijo puede sustituir las reglas del padre. Se exige la marca interna de reescritura también en autorización del directorio hijo, bloqueando URLs directas y codificadas.
 - Se duplicaban nosniff y Cache-Control entre puente y Laravel. El puente conserva esas cabeceras en sus rechazos y Laravel las gestiona al atender la solicitud.
 - La ruta privada y política de imágenes contemplaban solo staging. Se incorporó producción conservando el comportamiento anterior.
+- La publicación de imágenes institucionales solo reconocía Hero/Intendencia. Producción reconoce también las referencias exactas presentes en el JSON público del singleton, incluidas fotos de accesos; quitar la referencia vuelve a impedir la descarga anónima. Staging conserva su comportamiento anterior.
 - Cinco avisos en dependencias Composer: http-kernel, routing y mailer. Se actualizaron además sus dependencias mínimas http-foundation, sin salto de versión mayor ni requisitos ignorados.
 
 Los fallos de montaje del vendor, carreras del observador Playwright y selector duplicado de guardar se corrigieron en el arnés de pruebas. No representan cambios de producto.

@@ -75,11 +75,29 @@ $news = end($rows);
 foreach ($rows as $candidate) {
     if (str_starts_with($candidate['slug'], 'cronica-sintetica-desde-chromium')) {
         $news = $candidate;
+        break;
     }
 }
 if (count($news['imagenes'] ?? []) === 3) {
     $news['imagenes'] = [...$news['imagenes'], $oriented, $transparent, $safe];
     $r = $client->put('/api/admin/noticias/'.$news['id'], ['json' => $news]);
-    $assert($r->getStatusCode() === 200 && count(json_decode((string) $r->getBody(),true)['imagenes']) === 6,'galería de seis y portada conservadas');
+    $assert($r->getStatusCode() === 200 && count(json_decode((string) $r->getBody(), true)['imagenes']) === 6, 'galería de seis y portada conservadas');
+} else {
+    $assert(count($news['imagenes'] ?? []) === 6, 'galería de seis conservada');
 }
+$admin = new Client(['base_uri' => 'https://www.ensenada.gov.ar', 'verify' => false, 'http_errors' => false, 'cookies' => new CookieJar,
+    'headers' => ['Origin' => 'https://www.ensenada.gov.ar', 'Sec-Fetch-Site' => 'same-origin']]);
+$assert($admin->post('/api/auth/login', ['json' => ['email' => 'admin@example.test', 'password' => 'Synthetic-Production-Test-123!']])->getStatusCode() === 200, 'admin CMS');
+$r = $admin->post('/api/admin/archivos/sitio', ['multipart' => [['name' => 'archivo', 'contents' => $png, 'filename' => 'access.png']]]);
+$assert($r->getStatusCode() === 200, 'imagen para acceso institucional');
+$siteImage = json_decode((string) $r->getBody(), true)['url'];
+$anonymous = new Client(['base_uri' => 'https://www.ensenada.gov.ar', 'verify' => false, 'http_errors' => false]);
+$assert($anonymous->get($siteImage)->getStatusCode() === 404, 'imagen institucional sin publicar');
+$content = json_decode((string) $admin->get('/api/admin/site-content')->getBody(), true);
+$previous = $content;
+$content['accesos'][0]['imagen'] = $siteImage;
+$assert($admin->put('/api/admin/site-content', ['json' => $content])->getStatusCode() === 200, 'guardar foto de acceso');
+$assert($anonymous->get($siteImage)->getStatusCode() === 200, 'foto del acceso descargable públicamente');
+$admin->put('/api/admin/site-content', ['json' => $previous]);
+$assert($anonymous->get($siteImage)->getStatusCode() === 404, 'quitar referencia revoca acceso público');
 echo "OK $count comprobaciones de orientación, transparencia, límites, corrupción y galería\n";

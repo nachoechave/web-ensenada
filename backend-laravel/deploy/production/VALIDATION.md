@@ -7,7 +7,7 @@
 | Angular | 74 tests aprobados; build correcto |
 | HTTP Apache/PHP/MariaDB | 131 comprobaciones aprobadas |
 | Aislamiento, cierre, revisión por IP y rollback | 25 comprobaciones aprobadas, incluidos cambios concurrentes preservados |
-| EXIF, transparencia, corrupción, 30 MiB y galería de seis | 16 comprobaciones aprobadas |
+| EXIF, transparencia, corrupción, 30 MiB, galería de seis y fotos de accesos institucionales | 22 comprobaciones aprobadas |
 | Chromium HTTPS con Angular real | 18 comprobaciones aprobadas; sin errores JavaScript |
 | ZIP: instalación repetida, actualización y rollback Angular | 15 comprobaciones aprobadas |
 | Dependencias de producción | 76 paquetes; auditoría Composer sin avisos |

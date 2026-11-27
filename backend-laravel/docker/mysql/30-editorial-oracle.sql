@@ -1,0 +1,10 @@
+CREATE USER 'news_oracle'@'%' IDENTIFIED BY 'synthetic-editorial-oracle-only-1234';
+GRANT SELECT ON ensenada_auth_test.usuarios TO 'news_oracle'@'%';
+GRANT SELECT ON ensenada_auth_test.usuario_roles TO 'news_oracle'@'%';
+GRANT SELECT, INSERT, UPDATE ON ensenada_auth_test.noticias TO 'news_oracle'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON ensenada_auth_test.noticia_imagenes TO 'news_oracle'@'%';
+GRANT SELECT, INSERT ON ensenada_auth_test.auditoria_noticias TO 'news_oracle'@'%';
+GRANT SELECT, UPDATE ON ensenada_auth_test.portal_site_content TO 'news_oracle'@'%';
+GRANT SELECT, INSERT, UPDATE ON ensenada_auth_test.publicaciones_hacienda TO 'news_oracle'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON ensenada_auth_test.archivos_hacienda TO 'news_oracle'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON ensenada_auth_test.documentos_proveedores TO 'news_oracle'@'%';

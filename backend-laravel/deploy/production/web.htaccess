@@ -1,0 +1,25 @@
+# Only this new directory uses ea-php83. Never change the root cPanel PHP 8.2 block.
+Options -Indexes -MultiViews
+DirectoryIndex index.html
+<RequireAll>
+Require expr "%{HTTP_HOST} == 'www.ensenada.gov.ar'"
+<RequireAny>
+Require env REDIRECT_ENSENADA_PRODUCTION_WEB
+Require env REDIRECT_ENSENADA_PRODUCTION_ROUTE
+</RequireAny>
+</RequireAll>
+<IfModule mime_module>
+AddHandler application/x-httpd-ea-php83 .php
+</IfModule>
+RewriteEngine On
+RewriteCond %{HTTP_HOST} !^www\.ensenada\.gov\.ar$ [NC]
+RewriteRule ^ - [R=404,END]
+RewriteCond %{THE_REQUEST} "[[:space:]]/+(?:web-produccion)(?:[/;?]|[[:space:]])" [NC]
+RewriteRule ^ - [R=404,END]
+<FilesMatch "(?i)^(?!ensenada-production\.php$).*(?:\.php(?:[./]|$)|^\.|\.ini$|\.log$|\.sql$|\.bak$|\.map$)">
+Require all denied
+</FilesMatch>
+# Require the trusted parent rewrite for PHP. A client header cannot set this variable.
+<Files "ensenada-production.php">
+Require env REDIRECT_ENSENADA_PRODUCTION_ROUTE
+</Files>

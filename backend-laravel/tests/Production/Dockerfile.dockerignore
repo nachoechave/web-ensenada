@@ -1,0 +1,10 @@
+**
+!tests/
+!tests/Production/
+!tests/Production/apache.conf
+!docker/
+!docker/site-image-policy.xml
+!output/
+!output/dependencies/
+!output/dependencies/vendor/
+!output/dependencies/vendor/**

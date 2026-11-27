@@ -1,0 +1,9 @@
+{
+    admin off
+    auto_https disable_redirects
+    skip_install_trust
+}
+https://prueba.ensenada.gov.ar {
+    tls internal
+    reverse_proxy final-staging:18081
+}

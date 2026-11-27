@@ -1,0 +1,32 @@
+name: ensenada-production-cutover-tests
+services:
+  mysql-auth:
+    image: mariadb:10.11.19
+    environment:
+      MARIADB_ROOT_PASSWORD: synthetic-disposable-root
+      MARIADB_DATABASE: ensenada_web_prod
+    command: [--skip-log-bin, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_520_ci]
+    tmpfs: [/var/lib/mysql, /tmp]
+    volumes:
+      - ./generated-init.sql:/docker-entrypoint-initdb.d/10-schema.sql:ro
+      - ./accounts.sql:/docker-entrypoint-initdb.d/20-accounts.sql:ro
+    networks: [isolated]
+    healthcheck:
+      test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
+      interval: 2s
+      retries: 50
+  apache:
+    image: ensenada-production-apache:local
+    environment:
+      ENSENADA_PRODUCTION_TEST_DISPOSABLE: 'true'
+    network_mode: service:mysql-auth
+    depends_on:
+      mysql-auth:
+        condition: service_healthy
+    volumes:
+      - ../..:/source:ro
+      - ../../output/angular-production/browser:/angular:ro
+    tmpfs: [/home/ensenada, /tmp]
+networks:
+  isolated:
+    internal: true

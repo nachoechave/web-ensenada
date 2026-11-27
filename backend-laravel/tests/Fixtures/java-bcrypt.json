@@ -1,0 +1,5 @@
+{"generator":"Spring Security BCrypt 7.1.0 / Java 21","vectors":[
+{"password":"Synthetic-password-1234","hash":"$2a$10$BUUMg5EfyXoL/07khpIEOeAiUf1t9v15bvr8AvqWWH0tLMriXmPNy"},
+{"password":"Contraseña-sintética-1234","hash":"$2a$10$uYtmCBv9wwg6kM04a/n4N.myVTdZ62kBX4Xhwvf/HGcItdqU1Mf7u"},
+{"password":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","hash":"$2a$10$4dw1JFmBekgOZ4cjGeWvZ.cpqqehVlVOs5X9dn/vZ.UoInMKS7mFO"}
+]}

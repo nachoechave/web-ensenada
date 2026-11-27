@@ -1,0 +1,9 @@
+# Insert before the existing Angular fallback. Keep the cPanel PHP handler.
+RedirectMatch 404 "(?i)^/(?:api|uploads)$"
+RewriteEngine On
+RewriteRule ^ensenada-api\.php(?:/|$) - [R=404,L,NC]
+RewriteRule ^(?:\.env(?:[./]|$)|backend-laravel(?:/|$)) - [R=404,L,NC]
+RewriteRule ^(?:api|uploads)(?:/|$) - [NC,E=ENSENADA_REQUEST_LINE:%{THE_REQUEST}]
+RewriteRule ^(?:api|uploads)(?:/|$) ensenada-api.php [NC,END]
+RewriteCond %{THE_REQUEST} "[[:space:]]/+(?:api|uploads)(?:[/;?]|[[:space:]])" [NC]
+RewriteRule ^ - [R=404,L]

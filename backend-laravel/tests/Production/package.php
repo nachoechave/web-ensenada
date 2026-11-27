@@ -50,5 +50,5 @@ $p->run();
 $assert(! $p->isSuccessful() && hash_file('sha256', $root.'/.env') === $envHash, 'no reemplaza claves existentes');
 $assert($install('angular')->isSuccessful(), 'actualización Angular de imágenes');
 $assert($install('angular')->isSuccessful(), 'actualización Angular idempotente');
-$assert($install('rollback-angular')->isSuccessful() && hash_file('sha256',$public.'/index.html') === $angular, 'rollback Angular exacto');
+$assert($install('rollback-angular')->isSuccessful() && hash_file('sha256', $public.'/index.html') === $angular, 'rollback Angular exacto');
 echo "OK 15 verificaciones del ZIP real\n";

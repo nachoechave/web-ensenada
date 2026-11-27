@@ -28,6 +28,9 @@ final class IwindsStaging
             || $mysql['database'] !== 'ensenada_web' || $mysql['username'] !== 'ensenada_web_app' || empty($mysql['password'])) {
             throw new RuntimeException('Configuración iWinds de staging incompleta o fuera del alcance permitido.');
         }
+        if (SharedDatabaseLease::managed()) {
+            SharedDatabaseLease::guardStaging($app);
+        }
         if ($app->runningInConsole()) {
             if (basename($_SERVER['argv'][0] ?? '') === 'artisan'
                 && ! in_array($_SERVER['argv'][1] ?? '', ['route:list', 'config:cache', 'config:clear', 'route:cache', 'route:clear'], true)) {

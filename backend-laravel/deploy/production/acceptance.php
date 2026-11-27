@@ -1,12 +1,38 @@
 <?php
 
 declare(strict_types=1);
+use App\Support\IwindsProduction;
+use App\Support\ProductionPermissions;
+use App\Support\SharedDatabaseLease;
+use Illuminate\Contracts\Console\Kernel;
+
 if (PHP_SAPI !== 'cli') {
     http_response_code(404);
     exit(1);
 }
 $origin = 'https://www.ensenada.gov.ar';
-$options = getopt('', ['news:', 'hacienda:', 'image:', 'provider:', 'private-document:']);
+$options = getopt('', ['news:', 'hacienda:', 'image:', 'provider:', 'private-document:', 'staging-basic-file:']);
+require dirname(__DIR__, 2).'/vendor/autoload.php';
+try {
+    SharedDatabaseLease::production(true);
+    $app = require dirname(__DIR__, 2).'/bootstrap/app.php';
+    $app->make(Kernel::class)->bootstrap();
+    ProductionPermissions::verify();
+    if (! IwindsProduction::enabled() || ! IwindsProduction::isolationVerified()) {
+        throw new RuntimeException;
+    }
+    $basicFile = $options['staging-basic-file'] ?? '';
+    if (is_link($basicFile) || ! is_file($basicFile) || (fileperms($basicFile) & 0777) !== 0600) {
+        throw new RuntimeException;
+    }
+    $stageBasic = rtrim(file_get_contents($basicFile), "\r\n");
+    if (! preg_match('/\A[^:\r\n]+:[^\r\n]+\z/D', $stageBasic)) {
+        throw new RuntimeException;
+    }
+} catch (Throwable) {
+    fwrite(STDERR, "BLOQUEADO propiedad exclusiva, perfil mínimo, marcador válido o archivo Basic privado pendientes.\n");
+    exit(1);
+}
 $checks = 0;
 function assertAcceptance(bool $ok, string $label): void
 {
@@ -17,18 +43,31 @@ function assertAcceptance(bool $ok, string $label): void
         exit(1);
     }echo 'OK '.$label."\n";
 }
-function requestAcceptance(string $path): array
+function requestAcceptance(string $path, bool $staging = false): array
 {
-    global $origin;
+    global $origin,$stageBasic;
     assertAcceptance(str_starts_with($path, '/') && ! str_starts_with($path, '//') && ! preg_match('/[\r\n]/', $path), 'ruta de comprobación local');
-    $ch = curl_init($origin.$path);
+    $ch = curl_init(($staging ? 'https://prueba.ensenada.gov.ar' : $origin).$path);
     curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_HEADER => true, CURLOPT_FOLLOWLOCATION => false, CURLOPT_CONNECTTIMEOUT => 10, CURLOPT_TIMEOUT => 60]);
+    if ($staging) {
+        curl_setopt($ch, CURLOPT_USERPWD, $stageBasic);
+    }
     $raw = curl_exec($ch);
     $info = curl_getinfo($ch);
     curl_close($ch);
     assertAcceptance($raw !== false, 'HTTPS con certificado válido '.$path);
 
     return [$info['http_code'], substr($raw, $info['header_size']), substr($raw, 0, $info['header_size'])];
+}
+foreach (['/api/site-content', '/api/noticias', '/api/auth/me', '/api/admin/usuarios'] as $path) {
+    [$status] = requestAcceptance($path, true);
+    assertAcceptance($status === 503, 'staging sin acceso a datos productivos aun con Basic '.$path);
+}
+foreach (['image', 'provider', 'private-document'] as $key) {
+    if (isset($options[$key])) {
+        [$status] = requestAcceptance($options[$key], true);
+        assertAcceptance($status === 503, 'staging no sirve archivos transferidos '.$key);
+    }
 }
 foreach (['/', '/noticias', '/hacienda', '/proveedores', '/areas', '/intendencia', '/admin/login'] as $path) {
     [$status,$body] = requestAcceptance($path);

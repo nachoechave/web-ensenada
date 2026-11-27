@@ -4,7 +4,7 @@ services:
     image: mariadb:10.11.19
     environment:
       MARIADB_ROOT_PASSWORD: synthetic-disposable-root
-      MARIADB_DATABASE: ensenada_web_prod
+      MARIADB_DATABASE: ensenada_web
     command: [--skip-log-bin, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_520_ci]
     tmpfs: [/var/lib/mysql, /tmp]
     volumes:
@@ -26,6 +26,8 @@ services:
     volumes:
       - ../..:/source:ro
       - ../../output/angular-production/browser:/angular:ro
+      - ../../../../../output/iwinds-production-cutover-20261127/web-ensenada-iwinds-production.zip:/base-release.zip:ro
+      - ../../output/shared-update/web-ensenada-iwinds-shared-database.zip:/shared-update.zip:ro
     tmpfs: [/home/ensenada, /tmp]
 networks:
   isolated:

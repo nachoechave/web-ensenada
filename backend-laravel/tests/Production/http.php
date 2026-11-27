@@ -6,7 +6,7 @@ require '/source/tests/Fixtures/ProviderDocuments.php';
 if (getenv('ENSENADA_PRODUCTION_TEST_DISPOSABLE') !== 'true') {
     exit(1);
 }
-$reset = new PDO('mysql:host=127.0.0.1;dbname=ensenada_web_prod', 'prod_setup', 'synthetic-prod-setup-only');
+$reset = new PDO('mysql:host=127.0.0.1;dbname=ensenada_web', 'ensenada_web_schema', 'synthetic-schema-only');
 $reset->exec('DELETE FROM auth_login_windows');
 $reset->exec("UPDATE usuarios SET activo=1 WHERE email IN ('admin@example.test','prensa@example.test','hacienda@example.test')");
 use GuzzleHttp\Client;
@@ -77,6 +77,10 @@ $r = $anon->get('http://www.ensenada.gov.ar/noticias');
 code($r, 302, 'HTTPS');
 foreach (['prueba', 'tramites'] as $host) {
     $r = $anon->get('https://'.$host.'.ensenada.gov.ar/');
+    if ($host === 'prueba') {
+        code($r, 401, 'staging conserva Basic');
+        $r = $anon->get('https://prueba.ensenada.gov.ar/', ['auth' => ['staging', 'synthetic-basic-only']]);
+    }
     code($r, 200, 'subdominio');
     check((string) $r->getBody() === $host.'-unchanged', 'aislamiento subdominio');
 }
@@ -177,7 +181,7 @@ code($prensa->delete('/api/admin/noticias/'.$id), 204, 'archivar noticia');
 code($anon->get($images[0]), 404, 'imagen archivada');
 code($prensa->post('/api/auth/logout'), 204, 'logout');
 code($prensa->get('/api/auth/me'), 401, 'sesión revocada');
-$pdo = new PDO('mysql:host=127.0.0.1;dbname=ensenada_web_prod', 'prod_setup', 'synthetic-prod-setup-only', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+$pdo = new PDO('mysql:host=127.0.0.1;dbname=ensenada_web', 'ensenada_web_schema', 'synthetic-schema-only', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 $pdo->exec("UPDATE usuarios SET activo=0 WHERE email='hacienda@example.test'");
 code($hacienda->get('/api/auth/me'), 401, 'revocación trigger');
 $pdo->exec('UPDATE auth_sessions SET expires_at=0');

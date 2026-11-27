@@ -1,6 +1,7 @@
 <?php
 
 require '/home/ensenada/backend-laravel-produccion/vendor/autoload.php';
+use App\Support\SharedDatabaseAudit;
 use GuzzleHttp\Client;
 use Symfony\Component\Process\Process;
 
@@ -21,7 +22,7 @@ function verifyOperation(bool $ok, string $label): void
 function controlOperation(string $op, array $args = []): Process
 {
     global $ops;
-    $p = new Process([PHP_BINARY, $ops.'/control.php', $op, ...$args]);
+    $p = $op === 'enable' && $args !== [] ? new Process([PHP_BINARY, $ops.'/handover.php', 'activate', '--schema-config=/home/ensenada/respaldos_privados/schema.cnf', '--authorize-session-revocation', '--authorize-production']) : new Process([PHP_BINARY, $ops.'/control.php', $op, ...$args]);
     $p->run();
 
     return $p;
@@ -29,7 +30,7 @@ function controlOperation(string $op, array $args = []): Process
 $http = new Client(['base_uri' => 'https://www.ensenada.gov.ar', 'verify' => false, 'http_errors' => false, 'allow_redirects' => false]);
 $status = fn (): int => $http->get('/api/site-content')->getStatusCode();
 verifyOperation($status() === 200, 'API inicial');
-$stage = '/home/ensenada/backend-laravel/.env';
+$stage = '/home/ensenada/web-db-transfer/staging-backend/.env';
 rename($stage, $stage.'.offline');
 try {
     verifyOperation($status() === 200, 'Producción independiente de archivos de staging');
@@ -56,7 +57,7 @@ chmod($root.'/.iwinds-production-enabled', 0600);
 verifyOperation($status() >= 500, 'Marcador falsificado no habilita');
 controlOperation('close');
 verifyOperation(controlOperation('enable', ['--approved-data-and-cutover'])->isSuccessful(), 'Restauración tras marcador inválido');
-$pdo = new PDO('mysql:host=127.0.0.1;dbname=ensenada_web_prod', 'ensenada_web_prod_app', 'synthetic-prod-runtime-only', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+$pdo = SharedDatabaseAudit::connect(SharedDatabaseAudit::env($root));
 foreach (['DELETE FROM usuarios WHERE 1=0', 'UPDATE auditoria_noticias SET id=id WHERE 1=0', 'DELETE FROM auth_mutexes WHERE 1=0',
     'CREATE TABLE forbidden_structure(id INT)'] as $sql) {
     try {

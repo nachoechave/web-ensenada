@@ -4,6 +4,7 @@
 declare(strict_types=1);
 use App\Support\IwindsProduction;
 use App\Support\IwindsPublicProbe;
+use App\Support\SharedDatabaseLease;
 
 $root = '/home/ensenada/backend-laravel-produccion';
 header('Cache-Control: no-store');
@@ -11,6 +12,7 @@ header('X-Content-Type-Options: nosniff');
 try {
     require_once $root.'/app/Support/IwindsPublicProbe.php';
     require_once $root.'/app/Support/IwindsProduction.php';
+    require_once $root.'/app/Support/SharedDatabaseLease.php';
     if (! IwindsProduction::allows($_SERVER) || array_key_exists('_method', $_POST)) {
         http_response_code(404);
         exit;
@@ -20,7 +22,8 @@ try {
         http_response_code(404);
         exit;
     }
-    // A close or backup waits for in-flight requests and prevents new database/file operations.
+    SharedDatabaseLease::production(true);
+    // Always take the shared lease before the application-specific lock.
     $deploymentLock = @fopen($root.'/.production-control-lock', 'c');
     if ($deploymentLock === false || ! flock($deploymentLock, LOCK_SH)) {
         http_response_code(503);

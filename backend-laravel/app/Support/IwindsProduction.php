@@ -43,9 +43,13 @@ final class IwindsProduction
             || in_array($jwt, [$key, $raw, substr($key, 7)], true)
             || config('database.default') !== 'mysql' || ! empty($db['url']) || ! empty($db['unix_socket'])
             || ! in_array($db['host'], ['localhost', '127.0.0.1'], true) || (int) $db['port'] !== 3306
-            || $db['database'] !== 'ensenada_web_prod' || $db['username'] !== 'ensenada_web_prod_app'
+            || $db['database'] !== 'ensenada_web' || $db['username'] !== 'ensenada_web_app'
             || empty($db['password']) || $db['collation'] !== 'utf8mb4_unicode_520_ci') {
             throw new RuntimeException('Producción deshabilitada: perfil inválido.');
+        }
+        SharedDatabaseLease::production(! $app->runningInConsole());
+        if (! hash_equals(SharedDatabaseLease::state()['fingerprint'] ?? '', self::fingerprint())) {
+            throw new RuntimeException('Credencial de producción fuera de la transferencia autorizada.');
         }
         if ($app->runningInConsole()) {
             if (basename($_SERVER['argv'][0] ?? '') === 'artisan'
@@ -64,7 +68,7 @@ final class IwindsProduction
 
     public static function verifyIndependentStageSecrets(): void
     {
-        $file = IwindsStaging::ROOT.'/.env';
+        $file = SharedDatabaseLease::PARKED.'/.env';
         if (is_link($file) || ! is_file($file) || ! is_readable($file)) {
             throw new RuntimeException('No se pudo comprobar el aislamiento inicial de staging.');
         }

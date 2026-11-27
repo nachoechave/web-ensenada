@@ -70,6 +70,9 @@ final class IwindsPublicProbe
 
     public static function activeAdminPeriodExpiry(string $backend): ?int
     {
+        if (class_exists(SharedDatabaseLease::class) && SharedDatabaseLease::managed() && ! SharedDatabaseLease::legacyStage()) {
+            return SharedDatabaseLease::recoveryActive() ? SharedDatabaseLease::state()['expires_at'] : null;
+        }
         $present = self::presentMarkers($backend);
         $path = $present['admin'] ?? null;
         if (count($present) !== 1 || $path === null || is_link($path) || ! is_file($path)) {
@@ -141,6 +144,13 @@ final class IwindsPublicProbe
 
     public static function requestMode(string $backend, array $server): ?string
     {
+        if (class_exists(SharedDatabaseLease::class) && SharedDatabaseLease::managed() && ! SharedDatabaseLease::legacyStage()) {
+            if (! SharedDatabaseLease::recoveryActive()) {
+                return null;
+            }
+
+            return preg_match('~\A/api/(?:auth|admin)/~D', explode('?', $server['REQUEST_URI'] ?? '', 2)[0]) === 1 ? 'web-admin' : 'web';
+        }
         if (! self::webMarkerPresent($backend)) {
             return self::mode($backend);
         }

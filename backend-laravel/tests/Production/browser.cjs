@@ -30,8 +30,13 @@ const fs = require('node:fs');
   checks+=4;
   const created=page.waitForResponse(r=>r.url().endsWith('/api/admin/noticias')&&r.request().method()==='POST'&&r.status()===201);
   await page.getByRole('button',{name:'Crear noticia',exact:true}).click();
-  const news=await (await created).json();
+  await created;
   await page.waitForURL(origin+'/admin/noticias');checks++;
+  // Angular navigates immediately after save; Chromium may discard that POST body.
+  // Verify persistence through the same authenticated browser context instead.
+  const saved=await (await context.request.get(origin+'/api/admin/noticias')).json();
+  const news=saved.find(n=>n.titulo==='Crónica sintética desde Chromium');
+  if(!news)throw Error('Noticia creada no persistida');
   for(const width of [1920,1366,390]) {
     await page.setViewportSize({width,height:900});
     await page.goto(origin+'/noticias/'+news.slug);

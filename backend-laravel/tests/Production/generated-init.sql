@@ -1,10 +1,10 @@
 -- MariaDB 10.11 only. Run in batch mode without --force or reconnect.
--- Set 0 = 1 explicitly to change an empty latin1 database.
+-- Set @ensenada_convert_empty_latin1 = 1 explicitly to change an empty latin1 database.
 -- The DDL body matches schema-init.sql and must remain aligned.
 SET @schema_lock = CONCAT('web-ensenada-schema:', DATABASE());
 SET @schema_guard = IF(
-    BINARY DATABASE() IN ('ensenada_web_prod')
-    AND SUBSTRING_INDEX(CURRENT_USER(), '@', 1) NOT IN ('ensenada_web_prod_app', 'auth_runtime')
+    BINARY DATABASE() IN ('ensenada_web', 'ensenada_auth_test', 'ensenada_auth_unit')
+    AND SUBSTRING_INDEX(CURRENT_USER(), '@', 1) NOT IN ('ensenada_web_app', 'ensenada_web_news_reader', 'auth_runtime', 'news_reader')
     AND VERSION() REGEXP '^(5[.]5[.]5-)?10[.]11[.][0-9]+-MariaDB'
     AND GET_LOCK(@schema_lock, 0) = 1,
     'SELECT 1 AS mariadb_and_lock_ok',
@@ -19,7 +19,7 @@ INTO @schema_charset, @schema_collation
 FROM information_schema.SCHEMATA WHERE BINARY SCHEMA_NAME = BINARY DATABASE();
 SET @schema_guard = IF(
     ((@schema_charset = 'utf8mb4' AND @schema_collation = 'utf8mb4_unicode_520_ci')
-        OR (0 = 1 AND @schema_charset = 'latin1'
+        OR (@ensenada_convert_empty_latin1 = 1 AND @schema_charset = 'latin1'
             AND @schema_collation = 'latin1_swedish_ci'))
     AND NOT EXISTS (SELECT 1 FROM information_schema.TABLES WHERE BINARY TABLE_SCHEMA = BINARY DATABASE())
     AND NOT EXISTS (SELECT 1 FROM information_schema.TRIGGERS WHERE BINARY TRIGGER_SCHEMA = BINARY DATABASE())

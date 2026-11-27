@@ -1,25 +1,37 @@
-# Resultado local — 27/11/2026
+# Transferencia de base existente: resultados locales — 27/11/2026
 
-| Validación | Resultado |
+Rama `feat/iwinds-production-cutover`, PR 85. No hubo conexión al hosting, acceso a datos reales, activación remota ni cambios en Angular, Spring Boot, WordPress o el .htaccess principal del servidor.
+
+| Validación ejecutada | Resultado |
 |---|---|
-| PHPUnit con SQLite y dependencias actualizadas | 167 tests / 504 assertions aprobados |
-| Regresión de autorización temporal de staging | 3 tests / 31 assertions aprobados |
-| Angular | 74 tests aprobados; build correcto |
-| HTTP Apache/PHP/MariaDB | 131 comprobaciones aprobadas |
-| Aislamiento, cierre, revisión por IP y rollback | 25 comprobaciones aprobadas, incluidos cambios concurrentes preservados |
-| EXIF, transparencia, corrupción, 30 MiB, galería de seis y fotos de accesos institucionales | 22 comprobaciones aprobadas |
-| Chromium HTTPS con Angular real | 18 comprobaciones aprobadas; sin errores JavaScript |
-| ZIP: instalación repetida, actualización y rollback Angular | 15 comprobaciones aprobadas |
-| Dependencias de producción | 76 paquetes; auditoría Composer sin avisos |
-| Plataforma local | PHP 8.3.36, Apache 2.4.68, MariaDB 10.11.19, 256M/32M/40M; platform.php aprobado |
-| Esquema y mínimos por tabla | 12 tablas y trigger verificados; FK y rechazo de segunda inicialización comprobados |
-| Perfil cpanel-dml en producción | Rechazado en HTTP; recuperación al restaurar mínimos por tabla |
-| Respaldo sintético | SQL y dos TAR con SHA verificados; SQL restaurado en otra MariaDB sin red, checksums iguales; 6008 archivos privados extraídos con SHA idéntico, excluyendo logs activos de la comparación |
+| PHPUnit, SQLite, PHP 8.3.36 | 177 tests / 517 assertions aprobados |
+| Regresión del período administrativo de staging | 3 tests / 31 assertions aprobados |
+| Angular existente | 74 tests aprobados; build correcto, main-5AVB2EQE.js / styles-5MXFBPYB.css |
+| Retiro de grant amplio, perfil por tabla y rechazo de cpanel-dml | Aprobado en MariaDB 10.11.19 descartable, cuentas locales sin privilegios globales |
+| Pre-corte con base única | 26 comprobaciones aprobadas: autorización, aparcado, credencial anterior inválida, conexiones terminadas, rollback de transacción previa, claves conservadas, archivos y revisión incompleta bloqueada |
+| Activación autorizada | 13 comprobaciones aprobadas: revisión, restauración, sesiones revocadas, passwords intactos, cachés/rutas y aislamiento de staging |
+| HTTP real Apache 2.4.68 / PHP 8.3.36 / MariaDB 10.11.19 | 132 comprobaciones aprobadas de autenticación, roles, revocación, Usuarios, Noticias, Hacienda, Proveedores, CMS, documentos y errores |
+| Cierre, permisos, preview y reescritura/rollback selectivos | 25 comprobaciones aprobadas; candidato obsoleto rechazado, cambio concurrente preservado, WordPress y subdominios conservados |
+| Angular real / Chromium / HTTPS | 18 comprobaciones aprobadas, cero errores JavaScript; noticia completa con JPEG 4000×2250, PNG, WebP, CMS y 1920/1366/390 px |
+| Optimización y seguridad de imágenes | 22 comprobaciones aprobadas: orientación EXIF, transparencia, 1920 px, 30 MiB, corrupción, bomba de dimensiones, ausencia de parciales, galería de seis y referencias CMS |
+| Aceptación del script distribuido, con TLS validado | 120 comprobaciones aprobadas + 6 de preparación sintética; staging responde 503 con Basic válido para API y archivos, producción responde con contratos públicos, documentos privados 404 |
+| Recuperación exclusiva de staging | 27 comprobaciones aprobadas: drenaje, respaldo reciente obligatorio, nueva rotación/revocación, conservación de escrituras y archivos nuevos, Basic + roles, Origin, expiración, cierre y nuevo corte sin reutilizar aprobaciones |
+| Respaldo y restauración aislados | SHA de SQL y cuatro TAR; esquema completo de 12 tablas, huella HMAC de todas las filas/campos, archivos idénticos y trigger probado mediante transacción reversible |
+| Restaurador reutilizable `restore-local.ps1` | Aprobado por segunda restauración del respaldo sintético, contenedor/volumen tmpfs y red interna propios, sin puertos publicados |
+| Incremento real sobre el ZIP previamente instalado | Instalación repetida, rechazo de código distinto antes de sobrescribir, rollback de código/protección y reinstalación; .env y claves conservados |
 
-Los JPEG/PNG/WebP 4000×2250 cargados desde el formulario real quedaron en 1920×1080. Se publicó la noticia y se abrió su detalle en 1920/1366/390 px. También se cargó un WebP al Hero y se guardó el CMS. No se modificó su diseño.
+Total: **180 tests PHP, 74 tests Angular y 390 comprobaciones de los scripts**, además de la verificación de archivos del instalador y las restauraciones. Los contadores son aserciones, no cantidad de endpoints distintos. Pint y `git diff --check` sin errores. La compilación conserva las advertencias previas de presupuesto de JS/CSS; no se cambió el frontend para este incremento.
 
-La instalación final incorpora una corrección necesaria de Angular V13: su formulario de Noticias todavía rechazaba WebP y fotos mayores de 5 MiB. Solo cambian la validación, sus mensajes y el bundle correspondiente. Se conservan estilos, Hero, Navbar y API.
+## Reproducción
 
-Las pruebas usan exclusivamente datos sintéticos y contenedores propios. WordPress y los subdominios se representan mediante fixtures; no se probaron las aplicaciones reales de iWinds. El TLS local usa un certificado de prueba. No se realizaron conexiones al hosting, publicación, cambios de usuarios reales o bases municipales.
+`tests/SharedDatabase/run.ps1` usa solo el proyecto Docker nombrado `ensenada-production-cutover-tests`, MariaDB 10.11.19 y almacenamiento tmpfs, sin puertos ni volúmenes de otros proyectos. Requiere el ZIP anterior con SHA 3d939939…24d68b, las imágenes PHP/Chromium locales verificadas, vendor obtenido del lock y el build Angular existente. Construye el incremento, instala sobre el baseline, transfiere una única base, restaura el respaldo en otro contenedor, ejecuta aceptación y termina con ambos backends cerrados después de un nuevo corte. Las cuentas/datos de `tests/` son exclusivamente sintéticos; no se distribuyen como aprovisionamiento.
 
-**La publicación permanece bloqueada** hasta aprobar grants mínimos reales y base independiente, datos oficiales, respaldo municipal restaurable, cuota, handler PHP localizado y recursos web efectivos, aceptación administrativa y comparación funcional de servicios. Consultar README.md para instalación gradual y reversión. El build estático no resuelve la decisión pendiente de SSR/SEO dinámico.
+El ensayo simula el transcurso de 125 segundos únicamente desde el harness excluido del ZIP; el comando real no ofrece ningún parámetro para saltar esa espera. El test Browser verifica la noticia persistida mediante el contexto autenticado después de la navegación para evitar una carrera de Chromium al descartar el cuerpo del POST.
+
+## Límite de evidencia y bloqueos de publicación
+
+La base real de aproximadamente 400 KB no se inspeccionó ni se descargó. Su contenido oficial debe aprobarse manualmente y **su propio** respaldo debe restaurarse localmente con `restore-local.ps1`; una prueba sintética no satisface esa condición. El activador exige prueba ligada al backup_id y a las huellas actuales. No se admiten cpanel-dml, credenciales compartidas con otros sistemas, escritores externos, datos públicos no revisados, referencias/archivos faltantes ni activación simultánea de los backends.
+
+Confirmar en iWinds los grants por tabla, plugin que admita rotación propia, cliente dump compatible, cuota/espacio, PHP web 32M/40M/256M y HTTPS. Si el grantor disponible no permite retirar el grant amplio y conceder los permisos mínimos, **bloquear producción**; no elevar privilegios ni debilitar el perfil. Exigir staging 503 con Basic válido después del corte y aceptación administrativa real antes de abrir tráfico. La misma cuenta Unix no proporciona aislamiento frente a una ejecución remota de código que comprometa toda la cuenta cPanel.
+
+Guía operativa y reversión: [SHARED-DATABASE.md](SHARED-DATABASE.md). Nada en estos resultados autoriza el despliegue automático.

@@ -69,12 +69,12 @@ final class IwindsPublishedImages
             return false;
         }
         $content = json_decode($json, true);
-        if (app()->environment('production')) {
+        if (app()->environment('production') || (class_exists(SharedDatabaseLease::class) && SharedDatabaseLease::recoveryActive())) {
             // All leaves of this singleton are already returned by the public CMS endpoint.
             // Include images used by existing access cards and future supported sections.
             $found = false;
             array_walk_recursive($content, static function (mixed $value) use ($path, &$found): void {
-                $found = $found || $value === $path || $value === IwindsProduction::ORIGIN.$path;
+                $found = $found || $value === $path || $value === IwindsProduction::ORIGIN.$path || $value === IwindsStaging::ORIGIN.$path;
             });
 
             return $found;

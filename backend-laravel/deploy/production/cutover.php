@@ -20,8 +20,11 @@ function regular(string $path): string
 
     return file_get_contents($path);
 }
-function replaceAtomic(string $path, string $content, string $expected): void
+function replaceAtomic(string $path, string $content, string $expected, string $operation, ?array $receipt): void
 {
+    if (realpath(dirname($path)) !== dirname($path)) {
+        fail('Directorio público no canónico.');
+    }
     if (function_exists('posix_geteuid') && fileowner($path) !== posix_geteuid()) {
         fail('Ejecutar como el propietario actual de .htaccess.');
     }
@@ -32,9 +35,36 @@ function replaceAtomic(string $path, string $content, string $expected): void
     if (! hash_equals($expected, hash('sha256', regular($path)))) {
         fail('El archivo cambió. Revisar antes de continuar.');
     }
+    $stateDirectory = '/home/ensenada/backend-laravel-produccion/deploy-state';
+    if (! is_dir($stateDirectory) && ! mkdir($stateDirectory, 0700)) {
+        fail('No se pudo preparar el estado privado.');
+    }
+    if (realpath($stateDirectory) !== $stateDirectory) {
+        fail('Estado privado no canónico.');
+    }
+    $statePath = $stateDirectory.'/cutover.json';
+    $targetHash = hash('sha256', $content);
+    if ($operation === 'apply') {
+        if (($receipt['base'] ?? '') !== $expected || ($receipt['candidate'] ?? '') !== $targetHash) {
+            fail('El candidato no corresponde al original vigente. Regenerar y revisar el diff.');
+        }
+        // Journal before rename: a crash cannot leave an unrecorded applied version.
+        $state = ['base' => $expected, 'applied' => $targetHash];
+        $stateTemp = $statePath.'.'.bin2hex(random_bytes(8));
+        if (file_put_contents($stateTemp, json_encode($state, JSON_THROW_ON_ERROR), LOCK_EX) === false
+            || ! chmod($stateTemp, 0600) || ! rename($stateTemp, $statePath)) {
+            fail('No se pudo registrar el cambio.');
+        }
+    } else {
+        $state = json_decode(regular($statePath), true, flags: JSON_THROW_ON_ERROR);
+        if (($state['applied'] ?? '') !== $expected || ($state['base'] ?? '') !== $targetHash) {
+            fail('Rollback bloqueado: hay cambios posteriores o el respaldo no es el original aplicado.');
+        }
+    }
     $temp = $path.'.ensenada-'.bin2hex(random_bytes(8));
     $mode = fileperms($path) & 0777;
-    if (file_put_contents($temp, $content, LOCK_EX) !== strlen($content) || ! chmod($temp, $mode) || ! rename($temp, $path)) {
+    if (file_put_contents($temp, $content, LOCK_EX) !== strlen($content) || ! chmod($temp, $mode)
+        || ! hash_equals($expected, hash('sha256', regular($path))) || ! rename($temp, $path)) {
         @unlink($temp);
         fail('No se pudo publicar de forma atómica.');
     }
@@ -45,7 +75,8 @@ $op = $argv[1] ?? '';
 if ($op === 'candidate' && in_array(count($argv), [4, 5], true)) {
     $original = regular($argv[2]);
     $output = $argv[3];
-    if (file_exists($output) || is_link($output) || str_contains($original, '# BEGIN ENSENADA PRODUCTION CUTOVER')) {
+    if (file_exists($output) || is_link($output) || file_exists($output.'.receipt') || is_link($output.'.receipt')
+        || str_contains($original, '# BEGIN ENSENADA PRODUCTION CUTOVER')) {
         fail('Candidato o bloque ya existente.');
     }
     $anchor = '# END mudanza turnos';
@@ -67,6 +98,11 @@ if ($op === 'candidate' && in_array(count($argv), [4, 5], true)) {
         fail('No se pudo crear el candidato.');
     }
     fclose($stream);
+    $receipt = fopen($output.'.receipt', 'xb');
+    if ($receipt === false || fwrite($receipt, json_encode(['base' => hash('sha256', $original), 'candidate' => hash('sha256', $candidate)], JSON_THROW_ON_ERROR)) === false) {
+        fail('No se pudo guardar el comprobante.');
+    }
+    fclose($receipt);
     echo hash('sha256', $candidate)."  candidato generado; sin instalar\n";
     exit;
 }
@@ -80,7 +116,8 @@ if (in_array($op, ['apply', 'rollback'], true) && count($argv) === 6 && $argv[5]
     if (! preg_match('/\A[a-f0-9]{64}\z/D', $expected)) {
         fail('SHA-256 actual obligatorio.');
     }
-    replaceAtomic($current, regular($source), $expected);
+    $receipt = $op === 'apply' ? json_decode(regular($source.'.receipt'), true, flags: JSON_THROW_ON_ERROR) : null;
+    replaceAtomic($current, regular($source), $expected, $op, $receipt);
     echo 'Cambio atómico aplicado; verificar HTTPS y servicios inmediatamente.'."\n";
     exit;
 }

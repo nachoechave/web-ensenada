@@ -6,7 +6,7 @@
 | Regresión de autorización temporal de staging | 3 tests / 31 assertions aprobados |
 | Angular | 74 tests aprobados; build correcto |
 | HTTP Apache/PHP/MariaDB | 131 comprobaciones aprobadas |
-| Aislamiento, cierre, revisión por IP y rollback | 23 comprobaciones aprobadas |
+| Aislamiento, cierre, revisión por IP y rollback | 25 comprobaciones aprobadas, incluidos cambios concurrentes preservados |
 | EXIF, transparencia, corrupción, 30 MiB y galería de seis | 16 comprobaciones aprobadas |
 | Chromium HTTPS con Angular real | 18 comprobaciones aprobadas; sin errores JavaScript |
 | ZIP: instalación repetida, actualización y rollback Angular | 15 comprobaciones aprobadas |

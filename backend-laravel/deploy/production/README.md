@@ -113,6 +113,8 @@ El cambio es atómico y comprueba el SHA inmediatamente antes. Ejecutar siempre 
 
 Verificar por HTTPS los valores **web**, sin `phpinfo` público. El puente devuelve 503 si PHP no es 8.3, memoria <256M, subida <32M o POST <40M. `-d` solo afecta CLI, no corrige PHP web. Configurar estos valores exclusivamente para el nuevo directorio/handler si iWinds lo permite y comprobarlos con cargas reales. Su `.htaccess` usa el handler cPanel `application/x-httpd-ea-php83` localizado; su disponibilidad y la herencia de opciones/handler deben confirmarse en iWinds. No cambiar el bloque PHP 8.2 del dominio principal.
 
+El generador escribe también un comprobante `.receipt` que vincula el candidato al SHA de su original: un cambio posterior bloquea la instalación incluso si se proporciona un SHA actual nuevo. Conservar el candidato junto a su comprobante privado. Se registra el original y la versión aplicada en `deploy-state/cutover.json`; rollback solo acepta esa pareja exacta y se bloquea ante cambios posteriores. Evitar escrituras de WordPress/cPanel al `.htaccess` durante la ventana autorizada y verificar su SHA inmediatamente después. El bloqueo propio no sustituye la coordinación con esos gestores externos.
+
 ## E. Aceptación antes del corte
 
 Comparar el inventario ya guardado sin repararlo ni modificarlo. El script acepta texto con hosts o URLs y columnas adicionales; falla si no reconoce dominios. Conserva status y Location, no sigue redirecciones. Guardar un baseline nuevo inmediatamente antes para evitar atribuir cambios antiguos al corte.
@@ -158,6 +160,8 @@ $PHP /home/ensenada/paquetes-produccion/revision-20261127/install.php rollback-a
 Usar como fuente el original **inmediatamente previo** si cambió desde el respaldo del 27/11. El SHA y el diff deben demostrarlo. El rollback de la carpeta web repone `Require all denied`; conserva Angular, backend, base y archivos. Si hubo cambios legítimos posteriores en `.htaccess`, el operador debe reconciliarlos antes, nunca forzar la sobrescritura. Repetir HTTPS, WordPress, turnos, PDFs históricos y comparación de subdominios. Restauraciones de datos o archivos requieren un incidente y autorización independientes.
 
 ## Condiciones de bloqueo pendientes de infraestructura
+
+La cuenta Unix de cPanel es compartida por aplicaciones municipales. Los directorios 0700 y las bases separadas no aíslan frente a un proceso comprometido que ejecute con ese mismo usuario. WordPress permanece operativo por requisito: su seguridad y la aceptación de este riesgo corresponden al responsable de infraestructura. El aislamiento fuerte requiere cuentas o entornos de ejecución distintos; Laravel no puede proporcionarlo desde el código de esta entrega.
 
 - Autorización para base y usuario independientes y capacidad real de conceder mínimos por tabla; `cpanel-dml` bloquea producción.
 - Datos oficiales aprobados, importación revisada, inventario de archivos y administrador propio de producción.

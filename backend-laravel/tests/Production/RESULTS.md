@@ -12,7 +12,7 @@ Se trabajó en `feat/iwinds-production-cutover`, a partir de `origin/main` `fb59
 | Build Angular original | Aprobado, main-AGXYZRPY.js / styles-5MXFBPYB.css |
 | Build de la corrección indispensable de imágenes | Aprobado, main-5AVB2EQE.js; CSS sin cambios |
 | HTTP real Apache 2.4.68 + PHP 8.3.36 + MariaDB 10.11.19 | 131 comprobaciones aprobadas |
-| Aislamiento, cierre, preview y rollback | 23 comprobaciones aprobadas |
+| Aislamiento, cierre, preview y rollback | 25 comprobaciones aprobadas, incluido rechazo de candidato obsoleto con SHA actual y preservación del cambio concurrente |
 | EXIF, transparencia, límites y galería | 16 comprobaciones aprobadas |
 | Angular real en Chromium con HTTPS | 18 comprobaciones aprobadas, cero errores JavaScript |
 | ZIP real, instalación repetida y reversión | 15 comprobaciones aprobadas, incluidas actualización Angular idempotente y restitución exacta de su índice |

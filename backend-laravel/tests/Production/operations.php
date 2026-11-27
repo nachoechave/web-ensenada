@@ -66,6 +66,20 @@ foreach (['DELETE FROM usuarios WHERE 1=0', 'UPDATE auditoria_noticias SET id=id
         verifyOperation(in_array($e->errorInfo[1], [1142, 1143], true), 'Mínimos DML/DDL');
     }
 }
+// A fresh SHA alone must not authorize applying a candidate based on an older original.
+$current = '/home/ensenada/public_html/.htaccess';
+(new Process([PHP_BINARY, $ops.'/cutover.php', 'rollback', $current, '/source/tests/Production/original.htaccess', hash_file('sha256', $current), '--authorized']))->mustRun();
+$candidate = '/tmp/stale-candidate-'.bin2hex(random_bytes(8));
+(new Process([PHP_BINARY, $ops.'/cutover.php', 'candidate', $current, $candidate]))->mustRun();
+$original = file_get_contents($current);
+file_put_contents($current, $original."\n# concurrent change\n");
+$changed = hash_file('sha256', $current);
+$p = new Process([PHP_BINARY, $ops.'/cutover.php', 'apply', $current, $candidate, $changed, '--authorized']);
+$p->run();
+verifyOperation(! $p->isSuccessful(), 'Candidato obsoleto rechazado incluso con SHA actual');
+verifyOperation(hash_file('sha256', $current) === $changed, 'Cambio concurrente preservado');
+file_put_contents($current, $original);
+(new Process([PHP_BINARY, $ops.'/cutover.php', 'apply', $current, $candidate, hash_file('sha256', $current), '--authorized']))->mustRun();
 // Preview is implemented in Apache using the real peer address, never a forwarded header.
 (new Process([PHP_BINARY, '/source/tests/Production/refresh-apache.php', '192.0.2.44']))->mustRun();
 $response = $http->get('/');
@@ -84,6 +98,6 @@ verifyOperation(file_get_contents($current) === file_get_contents('/source/tests
 verifyOperation(str_contains((string) $http->get('/')->getBody(), 'WORDPRESS-UNCHANGED'), 'WordPress restaurado');
 (new Process([PHP_BINARY, '/source/tests/Production/refresh-apache.php']))->mustRun();
 verifyOperation($status() === 503, 'Reinstalar reglas no habilita API');
-verifyOperation(controlOperation('enable',['--approved-data-and-cutover'])->isSuccessful(),'Restaurar después de rollback');
-verifyOperation($status() === 200,'API final');
+verifyOperation(controlOperation('enable', ['--approved-data-and-cutover'])->isSuccessful(), 'Restaurar después de rollback');
+verifyOperation($status() === 200, 'API final');
 echo "OK $checks comprobaciones de aislamiento, permisos, cierre, preview y rollback\n";

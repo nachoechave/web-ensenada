@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+use App\Support\AuditCheckpoint;
+use App\Support\ProductionDatabaseProfile as Profile;
 use App\Support\SharedDatabaseLease as Lease;
 use App\Support\SharedDatabaseTransfer as Transfer;
 
@@ -15,7 +17,8 @@ $options = [];
 try {
     $allowed = ['schema-config', 'out', 'review', 'proof', 'minutes', 'authorize-staging-pause', 'confirm-exclusive-account-use', 'confirm-no-background-writers',
         'authorize-mysql-password-rotation', 'confirm-account-quota', 'authorize-reviewed-data', 'authorize-restore-proof',
-        'authorize-session-revocation', 'authorize-production', 'authorize-production-pause', 'authorize-recovery-with-current-data'];
+        'authorize-session-revocation', 'authorize-production', 'authorize-production-pause', 'authorize-recovery-with-current-data',
+        'profile', 'risk-review', 'accept-cpanel-dml-production-risk', 'checkpoint', 'previous', 'authorize-offsite-audit-copy', 'offsite-reference'];
     foreach (array_slice($argv, 2) as $argument) {
         if (! preg_match('/\A--([a-z-]+)(?:=(.+))?\z/D', $argument, $parts) || ! in_array($parts[1], $allowed, true) || isset($options[$parts[1]])) {
             throw new RuntimeException('Argumentos inválidos.');
@@ -25,7 +28,20 @@ try {
     Lease::lock($operation !== 'status');
     switch ($operation) {
         case 'status':$state = Lease::state();
-            echo json_encode(array_intersect_key($state, array_flip(['owner', 'phase', 'epoch', 'expires_at', 'copied', 'revoked', 'activated_at'])), JSON_PRETTY_PRINT)."\n";
+            echo json_encode([...array_intersect_key($state, array_flip(['owner', 'phase', 'epoch', 'expires_at', 'copied', 'revoked', 'activated_at', 'integrity_blocked'])),
+                'database_profile' => $state['database_profile'] ?? 'per-table', 'risk_receipt_sha256' => $state['risk_acceptance']['sha256'] ?? null], JSON_PRETTY_PRINT)."\n";
+            break;
+        case 'configure-profile':Profile::configure($options);
+            echo "Perfil configurado sin habilitar API ni modificar grants/datos/claves.\n";
+            break;
+        case 'audit-checkpoint':AuditCheckpoint::capture(Transfer::schemaPdo($options['schema-config'] ?? ''), $options['out'] ?? '', $options['previous'] ?? null);
+            echo "Checkpoint privado creado; custodiar su SHA y una copia externa. No implica auditoría inmutable.\n";
+            break;
+        case 'attest-audit-copy':AuditCheckpoint::attest(Transfer::schemaPdo($options['schema-config'] ?? ''), $options['checkpoint'] ?? '', $options);
+            echo "Custodia externa declarada explícitamente para este checkpoint.\n";
+            break;
+        case 'verify-audit':AuditCheckpoint::monitor(Transfer::schemaPdo($options['schema-config'] ?? ''), $options['checkpoint'] ?? '');
+            echo "Filas previamente observadas conservadas. Nuevas filas permitidas; verificar origen y custodiar nuevos checkpoints.\n";
             break;
         case 'audit-live':Transfer::audit($options['schema-config'] ?? '', $options['out'] ?? '', true);
             echo "Auditoría provisional privada creada; no autoriza publicación.\n";
@@ -67,7 +83,7 @@ try {
             }Transfer::state(['phase' => 'paused']);
             echo "Recuperación cerrada inmediatamente.\n";
             break;
-        default:throw new RuntimeException('Operación: status, audit-live, pause-stage, rotate-production, audit, copy-storage, backup, approve-data, attest-restore, activate, pause-production, recover-stage, close-recovery.');
+        default:throw new RuntimeException('Operación: configure-profile, audit-checkpoint, attest-audit-copy, verify-audit, status, audit-live, pause-stage, rotate-production, audit, copy-storage, backup, approve-data, attest-restore, activate, pause-production, recover-stage, close-recovery.');
     }
 } catch (Throwable $error) {
     $message = $error instanceof PDOException ? 'Operación MySQL rechazada; revisar credenciales/permisos en privado. No se habilitó ningún backend.' : $error->getMessage();

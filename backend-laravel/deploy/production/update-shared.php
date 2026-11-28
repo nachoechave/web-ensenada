@@ -30,6 +30,10 @@ try {
     require_once $root.'/vendor/autoload.php';
     require_once $bundle.'/private/app/Support/SharedDatabaseLease.php';
     require_once $bundle.'/private/app/Support/SharedDatabaseTransfer.php';
+    if (($release['baseline_sha256'] ?? '') === '7fde8cd1577de52689e26f1227f356aedb6db0ad0e45221ce3dccbfc4f9183da'
+        && (! SharedDatabaseLease::managed() || ! is_file(SharedDatabaseLease::ROOT.'/control.key'))) {
+        throw new RuntimeException('Primer incremento y clave de transferencia originales requeridos; no se regeneran.');
+    }
     SharedDatabaseTransfer::initialize();
     $state = SharedDatabaseLease::state();
     if ($state['owner'] !== 'staging' || $state['phase'] !== 'legacy') {
@@ -124,6 +128,9 @@ try {
         }
         echo "Puente y protección del directorio preparados. Angular y .htaccess principal intactos.\n";
     } elseif ($operation === 'rollback-code') {
+        if (($state['database_profile'] ?? 'per-table') !== 'per-table') {
+            throw new RuntimeException('Volver a per-table con configure-profile antes de revertir código; no se cambian grants ni se habilita API.');
+        }
         foreach (['ensenada-production.php', 'web.htaccess'] as $name) {
             $saved = $backup.'/web-'.$name;
             $dest = '/home/ensenada/public_html/web-produccion/'.($name === 'web.htaccess' ? '.htaccess' : $name);

@@ -18,8 +18,15 @@ $p = '/home/ensenada/backend-laravel-produccion';
 $s = '/home/ensenada/backend-laravel';
 mkdir($s, 0700);
 passthru('cp -a /home/ensenada/backend-laravel-produccion/. /home/ensenada/backend-laravel/');
+// The actual older staging release predates deploy/production; preserve it outside the fixture.
+if (! rename($s.'/deploy/production', '/home/ensenada/fixture-staging-production-not-installed')) {
+    throw new RuntimeException('Fixture de staging anterior inválido.');
+}
 $env = file_get_contents('/source/deploy/production/environment.example');
 $env = str_replace(['APP_KEY=', 'AUTH_JWT_SECRET=', 'DB_HOST=localhost', 'DB_PASSWORD='], ['APP_KEY=base64:'.base64_encode(random_bytes(32)), 'AUTH_JWT_SECRET='.bin2hex(random_bytes(48)), 'DB_HOST=127.0.0.1', 'DB_PASSWORD=synthetic-staging-runtime-only'], $env);
+if (getenv('ENSENADA_TEST_DATABASE_PROFILE') === 'cpanel-dml') {
+    $env = str_replace('DB_HOST=127.0.0.1', 'DB_HOST=localhost', $env);
+}
 $stage = str_replace(['APP_ENV=production', 'https://www.ensenada.gov.ar'], ['APP_ENV=staging', 'https://prueba.ensenada.gov.ar'], $env);
 file_put_contents($s.'/.env', $stage);
 chmod($s.'/.env', 0600);
@@ -30,6 +37,10 @@ chmod($p.'/.env', 0600);
 mkdir('/home/ensenada/respaldos_privados', 0700);
 file_put_contents('/home/ensenada/respaldos_privados/schema.cnf', "[client]\nhost=127.0.0.1\nport=3306\nuser=ensenada_web_schema\npassword=synthetic-schema-only\ndatabase=ensenada_web\n");
 chmod('/home/ensenada/respaldos_privados/schema.cnf', 0600);
+if (getenv('ENSENADA_TEST_DATABASE_PROFILE') === 'cpanel-dml') {
+    $file = '/home/ensenada/respaldos_privados/schema.cnf';
+    file_put_contents($file, str_replace('host=127.0.0.1', 'host=localhost', file_get_contents($file)));
+}
 $pdo = new PDO('mysql:host=127.0.0.1;dbname=ensenada_web', 'ensenada_web_schema', 'synthetic-schema-only', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 $hash = password_hash('Synthetic-Production-Test-123!', PASSWORD_BCRYPT, ['cost' => 4]);
 foreach (['SUPER_ADMIN' => 'admin', 'PRENSA' => 'prensa', 'HACIENDA' => 'hacienda'] as $role => $email) {
@@ -49,9 +60,20 @@ foreach ([IwindsPublicProbe::ROTATION, IwindsPublicProbe::ADMIN_MARKER] as $name
     chmod($s.'/'.$name, 0600);
 }
 $zip = new ZipArchive;
+$zip->open('/prior-update.zip');
+$zip->extractTo('/tmp/prior');
+$zip->close();
+foreach (['install-private', 'prepare-web'] as $op) {
+    passthru('php /tmp/prior/update.php '.$op, $status);
+    if ($status !== 0) {
+        exit($status);
+    }
+}
+$zip = new ZipArchive;
 $zip->open('/shared-update.zip');
 $zip->extractTo('/tmp/increment');
 $zip->close();
+$controlKeyBefore = hash_file('sha256', '/home/ensenada/web-db-transfer/control.key');
 foreach (['install-private', 'install-private', 'prepare-web'] as $op) {
     passthru('php /tmp/increment/update.php '.$op, $status);
     if ($status !== 0) {
@@ -76,5 +98,8 @@ foreach (['rollback-code', 'install-private', 'prepare-web'] as $op) {
 }
 if (hash_file('sha256', $p.'/.env') !== $envSha) {
     throw new RuntimeException('Claves modificadas por instalador/reversión.');
+}
+if (hash_file('sha256', '/home/ensenada/web-db-transfer/control.key') !== $controlKeyBefore) {
+    throw new RuntimeException('Clave de transferencia reemplazada.');
 }
 echo "Fixture baseline instalado, claves independientes conservadas, incremento idempotente.\n";

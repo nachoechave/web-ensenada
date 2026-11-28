@@ -26,6 +26,7 @@ $private = schema()->query("SELECT a.nombre_almacenado FROM archivos_hacienda a 
 file_put_contents('/home/ensenada/respaldos_privados/staging-basic.txt', 'staging:synthetic-basic-only');
 chmod('/home/ensenada/respaldos_privados/staging-basic.txt', 0600);
 $p = command(['-d', 'curl.cainfo=/tmp/cert.pem', P.'/deploy/production/acceptance.php', '--news='.$news['slug'], '--hacienda='.$entry['id'],
-    '--image='.$news['imagen'], '--provider='.$provider['url'], '--private-document=/uploads/hacienda/'.$private, '--staging-basic-file=/home/ensenada/respaldos_privados/staging-basic.txt']);
+    '--image='.$news['imagen'], '--provider='.$provider['url'], '--private-document=/uploads/hacienda/'.$private, '--staging-basic-file=/home/ensenada/respaldos_privados/staging-basic.txt',
+    ...(getenv('ENSENADA_TEST_DATABASE_PROFILE') === 'cpanel-dml' ? ['--accept-cpanel-dml-production-risk'] : [])]);
 echo $p->getOutput();
 echo "OK $checks preparación y ejecución de aceptación con validación TLS\n";

@@ -1,8 +1,8 @@
 CREATE USER 'ensenada_web_app'@'127.0.0.1' IDENTIFIED BY 'synthetic-staging-runtime-only';
 CREATE USER 'ensenada_web_schema'@'127.0.0.1' IDENTIFIED BY 'synthetic-schema-only';
 CREATE USER 'ensenada_web_schema'@'localhost' IDENTIFIED BY 'synthetic-schema-only';
-GRANT ALL ON ensenada_web.* TO 'ensenada_web_schema'@'127.0.0.1';
-GRANT ALL ON ensenada_web.* TO 'ensenada_web_schema'@'localhost';
+GRANT ALL ON `ensenada\_web`.* TO 'ensenada_web_schema'@'127.0.0.1';
+GRANT ALL ON `ensenada\_web`.* TO 'ensenada_web_schema'@'localhost';
 -- Review the app account host and the grantor's effective GRANT OPTION before applying.
 -- The existing schema account and trigger DEFINER are left untouched.
 GRANT SELECT, INSERT, UPDATE ON `ensenada_web`.`usuarios` TO 'ensenada_web_app'@'127.0.0.1';

@@ -9,7 +9,8 @@ services:
     tmpfs: [/var/lib/mysql, /tmp]
     volumes:
       - ./generated-init.sql:/docker-entrypoint-initdb.d/10-schema.sql:ro
-      - ./accounts.sql:/docker-entrypoint-initdb.d/20-accounts.sql:ro
+      - ./${ENSENADA_TEST_SQL_PROFILE:-accounts.sql}:/docker-entrypoint-initdb.d/20-accounts.sql:ro
+      - mysql-socket:/run/mysqld
     networks: [isolated]
     healthcheck:
       test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
@@ -19,6 +20,7 @@ services:
     image: ensenada-production-apache:local
     environment:
       ENSENADA_PRODUCTION_TEST_DISPOSABLE: 'true'
+      ENSENADA_TEST_DATABASE_PROFILE: ${ENSENADA_TEST_DATABASE_PROFILE:-per-table}
     network_mode: service:mysql-auth
     depends_on:
       mysql-auth:
@@ -27,8 +29,17 @@ services:
       - ../..:/source:ro
       - ../../output/angular-production/browser:/angular:ro
       - ../../../../../output/iwinds-production-cutover-20261127/web-ensenada-iwinds-production.zip:/base-release.zip:ro
+      - ../../../../../output/iwinds-shared-database-20261127/web-ensenada-iwinds-shared-database.zip:/prior-update.zip:ro
       - ../../output/shared-update/web-ensenada-iwinds-shared-database.zip:/shared-update.zip:ro
+      - mysql-socket:/run/mysqld
     tmpfs: [/home/ensenada, /tmp]
 networks:
   isolated:
     internal: true
+volumes:
+  mysql-socket:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=16m

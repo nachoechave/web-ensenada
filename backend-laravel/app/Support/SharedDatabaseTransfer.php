@@ -51,6 +51,16 @@ final class SharedDatabaseTransfer
         return $state;
     }
 
+    public static function schemaPdo(string $config): PDO
+    {
+        $pdo = SharedDatabaseAudit::connect(SharedDatabaseAudit::schemaConfig($config));
+        if (ProductionDatabaseProfile::selected() === 'cpanel-dml') {
+            ProductionPermissions::verifySchemaPdo($pdo);
+        }
+
+        return $pdo;
+    }
+
     public static function closeProduction(): void
     {
         $path = SharedDatabaseLease::PROD.'/.iwinds-production-enabled';
@@ -298,7 +308,7 @@ final class SharedDatabaseTransfer
         if ($state['phase'] === 'active') {
             throw new RuntimeException('Pausar antes de la auditoría definitiva.');
         }
-        $pdo = SharedDatabaseAudit::connect(SharedDatabaseAudit::schemaConfig($config));
+        $pdo = self::schemaPdo($config);
         $storage = ($live ? SharedDatabaseLease::STAGE : ($state['owner'] === 'production' && $state['phase'] === 'paused' ? SharedDatabaseLease::PROD : SharedDatabaseLease::PARKED)).'/storage/app/private';
         $snapshot = SharedDatabaseAudit::snapshot($pdo, $storage);
         $report = ['epoch' => $state['epoch'], 'provisional' => $live, 'created_at' => time(), ...$snapshot];
@@ -416,7 +426,7 @@ final class SharedDatabaseTransfer
             throw new RuntimeException('Ambos escritores deben estar detenidos.');
         }
         $cfg = SharedDatabaseAudit::schemaConfig($config);
-        $pdo = SharedDatabaseAudit::connect($cfg);
+        $pdo = self::schemaPdo($config);
         $snapshot = SharedDatabaseAudit::snapshot($pdo, self::sourceStorage());
         if (file_exists($directory) || is_link($directory) || ! str_starts_with($directory, '/home/ensenada/respaldos_privados/')
             || realpath(dirname($directory)) !== dirname($directory) || ! mkdir($directory, 0700)) {
@@ -475,7 +485,7 @@ final class SharedDatabaseTransfer
         if ($s['phase'] !== 'prepared' || empty($s['copied'])) {
             throw new RuntimeException('Transferencia privada pendiente.');
         }
-        $pdo = SharedDatabaseAudit::connect(SharedDatabaseAudit::schemaConfig($config));
+        $pdo = self::schemaPdo($config);
         $snapshot = SharedDatabaseAudit::snapshot($pdo, SharedDatabaseLease::PARKED.'/storage/app/private');
         $review = self::readJson($reviewFile);
         if (($review['epoch'] ?? '') !== $s['epoch'] || ($review['data_digest'] ?? '') !== $snapshot['data_digest'] || ($review['files_digest'] ?? '') !== $snapshot['files_digest']) {
@@ -511,12 +521,15 @@ final class SharedDatabaseTransfer
     {
         self::flag($options, 'authorize-session-revocation');
         self::flag($options, 'authorize-production');
+        ProductionDatabaseProfile::requireActivationFlag($options);
         $s = self::state();
         if ($s['phase'] === 'active' && $s['owner'] === 'production') {
+            ProductionDatabaseProfile::verifyActivation();
             SharedDatabaseLease::production(false);
             $env = SharedDatabaseAudit::env(SharedDatabaseLease::PROD);
             ProductionPermissions::verifyPdo(SharedDatabaseAudit::connect($env));
-            $schema = SharedDatabaseAudit::connect(SharedDatabaseAudit::schemaConfig($config));
+            $schema = self::schemaPdo($config);
+            AuditCheckpoint::requireAnchor($schema);
             if (SharedDatabaseAudit::schema($schema) !== json_decode(file_get_contents(SharedDatabaseLease::PROD.'/deploy/production/schema-reference.json'), true)) {
                 throw new RuntimeException('Esquema modificado.');
             }
@@ -527,7 +540,8 @@ final class SharedDatabaseTransfer
         if ($s['phase'] !== 'prepared' || empty($s['approved']) || empty($s['restored']) || empty($s['copied'])) {
             throw new RuntimeException('Aprobación, copia o restauración verificadas pendientes.');
         }
-        $schema = SharedDatabaseAudit::connect(SharedDatabaseAudit::schemaConfig($config));
+        $schema = self::schemaPdo($config);
+        AuditCheckpoint::requireAnchor($schema);
         $snapshot = SharedDatabaseAudit::snapshot($schema, SharedDatabaseLease::PARKED.'/storage/app/private');
         if ((int) $schema->query('SELECT COUNT(*) FROM portal_site_content WHERE id=1')->fetchColumn() !== 1
             || (int) $schema->query("SELECT COUNT(*) FROM usuarios u JOIN usuario_roles r ON r.usuario_id=u.id WHERE u.activo=1 AND r.rol='SUPER_ADMIN'")->fetchColumn() < 1) {
@@ -559,7 +573,7 @@ final class SharedDatabaseTransfer
             self::state(['revoked' => true]);
         }
         SharedDatabaseLease::atomic(SharedDatabaseLease::PROD.'/.iwinds-production-enabled', 'production-v1 '.SharedDatabaseLease::fingerprint($env)."\n");
-        self::state(['owner' => 'production', 'phase' => 'active', 'activated_at' => time()]);
+        self::state(['owner' => 'production', 'phase' => 'active', 'activated_at' => time(), 'profile_activation' => ProductionDatabaseProfile::activationRecord()]);
     }
 
     public static function pauseProduction(array $options): void
@@ -578,6 +592,7 @@ final class SharedDatabaseTransfer
         self::flag($options, 'authorize-recovery-with-current-data');
         self::flag($options, 'authorize-mysql-password-rotation');
         self::flag($options, 'authorize-session-revocation');
+        ProductionDatabaseProfile::requireActivationFlag($options);
         $s = self::state();
         $minutes = (int) ($options['minutes'] ?? 30);
         if ($minutes < 1 || $minutes > 60) {
@@ -589,6 +604,7 @@ final class SharedDatabaseTransfer
         if ($s['phase'] === 'paused') {
             $pdo = SharedDatabaseAudit::connect(SharedDatabaseAudit::env(SharedDatabaseLease::PROD));
             ProductionPermissions::verifyPdo($pdo);
+            AuditCheckpoint::requireAnchor($pdo);
             $backup = self::readJson($s['backup'] ?? '');
             if (($backup['epoch'] ?? '') !== $s['epoch'] || ($backup['full_data_digest'] ?? '') !== SharedDatabaseAudit::fullDigest($pdo, SharedDatabaseLease::key())
                 || ($backup['files'] ?? []) !== SharedDatabaseAudit::files(SharedDatabaseLease::PROD.'/storage/app/private')) {
@@ -614,17 +630,27 @@ final class SharedDatabaseTransfer
                 throw new RuntimeException('No se pudo restaurar backend conservado.');
             }
         }
-        self::state(['owner' => 'recovery', 'phase' => 'active', 'expires_at' => time() + $minutes * 60]);
+        self::state(['owner' => 'recovery', 'phase' => 'active', 'expires_at' => time() + $minutes * 60, 'profile_activation' => ProductionDatabaseProfile::activationRecord()]);
     }
 
     private static function prepareRecoveryCode(): void
     {
         $source = SharedDatabaseLease::PROD;
         $target = is_dir(SharedDatabaseLease::PARKED) ? SharedDatabaseLease::PARKED : SharedDatabaseLease::STAGE;
-        foreach (['SharedDatabaseLease.php', 'ProductionPermissions.php', 'IwindsProduction.php', 'IwindsPublishedImages.php'] as $name) {
+        foreach (['SharedDatabaseLease.php', 'ProductionPermissions.php', 'ProductionDatabaseProfile.php', 'IwindsProduction.php', 'IwindsPublishedImages.php'] as $name) {
             self::archiveFile($target.'/app/Support/'.$name, 'recovery-code-'.$name);
             SharedDatabaseLease::atomic($target.'/app/Support/'.$name, file_get_contents($source.'/app/Support/'.$name));
         }
+        foreach ([$target.'/deploy', $target.'/deploy/production'] as $directory) {
+            if (is_link($directory) || (file_exists($directory) && realpath($directory) !== $directory)) {
+                throw new RuntimeException('Destino de política de recuperación enlazado.');
+            }
+            if (! is_dir($directory) && ! mkdir($directory, 0700)) {
+                throw new RuntimeException('No se pudo preparar política privada de recuperación.');
+            }
+        }
+        self::archiveFile($target.'/deploy/production/CPANEL-DML-RISK.md', 'recovery-risk-policy');
+        SharedDatabaseLease::atomic($target.'/deploy/production/CPANEL-DML-RISK.md', file_get_contents($source.'/deploy/production/CPANEL-DML-RISK.md'));
         foreach (['IwindsStaging.php', 'IwindsPublicProbe.php'] as $name) {
             self::archiveFile($target.'/app/Support/'.$name, 'recovery-code-'.$name);
         }

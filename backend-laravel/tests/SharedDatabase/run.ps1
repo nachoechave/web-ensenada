@@ -1,16 +1,21 @@
-param([switch]$KeepContainers)
+param([switch]$KeepContainers, [ValidateSet('per-table','cpanel-dml')][string]$Profile='per-table')
 $ErrorActionPreference='Stop'
 $taskLaravel=(Resolve-Path "$PSScriptRoot/../..").Path
 $taskRepository=(Resolve-Path "$taskLaravel/..").Path
 $taskBaseline=(Resolve-Path "$taskRepository/../../output/iwinds-production-cutover-20261127/web-ensenada-iwinds-production.zip").Path
+$taskPrior=(Resolve-Path "$taskRepository/../../output/iwinds-shared-database-20261127/web-ensenada-iwinds-shared-database.zip").Path
+$taskOldProfile=$env:ENSENADA_TEST_DATABASE_PROFILE
+$taskOldSql=$env:ENSENADA_TEST_SQL_PROFILE
+$env:ENSENADA_TEST_DATABASE_PROFILE=$Profile
+$env:ENSENADA_TEST_SQL_PROFILE=if($Profile-eq 'cpanel-dml'){'accounts-dml.sql'}else{'accounts.sql'}
 $taskOutput=Join-Path $taskLaravel 'output/shared-update'
 New-Item -ItemType Directory -Force $taskOutput | Out-Null
 function Run-Docker { & docker @args; if($LASTEXITCODE -ne 0){throw "Docker falló: $($args[0]) $($args[1])"} }
 Push-Location $taskLaravel
 try {
     # Only this named disposable project, all DB storage is tmpfs; no persistent volumes or published ports.
-    Run-Docker compose -f tests/Production/compose.yaml down
-    Run-Docker run --rm --mount "type=bind,source=$taskLaravel,target=/source" --mount "type=bind,source=$taskBaseline,target=/base.zip,readonly" --entrypoint sh ensenada-auth-stage2-app:local -c 'php /source/deploy/production/build-shared-update.php /source /base.zip /tmp/increment.zip && cp /tmp/increment.zip /source/output/shared-update/web-ensenada-iwinds-shared-database.zip'
+    Run-Docker compose -f tests/Production/compose.yaml down --volumes
+    Run-Docker run --rm --mount "type=bind,source=$taskLaravel,target=/source" --mount "type=bind,source=$taskPrior,target=/base.zip,readonly" --entrypoint sh ensenada-auth-stage2-app:local -c 'php /source/deploy/production/build-shared-update.php /source /base.zip /tmp/increment.zip && cp /tmp/increment.zip /source/output/shared-update/web-ensenada-iwinds-shared-database.zip'
     Run-Docker compose -f tests/Production/compose.yaml up -d apache
     $ready=$false
     for($i=0;$i -lt 90;$i++) {
@@ -20,10 +25,13 @@ try {
         if($status -eq '200'){$ready=$true;break}; Start-Sleep -Seconds 1
     }
     if(!$ready){throw 'Apache no inició; inspeccionar logs.'}
+    if($Profile-eq 'per-table'){
     Run-Docker compose -f tests/Production/compose.yaml exec -T -e MYSQL_PWD=synthetic-disposable-root mysql-auth mariadb -uroot -e "GRANT SELECT,INSERT,UPDATE,DELETE ON ensenada_web.* TO 'ensenada_web_app'@'127.0.0.1'"
     Run-Docker compose -f tests/Production/compose.yaml exec -T -u www-data apache php /source/tests/SharedDatabase/reject-dml.php
     (Get-Content -Raw deploy/production/grants-production.sql).Replace("@'localhost'","@'127.0.0.1'") | & docker compose -f tests/Production/compose.yaml exec -T -e MYSQL_PWD=synthetic-disposable-root mysql-auth mariadb -uroot ensenada_web
     if($LASTEXITCODE-ne 0){throw 'Perfil mínimo por tabla rechazado.'}
+    }
+    Run-Docker compose -f tests/Production/compose.yaml exec -T -u www-data apache php /source/tests/SharedDatabase/configure-dml.php
     Run-Docker compose -f tests/Production/compose.yaml exec -T -u www-data apache php /source/tests/SharedDatabase/pre.php
     $taskBackup=Join-Path $taskOutput ('restore-'+[guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory $taskBackup | Out-Null
@@ -46,6 +54,7 @@ try {
     Run-Docker compose -f tests/Production/compose.yaml exec -T -u www-data apache php /source/tests/SharedDatabase/post.php
     Run-Docker compose -f tests/Production/compose.yaml exec -T -u www-data apache php /source/tests/Production/http.php
     Run-Docker compose -f tests/Production/compose.yaml exec -T -u www-data apache php /source/tests/Production/operations.php
+    Run-Docker compose -f tests/Production/compose.yaml exec -T -u www-data apache php /source/tests/SharedDatabase/audit-integrity.php
     Run-Docker compose -f tests/Production/compose.yaml exec -T -u www-data apache php /source/tests/SharedDatabase/reset-actors.php
     $taskBrowser=Join-Path $taskLaravel 'output/browser-production'
     New-Item -ItemType Directory -Force $taskBrowser | Out-Null
@@ -55,6 +64,8 @@ try {
     Run-Docker compose -f tests/Production/compose.yaml exec -T -u www-data apache php /source/tests/SharedDatabase/acceptance.php
     Run-Docker compose -f tests/Production/compose.yaml exec -T -u www-data apache php /source/tests/SharedDatabase/rollback.php
 } finally {
-    if(!$KeepContainers){Run-Docker compose -f tests/Production/compose.yaml down}
+    if(!$KeepContainers){Run-Docker compose -f tests/Production/compose.yaml down --volumes}
+    $env:ENSENADA_TEST_DATABASE_PROFILE=$taskOldProfile
+    $env:ENSENADA_TEST_SQL_PROFILE=$taskOldSql
     Pop-Location
 }

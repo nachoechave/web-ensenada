@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "profile": "cpanel-dml",
+  "database": "ensenada_web",
+  "policy_sha256": "",
+  "accepted_by": "",
+  "authority_reference": "",
+  "offsite_backup_reference": "",
+  "audit_monitoring_reference": "",
+  "incident_response_reference": "",
+  "acknowledgements": {
+    "database_wide_mutation": false,
+    "audit_not_append_only": false,
+    "sql_compromise_can_escalate_roles": false,
+    "shared_unix_account": false,
+    "schema_account_offline": false,
+    "offsite_backups": false,
+    "periodic_audit_checks": false,
+    "unobserved_changes_between_checkpoints": false
+  }
+}

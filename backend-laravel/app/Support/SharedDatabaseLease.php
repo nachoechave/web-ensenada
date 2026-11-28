@@ -125,6 +125,10 @@ final class SharedDatabaseLease
         if (self::role($web) !== 'production') {
             throw new RuntimeException('Producción no es propietaria de la base.');
         }
+        if ($web) {
+            require_once __DIR__.'/ProductionDatabaseProfile.php';
+            ProductionDatabaseProfile::verifyActivation();
+        }
     }
 
     public static function recoveryActive(): bool
@@ -147,6 +151,9 @@ final class SharedDatabaseLease
         if (! self::recoveryActive()) {
             throw new RuntimeException('Staging sin acceso a la base transferida.');
         }
+        require_once __DIR__.'/ProductionDatabaseProfile.php';
+        require_once __DIR__.'/ProductionPermissions.php';
+        ProductionDatabaseProfile::verifyActivation();
         if ($app->runningInConsole() && (basename($_SERVER['argv'][0] ?? '') !== 'artisan'
             || ! in_array($_SERVER['argv'][1] ?? '', ['route:list', 'config:cache', 'config:clear', 'route:cache', 'route:clear'], true))) {
             throw new RuntimeException('Solo comandos de caché/rutas durante recuperación.');

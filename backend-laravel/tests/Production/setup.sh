@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eu
 umask 077
+printf 'pdo_mysql.default_socket=/run/mysqld/mysqld.sock\n' > /usr/local/etc/php/conf.d/test-socket.ini
+chmod 644 /usr/local/etc/php/conf.d/test-socket.ini
 printf '\n127.0.0.1 www.ensenada.gov.ar ensenada.gov.ar prueba.ensenada.gov.ar tramites.ensenada.gov.ar\n' >> /etc/hosts
 mkdir -p /home/ensenada/public_html/web-produccion /home/ensenada/public_html/prueba.ensenada.gov.ar
 printf 'Require all denied\n' > /home/ensenada/public_html/web-produccion/.htaccess

@@ -1,5 +1,7 @@
 # Transferencia exclusiva de ensenada_web — incremento PR 85
 
+Perfil predeterminado por tabla. Para las cuentas de iWinds sin GRANT OPTION y el segundo incremento instalado, la alternativa explícita está en [CPANEL-DML.md](CPANEL-DML.md). Sus instrucciones sustituyen únicamente el bloqueo anterior de cpanel-dml; mantienen el resto de controles, datos, claves y restauración.
+
 Este incremento reemplaza la estrategia de base separada. Solo usa `ensenada_web`, `ensenada_web_app` y el usuario de esquema existente `ensenada_web_schema`. No instala de nuevo Laravel, Angular ni vendor, no regenera APP_KEY/JWT, no importa SQL en iWinds, no modifica WordPress ni el .htaccess principal. El backend instalado debe coincidir con el ZIP anterior SHA-256 `3d9399393618022b89371cf6a98c08476f4406ea1c92bdc7e4915bc29624d68b`; una diferencia detiene el instalador antes de sobrescribir código. No forzar este control.
 
 ## Preparación sin tráfico

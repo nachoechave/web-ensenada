@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 use App\Content\SiteContentDocument;
+use App\Support\ProductionDatabaseProfile;
 use App\Support\ProductionPermissions;
 use App\Support\SharedDatabaseLease;
 use Illuminate\Contracts\Console\Kernel;
@@ -58,7 +59,7 @@ try {
             throw new RuntimeException('Almacenamiento privado inválido.');
         }
     }
-    echo "Configuración, propiedad exclusiva, permisos, usuarios y contenido existentes verificados.\n";
+    echo 'Configuración, propiedad exclusiva, permisos / '.ProductionDatabaseProfile::selected().", usuarios y contenido existentes verificados.\n";
 } catch (Throwable $error) {
     fwrite(STDERR, 'BLOQUEADO: '.($error instanceof PDOException ? 'Comprobación MySQL rechazada.' : $error->getMessage())."\n");
     exit(1);

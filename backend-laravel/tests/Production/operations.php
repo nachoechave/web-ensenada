@@ -22,7 +22,8 @@ function verifyOperation(bool $ok, string $label): void
 function controlOperation(string $op, array $args = []): Process
 {
     global $ops;
-    $p = $op === 'enable' && $args !== [] ? new Process([PHP_BINARY, $ops.'/handover.php', 'activate', '--schema-config=/home/ensenada/respaldos_privados/schema.cnf', '--authorize-session-revocation', '--authorize-production']) : new Process([PHP_BINARY, $ops.'/control.php', $op, ...$args]);
+    $p = $op === 'enable' && $args !== [] ? new Process([PHP_BINARY, $ops.'/handover.php', 'activate', '--schema-config=/home/ensenada/respaldos_privados/schema.cnf', '--authorize-session-revocation', '--authorize-production',
+        ...(getenv('ENSENADA_TEST_DATABASE_PROFILE') === 'cpanel-dml' ? ['--accept-cpanel-dml-production-risk'] : [])]) : new Process([PHP_BINARY, $ops.'/control.php', $op, ...$args]);
     $p->run();
 
     return $p;
@@ -62,9 +63,25 @@ foreach (['DELETE FROM usuarios WHERE 1=0', 'UPDATE auditoria_noticias SET id=id
     'CREATE TABLE forbidden_structure(id INT)'] as $sql) {
     try {
         $pdo->exec($sql);
+        if (getenv('ENSENADA_TEST_DATABASE_PROFILE') === 'cpanel-dml' && ! str_starts_with($sql, 'CREATE')) {
+            verifyOperation(true, 'Riesgo DML sobre usuarios/auditoría/mutexes demostrado sin modificar filas');
+
+            continue;
+        }
         throw new RuntimeException('Operación prohibida permitida');
     } catch (PDOException $e) {
         verifyOperation(in_array($e->errorInfo[1], [1142, 1143], true), 'Mínimos DML/DDL');
+    }
+}
+if (getenv('ENSENADA_TEST_DATABASE_PROFILE') === 'cpanel-dml') {
+    $schema = SharedDatabaseAudit::connect(SharedDatabaseAudit::schemaConfig('/home/ensenada/respaldos_privados/schema.cnf'));
+    foreach ([$pdo, $schema] as $connection) {
+        try {
+            $connection->exec("GRANT SELECT ON `ensenada\\_web`.* TO 'ensenada_web_app'@'localhost'");
+            throw new RuntimeException('Delegación inesperada');
+        } catch (PDOException$e) {
+            verifyOperation(in_array($e->errorInfo[1], [1044, 1142, 1143], true), 'Ni runtime ni schema tienen GRANT OPTION');
+        }
     }
 }
 // A fresh SHA alone must not authorize applying a candidate based on an older original.

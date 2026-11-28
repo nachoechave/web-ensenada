@@ -1,37 +1,39 @@
-# Transferencia de base existente: resultados locales — 27/11/2026
+# Segundo incremento: perfiles de producción — 27/11/2026
 
-Rama `feat/iwinds-production-cutover`, PR 85. No hubo conexión al hosting, acceso a datos reales, activación remota ni cambios en Angular, Spring Boot, WordPress o el .htaccess principal del servidor.
+Rama `feat/iwinds-production-cutover`, PR 85. No se conectó a iWinds, no se cambiaron esquemas/datos reales ni Angular, Spring Boot, WordPress, DNS, correo, otros subdominios o bases. El ZIP se aplica sobre el primer incremento instalado SHA 7fde8cd1…f9183da y conserva claves, configuración, almacenamiento y puente preparado.
 
-| Validación ejecutada | Resultado |
+## Pruebas ejecutadas localmente
+
+| Validación | Resultado |
 |---|---|
-| PHPUnit, SQLite, PHP 8.3.36 | 177 tests / 517 assertions aprobados |
-| Regresión del período administrativo de staging | 3 tests / 31 assertions aprobados |
-| Angular existente | 74 tests aprobados; build correcto, main-5AVB2EQE.js / styles-5MXFBPYB.css |
-| Retiro de grant amplio, perfil por tabla y rechazo de cpanel-dml | Aprobado en MariaDB 10.11.19 descartable, cuentas locales sin privilegios globales |
-| Pre-corte con base única | 26 comprobaciones aprobadas: autorización, aparcado, credencial anterior inválida, conexiones terminadas, rollback de transacción previa, claves conservadas, archivos y revisión incompleta bloqueada |
-| Activación autorizada | 13 comprobaciones aprobadas: revisión, restauración, sesiones revocadas, passwords intactos, cachés/rutas y aislamiento de staging |
-| HTTP real Apache 2.4.68 / PHP 8.3.36 / MariaDB 10.11.19 | 132 comprobaciones aprobadas de autenticación, roles, revocación, Usuarios, Noticias, Hacienda, Proveedores, CMS, documentos y errores |
-| Cierre, permisos, preview y reescritura/rollback selectivos | 25 comprobaciones aprobadas; candidato obsoleto rechazado, cambio concurrente preservado, WordPress y subdominios conservados |
-| Angular real / Chromium / HTTPS | 18 comprobaciones aprobadas, cero errores JavaScript; noticia completa con JPEG 4000×2250, PNG, WebP, CMS y 1920/1366/390 px |
-| Optimización y seguridad de imágenes | 22 comprobaciones aprobadas: orientación EXIF, transparencia, 1920 px, 30 MiB, corrupción, bomba de dimensiones, ausencia de parciales, galería de seis y referencias CMS |
-| Aceptación del script distribuido, con TLS validado | 120 comprobaciones aprobadas + 6 de preparación sintética; staging responde 503 con Basic válido para API y archivos, producción responde con contratos públicos, documentos privados 404 |
-| Recuperación exclusiva de staging | 27 comprobaciones aprobadas: drenaje, respaldo reciente obligatorio, nueva rotación/revocación, conservación de escrituras y archivos nuevos, Basic + roles, Origin, expiración, cierre y nuevo corte sin reutilizar aprobaciones |
-| Respaldo y restauración aislados | SHA de SQL y cuatro TAR; esquema completo de 12 tablas, huella HMAC de todas las filas/campos, archivos idénticos y trigger probado mediante transacción reversible |
-| Restaurador reutilizable `restore-local.ps1` | Aprobado por segunda restauración del respaldo sintético, contenedor/volumen tmpfs y red interna propios, sin puertos publicados |
-| Incremento real sobre el ZIP previamente instalado | Instalación repetida, rechazo de código distinto antes de sobrescribir, rollback de código/protección y reinstalación; .env y claves conservados |
+| PHPUnit SQLite / PHP 8.3.36 | 193 tests, 536 assertions aprobados |
+| Regresión del período administrativo de staging | 3 tests, 31 assertions aprobados |
+| Angular sin cambios | 74 tests y build aprobados; main-5AVB2EQE.js / styles-5MXFBPYB.css; advertencias previas de presupuesto de JS/CSS |
+| Perfil per-table predeterminado | Ensayo completo aprobado; cpanel-dml rechazado sin selección/aceptación |
+| Perfil cpanel-dml | Ensayo completo con MariaDB 10.11.19, runtime con exactamente cuatro DML y esquema con ALL únicamente sobre la base literal; ninguna cuenta tiene GRANT OPTION |
+| Cuentas efectivas | ensenada_web_app@localhost y ensenada_web_schema@localhost comprobadas por PDO sobre socket compartido únicamente entre los contenedores propios |
+| Validación negativa de grants | Rechazo de privilegios globales, DDL, ALL en runtime, permisos faltantes/adicionales, delegación, roles SQL, otras bases, host comodín y guion bajo sin escapar; per-table conserva sus 12 alcances |
+| Instalación | Baseline completo + primer incremento inmutable + segundo incremento; repetición, rechazo de archivos distintos, reversión y reinstalación, conservando .env y control.key |
+| Autorización alternativa | Template sin aceptar y falta de bandera rechazados; recibo alterado rechazado; no hay activación sin respaldo restaurado ni copia externa declarada del checkpoint |
+| Pre-corte | 26 comprobaciones aprobadas: aparcado, exclusión, credencial vieja rechazada, cierre de conexión/transacción anterior, conservación de claves, copia sin sobrescrituras y revisión de datos |
+| Activación con cpanel-dml | 20 comprobaciones aprobadas, incluidas restauración obligatoria, checkpoint y bandera adicional; schema-check y cachés correctos |
+| Contratos HTTP y módulos | 132 comprobaciones por perfil, en Apache 2.4.68/PHP 8.3.36/MariaDB 10.11.19; Autenticación, Usuarios, Noticias, Hacienda, Proveedores, CMS y documentos |
+| Permisos/cierre/Apache | 25 comprobaciones con per-table; 27 con cpanel-dml, demostrando DML directo posible sobre usuarios/auditoría/mutexes y falta real de delegación en ambas cuentas |
+| Auditoría compensatoria | 15 comprobaciones: alteración/borrado detectados y API cerrada, bloqueo persistido fuera de SQL, prohibición de retroceder checkpoints y de firmar datos alterados; reparación solo en el harness sintético excluido del ZIP |
+| Imágenes | 22 comprobaciones por perfil: EXIF, transparencia, 1920 px, 30 MiB, corrupción, límites, seis imágenes y referencias CMS |
+| Chromium real | 18 comprobaciones por perfil, HTTPS, formularios completos, JPEG 4000×2250/PNG/WebP, CMS y 1920/1366/390 px; cero errores JavaScript |
+| Aceptación HTTPS | 120 comprobaciones + 6 de preparación por perfil, validando certificado de la CA local, contratos, archivos privados y staging 503 incluso con Basic válido |
+| Rollback | 27 comprobaciones por perfil: conserva escrituras/archivos nuevos, exige respaldo actual, rota/revoca, Basic + sesión y roles, expiración/cierre, nuevo corte con nuevas aprobaciones; staging anterior sin deploy/production soportado |
+| Restauración | SQL y cuatro TAR restaurados en MariaDB descartable independiente; doce tablas, todas las filas/campos, archivos y trigger reversible idénticos; sin importar SQL en el hosting |
 
-Total: **180 tests PHP, 74 tests Angular y 390 comprobaciones de los scripts**, además de la verificación de archivos del instalador y las restauraciones. Los contadores son aserciones, no cantidad de endpoints distintos. Pint y `git diff --check` sin errores. La compilación conserva las advertencias previas de presupuesto de JS/CSS; no se cambió el frontend para este incremento.
+El recorrido cpanel-dml suma **423 comprobaciones**; per-table suma **393**. Se agregan las comprobaciones del ZIP exacto y sus componentes. Sintaxis PHP, Pint y `git diff --check` verificados. Los contadores son aserciones, no cantidad de endpoints.
 
-## Reproducción
+## Reproducibilidad y límites
 
-`tests/SharedDatabase/run.ps1` usa solo el proyecto Docker nombrado `ensenada-production-cutover-tests`, MariaDB 10.11.19 y almacenamiento tmpfs, sin puertos ni volúmenes de otros proyectos. Requiere el ZIP anterior con SHA 3d939939…24d68b, las imágenes PHP/Chromium locales verificadas, vendor obtenido del lock y el build Angular existente. Construye el incremento, instala sobre el baseline, transfiere una única base, restaura el respaldo en otro contenedor, ejecuta aceptación y termina con ambos backends cerrados después de un nuevo corte. Las cuentas/datos de `tests/` son exclusivamente sintéticos; no se distribuyen como aprovisionamiento.
+Ejecutar `tests/SharedDatabase/run.ps1 -Profile per-table` y `-Profile cpanel-dml` de forma secuencial. Usan solo el proyecto `ensenada-production-cutover-tests`, sin puertos publicados, datos tmpfs y un volumen **nuevo y propio** de socket también tmpfs, retirado al terminar; no usan volúmenes ajenos. Se conserva una copia sintética de los respaldos/resultados en output ignorado. La espera de 125 segundos se simula exclusivamente desde el harness, nunca mediante una opción del comando desplegable.
 
-El ensayo simula el transcurso de 125 segundos únicamente desde el harness excluido del ZIP; el comando real no ofrece ningún parámetro para saltar esa espera. El test Browser verifica la noticia persistida mediante el contexto autenticado después de la navegación para evitar una carrera de Chromium al descartar el cuerpo del POST.
+Los tests representan una autorización ficticia del fixture. No son la aceptación institucional, no clasifican contenidos reales ni acreditan custodia externa del hosting. El validador solo admite el ámbito literal escapado: un grant `ensenada_web.*` sin escapar puede abarcar otros nombres y debe bloquearse. No se añaden permisos para hacerlo pasar.
 
-## Límite de evidencia y bloqueos de publicación
+El checkpoint verifica y captura una única lectura SQL consistente. El estado firmado retiene el último checkpoint, impide retroceder la observación y liga activación/riesgo/corte. La auditoría **sigue siendo modificable con DML**; los eventos introducidos/retirados entre observaciones y los eventos falsos nuevos pueden escapar a la detección. Si se compromete el UID o control.key, la integridad local deja de ser confiable: se necesita la copia externa y sus hashes custodiados independientemente. No se declara WORM ni equivalencia con mínimos por tabla.
 
-La base real de aproximadamente 400 KB no se inspeccionó ni se descargó. Su contenido oficial debe aprobarse manualmente y **su propio** respaldo debe restaurarse localmente con `restore-local.ps1`; una prueba sintética no satisface esa condición. El activador exige prueba ligada al backup_id y a las huellas actuales. No se admiten cpanel-dml, credenciales compartidas con otros sistemas, escritores externos, datos públicos no revisados, referencias/archivos faltantes ni activación simultánea de los backends.
-
-Confirmar en iWinds los grants por tabla, plugin que admita rotación propia, cliente dump compatible, cuota/espacio, PHP web 32M/40M/256M y HTTPS. Si el grantor disponible no permite retirar el grant amplio y conceder los permisos mínimos, **bloquear producción**; no elevar privilegios ni debilitar el perfil. Exigir staging 503 con Basic válido después del corte y aceptación administrativa real antes de abrir tráfico. La misma cuenta Unix no proporciona aislamiento frente a una ejecución remota de código que comprometa toda la cuenta cPanel.
-
-Guía operativa y reversión: [SHARED-DATABASE.md](SHARED-DATABASE.md). Nada en estos resultados autoriza el despliegue automático.
+Antes de publicar siguen siendo obligatorios: aceptación formal de [CPANEL-DML-RISK.md](CPANEL-DML-RISK.md), grants reales exactos, esquema/contenidos aprobados, copia externa efectiva, restauración del respaldo real, límites web/cuota y aceptación HTTPS/administrativa. La base real no fue inspeccionada ni descargada. Guía: [CPANEL-DML.md](CPANEL-DML.md). Nada se instala o activa remotamente.

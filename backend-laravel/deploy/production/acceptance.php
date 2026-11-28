@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 use App\Support\IwindsProduction;
+use App\Support\ProductionDatabaseProfile;
 use App\Support\ProductionPermissions;
 use App\Support\SharedDatabaseLease;
 use Illuminate\Contracts\Console\Kernel;
@@ -11,13 +12,15 @@ if (PHP_SAPI !== 'cli') {
     exit(1);
 }
 $origin = 'https://www.ensenada.gov.ar';
-$options = getopt('', ['news:', 'hacienda:', 'image:', 'provider:', 'private-document:', 'staging-basic-file:']);
+$options = getopt('', ['news:', 'hacienda:', 'image:', 'provider:', 'private-document:', 'staging-basic-file:', 'accept-cpanel-dml-production-risk']);
 require dirname(__DIR__, 2).'/vendor/autoload.php';
 try {
     SharedDatabaseLease::production(true);
     $app = require dirname(__DIR__, 2).'/bootstrap/app.php';
     $app->make(Kernel::class)->bootstrap();
     ProductionPermissions::verify();
+    ProductionDatabaseProfile::verifyActivation();
+    ProductionDatabaseProfile::requireActivationFlag(isset($options['accept-cpanel-dml-production-risk']) ? ['accept-cpanel-dml-production-risk' => true] : []);
     if (! IwindsProduction::enabled() || ! IwindsProduction::isolationVerified()) {
         throw new RuntimeException;
     }
@@ -30,10 +33,11 @@ try {
         throw new RuntimeException;
     }
 } catch (Throwable) {
-    fwrite(STDERR, "BLOQUEADO propiedad exclusiva, perfil mínimo, marcador válido o archivo Basic privado pendientes.\n");
+    fwrite(STDERR, "BLOQUEADO propiedad exclusiva, perfil SQL autorizado/aceptación de riesgo, marcador válido o archivo Basic privado pendientes.\n");
     exit(1);
 }
 $checks = 0;
+echo 'Perfil SQL verificado: '.ProductionDatabaseProfile::selected().". Mantener controles y custodia externa.\n";
 function assertAcceptance(bool $ok, string $label): void
 {
     global $checks;

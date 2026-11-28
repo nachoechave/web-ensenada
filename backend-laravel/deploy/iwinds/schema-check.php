@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\ProductionDatabaseProfile;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Support\Facades\DB;
 
@@ -27,7 +28,12 @@ try {
         && config('database.default') === 'mysql'
         && config('database.connections.mysql.username') === 'auth_runtime';
     if ($app->environment('production') && $cpanelDml) {
-        throw new RuntimeException;
+        if (ProductionDatabaseProfile::selected() !== 'cpanel-dml') {
+            throw new RuntimeException;
+        }
+    }
+    if ($app->environment('production') && ! $cpanelDml && ProductionDatabaseProfile::selected() !== 'per-table') {
+        throw new RuntimeException('Indicar explícitamente el perfil cpanel-dml autorizado.');
     }
     if (! $app->environment(['staging', 'production']) && ! $disposable) {
         throw new RuntimeException;

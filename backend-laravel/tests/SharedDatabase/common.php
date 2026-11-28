@@ -31,6 +31,10 @@ function command(array $args, bool $success = true): Process
 }
 function hand(string $op, array $args = [], bool $success = true): Process
 {
+    if ($success && getenv('ENSENADA_TEST_DATABASE_PROFILE') === 'cpanel-dml' && in_array($op, ['activate', 'recover-stage'], true)) {
+        $args[] = '--accept-cpanel-dml-production-risk';
+    }
+
     return command([H, $op, ...$args], $success);
 }
 function http(string $host = 'www.ensenada.gov.ar', bool $basic = false): Client

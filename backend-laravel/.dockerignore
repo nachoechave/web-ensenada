@@ -1,0 +1,9 @@
+.git
+.env
+.env.*
+vendor
+output
+storage
+bootstrap/cache
+tests/Angular/node_modules
+tests/Angular/test-results

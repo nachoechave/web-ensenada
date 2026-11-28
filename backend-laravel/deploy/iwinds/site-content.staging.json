@@ -1,0 +1,28 @@
+{
+  "topbar": {"telefono":"","direccion":"Entorno de pruebas","horarios":"Sin atención al público","facebook":"","instagram":"","youtube":""},
+  "navbar": {
+    "inicio":"Inicio","municipio":"Presentación de prueba","areas":"Áreas de prueba","tramites":"Trámites de prueba","noticias":"Noticias","hacienda":"Hacienda","contacto":"Contacto de prueba",
+    "boletinTexto":"Boletín · entorno de prueba","boletinUrl":"",
+    "items":[{"texto":"Inicio","url":"/","visible":true},{"texto":"Áreas de prueba","url":"/areas","visible":true},{"texto":"Noticias","url":"/noticias","visible":true},{"texto":"Hacienda","url":"/hacienda","visible":true},{"texto":"Proveedores","url":"/proveedores","visible":true}]
+  },
+  "hero": {
+    "eyebrow":"Staging · datos sintéticos","titulo":"Portal institucional de prueba","bajada":"Contenido sintético para verificar el funcionamiento del portal.",
+    "imagen":"https://assets.example.test/placeholder.jpg","imagenes":["https://assets.example.test/placeholder.jpg"],"intervaloSegundos":5,
+    "ctaPrimarioTexto":"Ver trámites de prueba","ctaPrimarioUrl":"#accesos","ctaSecundarioTexto":"Ver noticias","ctaSecundarioUrl":"/noticias"
+  },
+  "accesosTitulo":"Accesos de prueba",
+  "accesos":[{"titulo":"Trámite sintético","descripcion":"Enlace de prueba sin gestión real.","url":"/proveedores","icono":"document"}],
+  "tramites":{"kicker":"Pruebas","titulo":"Trámites de prueba","bajada":"Sin trámites oficiales.","items":[]},
+  "noticias":{"kicker":"Pruebas","titulo":"Noticias","bajada":"Sección para verificar el listado.","boton":"Ver noticias"},
+  "areas":{
+    "kicker":"Pruebas","titulo":"Áreas de prueba","bajada":"Directorio sintético.","paginaTitulo":"Directorio de prueba","paginaBajada":"Sin autoridades ni sedes oficiales.","items":[],
+    "secretarias":[{"id":"area-de-prueba","nombre":"Área sintética","responsable":"Responsable de prueba","direccion":"","telefono":"","horario":"Sin atención al público","email":"area@example.test"}]
+  },
+  "intendencia":{
+    "kicker":"Pruebas","nombre":"Intendencia de prueba","descripcion":"Ficha sintética sin referencias a personas reales.","imagen":"https://assets.example.test/placeholder.jpg",
+    "botonTexto":"Ver sección de prueba","botonUrl":"/intendencia","secundarioTexto":"Ver áreas de prueba","secundarioUrl":"/areas",
+    "cita":"","historiaTitulo":"Historia de prueba","historia":"Texto de prueba sin datos históricos.","galeria":["https://assets.example.test/placeholder.jpg"]
+  },
+  "agenda":{"kicker":"Pruebas","titulo":"Agenda de prueba","bajada":"Sin actividades programadas.","items":[]},
+  "footer":{"descripcion":"Entorno de staging con datos sintéticos.","telefono":"","direccion":"","email":"portal@example.test","mapaUrl":"","copyright":"Contenido de prueba"}
+}

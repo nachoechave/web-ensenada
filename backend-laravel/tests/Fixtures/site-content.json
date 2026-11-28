@@ -1,0 +1,14 @@
+{
+  "topbar": {"telefono":"0000 555 0101","direccion":"Sede sintética 10","horarios":"Lunes de 8 a 10","facebook":"https://social.example.test/portal","instagram":"","youtube":""},
+  "navbar": {"inicio":"Inicio","municipio":"Municipio","areas":"Áreas","tramites":"Trámites","noticias":"Noticias","hacienda":"Hacienda","contacto":"Contacto","boletinTexto":"Boletín sintético","boletinUrl":"https://boletin.example.test/","items":[{"texto":"Inicio","url":"/","visible":true},{"texto":"Áreas","url":"/areas","visible":true}]},
+  "hero": {"eyebrow":"Identidad sintética","titulo":"Portada sintética","bajada":"Presentación sintética","imagen":"/assets/site-synthetic-one.png","imagenes":["/assets/site-synthetic-one.png","/assets/site-synthetic-two.png"],"intervaloSegundos":5,"ctaPrimarioTexto":"Hacer un trámite","ctaPrimarioUrl":"#accesos","ctaSecundarioTexto":"Ver novedades","ctaSecundarioUrl":"#actualidad"},
+  "accesosTitulo":"Trámites de ejemplo",
+  "accesos":[{"titulo":"Trámite sintético","descripcion":"Consultar trámite","url":"/proveedores","icono":"document"}],
+  "tramites":{"kicker":"Servicios de prueba","titulo":"Servicios sintéticos","bajada":"Trámites de prueba","items":[]},
+  "noticias":{"kicker":"Actualidad de prueba","titulo":"Noticias sintéticas","bajada":"Novedades de prueba","boton":"Todas las novedades"},
+  "areas":{"kicker":"Directorio de prueba","titulo":"Áreas de ejemplo","bajada":"Descripción de ejemplo","paginaTitulo":"Directorio sintético","paginaBajada":"Dependencias de ejemplo","items":[],"secretarias":[{"id":"area-sintetica","nombre":"Secretaría sintética","responsable":"Responsable sintética","direccion":"Sede sintética 20","telefono":"0000 555 0102","horario":"Martes de 10 a 12","email":"area@example.test"}]},
+  "intendencia":{"kicker":"Autoridad de ejemplo","nombre":"Intendencia sintética","descripcion":"Biografía de prueba","imagen":"/assets/site-synthetic-one.png","botonTexto":"Contacto","botonUrl":"mailto:autoridad@example.test","secundarioTexto":"Más datos","secundarioUrl":"/intendencia","cita":"Cita de prueba","historiaTitulo":"Historia sintética","historia":"Relato de prueba","galeria":["/assets/site-synthetic-two.png"]},
+  "agenda":{"kicker":"Agenda de prueba","titulo":"Agenda sintética","bajada":"Eventos de prueba","items":[{"dia":"01","mes":"ENE","titulo":"Evento sintético","lugar":"Sede sintética","hora":"10:00"}]},
+  "footer":{"descripcion":"Pie sintético","telefono":"0000 555 0103","direccion":"Sede sintética 30","email":"portal@example.test","mapaUrl":"https://mapa.example.test/","copyright":"Texto de prueba"},
+  "extensionSintetica":{"objeto":{},"lista":[],"marca":"preservar"}
+}

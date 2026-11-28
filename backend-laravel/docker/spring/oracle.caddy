@@ -1,0 +1,13 @@
+https://localhost:20443 {
+    tls internal
+    @news path /api/noticias /api/noticias/*
+    handle @news {
+        reverse_proxy spring:8080
+    }
+    handle /api/* {
+        respond 404
+    }
+    handle {
+        import angular_ssr
+    }
+}

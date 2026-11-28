@@ -1,0 +1,17 @@
+# BEGIN mudanza turnos -> veterinaria (26/11/2026)
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^turnos(/(.*))?$ https://veterinaria.ensenada.gov.ar/$2 [R=301,L]
+</IfModule>
+# END mudanza turnos
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+# END WordPress
+# cPanel PHP 8.2 block remains byte-identical (the test image supplies PHP 8.3).

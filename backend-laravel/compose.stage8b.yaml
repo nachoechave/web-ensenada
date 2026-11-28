@@ -1,0 +1,14 @@
+# Apply after compose.stage2.yaml and compose.stage8.yaml.
+services:
+  mysql-auth:
+    image: ${AUTH_STAGE8_MARIADB_IMAGE:-mariadb:10.11.19@sha256:d769e37960821dfdcf096954f6e7ac89f747e116c1bba98e48edd265dfc7deae}
+    command: ["--skip-log-bin", "--character-set-server=latin1", "--collation-server=latin1_swedish_ci"]
+    volumes: !override
+      - ./docker/mariadb-stage8b-init.sh:/docker-entrypoint-initdb.d/10-schema.sh:ro
+      - ./docker/mysql-stage8-accounts.sh:/docker-entrypoint-initdb.d/20-accounts.sh:ro
+      - ./deploy/iwinds/schema-init-mariadb.sql:/stage8/schema-mariadb.sql:ro
+      - ./deploy/iwinds/schema-grants.sql:/stage8/grants.sql:ro
+      - ../backend/src/main/resources/db/migration:/stage8/flyway:ro
+  tls:
+    volumes:
+      - ./docker/angular/Caddyfile:/etc/caddy/Caddyfile:ro

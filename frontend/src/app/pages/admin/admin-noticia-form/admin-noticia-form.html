@@ -72,7 +72,7 @@
         #imagenInput
         class="file-input"
         type="file"
-        accept="image/png, image/jpeg"
+        accept="image/png, image/jpeg, image/webp"
         multiple
         (change)="seleccionarImagen($event)"
       />
@@ -90,7 +90,7 @@
         <p class="field-error">{{ errorImagen }}</p>
       }
 
-      <p class="gallery-help">Seleccioná hasta 6 fotos. Marcá una como portada para los listados y la página principal.</p>
+      <p class="gallery-help">Podés subir fotos de hasta 30 MB. Las optimizamos automáticamente para que carguen más rápido. Seleccioná hasta 6 fotos y marcá una como portada.</p>
       <div class="admin-gallery">
         @for (url of imagenes; track url; let i = $index) {
           <div class="admin-gallery-item">

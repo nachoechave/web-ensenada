@@ -1,0 +1,61 @@
+# BEGIN ENSENADA PRODUCTION CUTOVER v1
+# mod_dir otherwise redirects /hacienda despite the successful internal file rewrite.
+<If "%{HTTP_HOST} =~ m#^(www\.)?ensenada\.gov\.ar$# && %{REQUEST_URI} =~ m#^/(hacienda|noticias|proveedores|registro-proveedores|areas|intendencia|admin)$# #PREVIEW_EXPRESSION">
+DirectorySlash Off
+</If>
+<IfModule mod_rewrite.c>
+RewriteEngine On
+# PREVIEW_CONDITION
+RewriteCond %{HTTP_HOST} ^(www\.)?ensenada\.gov\.ar$ [NC]
+RewriteCond %{REQUEST_URI} !^/\.well-known(?:/|$) [NC]
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} !^www\.ensenada\.gov\.ar$ [NC]
+RewriteRule ^ https://www.ensenada.gov.ar%{REQUEST_URI} [R=302,END,NE]
+
+# Never expose the internal directory or an alternate entry point.
+# PREVIEW_CONDITION
+RewriteCond %{HTTP_HOST} ^(www\.)?ensenada\.gov\.ar$ [NC]
+RewriteRule ^(?:web-produccion|ensenada-production\.php)(?:[/;]|$) - [R=404,END,NC]
+# PREVIEW_CONDITION
+RewriteCond %{HTTP_HOST} ^(www\.)?ensenada\.gov\.ar$ [NC]
+RewriteRule (?:^|/)\.(?!well-known(?:/|$)) - [R=404,END,NC]
+# PREVIEW_CONDITION
+RewriteCond %{HTTP_HOST} ^(www\.)?ensenada\.gov\.ar$ [NC]
+RewriteRule ^(?:backend-laravel(?:-produccion)?|vendor|storage|bootstrap|logs)(?:/|$) - [R=404,END,NC]
+
+# Reject noncanonical API paths before Apache normalizes them.
+# PREVIEW_CONDITION
+RewriteCond %{HTTP_HOST} ^(www\.)?ensenada\.gov\.ar$ [NC]
+RewriteCond %{THE_REQUEST} "[[:space:]]/[^[:space:]?]*(?:%|;|//|/\.(?:/|[[:space:]?]))" [NC]
+RewriteRule ^(?:api|uploads)(?:/|$) - [R=404,END,NC]
+# PREVIEW_CONDITION
+RewriteCond %{HTTP_HOST} ^(www\.)?ensenada\.gov\.ar$ [NC]
+RewriteCond %{HTTP:Authorization} !^$
+RewriteCond %{HTTP:Authorization} !^Basic[[:space:]][A-Za-z0-9+/]+={0,2}$ [NC]
+RewriteRule ^(?:api|uploads)(?:/|$) - [R=404,END,NC]
+# PREVIEW_CONDITION
+RewriteCond %{HTTP_HOST} ^(www\.)?ensenada\.gov\.ar$ [NC]
+RewriteRule ^(?:api|uploads)$ - [R=404,END,NC]
+# PREVIEW_CONDITION
+RewriteCond %{HTTP_HOST} ^(www\.)?ensenada\.gov\.ar$ [NC]
+RewriteRule ^(?:api|uploads)/ - [NC,E=ENSENADA_PRODUCTION_ROUTE:1,E=ENSENADA_PRODUCTION_LINE:%{THE_REQUEST}]
+# PREVIEW_CONDITION
+RewriteCond %{HTTP_HOST} ^(www\.)?ensenada\.gov\.ar$ [NC]
+RewriteRule ^(?:api|uploads)/ web-produccion/ensenada-production.php [END,NC]
+
+# Resolve Angular routes before legacy physical directories (notably /hacienda).
+# PREVIEW_CONDITION
+RewriteCond %{HTTP_HOST} ^(www\.)?ensenada\.gov\.ar$ [NC]
+RewriteRule ^(?:$|noticias(?:/[^/.]+)?/?$|hacienda(?:/[1-9][0-9]*)?/?$|(?:registro-)?proveedores/?$|areas(?:/[^/.]+)?/?$|intendencia/?$|admin(?:/[a-z0-9/-]+)?/?$) - [E=ENSENADA_PRODUCTION_WEB:1]
+# PREVIEW_CONDITION
+RewriteCond %{HTTP_HOST} ^(www\.)?ensenada\.gov\.ar$ [NC]
+RewriteRule ^(?:$|noticias(?:/[^/.]+)?/?$|hacienda(?:/[1-9][0-9]*)?/?$|(?:registro-)?proveedores/?$|areas(?:/[^/.]+)?/?$|intendencia/?$|admin(?:/[a-z0-9/-]+)?/?$) web-produccion/index.html [END]
+# PREVIEW_CONDITION
+RewriteCond %{HTTP_HOST} ^(www\.)?ensenada\.gov\.ar$ [NC]
+RewriteRule ^(?:assets/[^.][A-Za-z0-9_./-]*|(?:main|polyfills|chunk|styles)[-A-Za-z0-9]*\.(?:js|css)|favicon\.ico)$ - [E=ENSENADA_PRODUCTION_WEB:1]
+# PREVIEW_CONDITION
+RewriteCond %{HTTP_HOST} ^(www\.)?ensenada\.gov\.ar$ [NC]
+RewriteRule ^(?:assets/[^.][A-Za-z0-9_./-]*|(?:main|polyfills|chunk|styles)[-A-Za-z0-9]*\.(?:js|css)|favicon\.ico)$ web-produccion/$0 [END]
+# Existing WordPress, /pdf, /doc, /servicios and other historical paths fall through unchanged.
+</IfModule>
+# END ENSENADA PRODUCTION CUTOVER v1

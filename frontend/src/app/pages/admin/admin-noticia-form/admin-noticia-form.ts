@@ -124,8 +124,8 @@ export class AdminNoticiaForm {
       this.errorImagen = 'Podés cargar hasta 6 imágenes por noticia.';
       return;
     }
-    if (archivos.some((archivo) => !['image/jpeg', 'image/png'].includes(archivo.type) || archivo.size > 5 * 1024 * 1024)) {
-      this.errorImagen = 'Seleccioná imágenes JPEG o PNG de hasta 5 MB cada una.';
+    if (archivos.some((archivo) => !['image/jpeg', 'image/png', 'image/webp'].includes(archivo.type) || archivo.size > 30 * 1024 * 1024)) {
+      this.errorImagen = 'Seleccioná imágenes JPEG, PNG o WebP de hasta 30 MB cada una.';
       return;
     }
     this.errorImagen = '';
@@ -188,7 +188,7 @@ export class AdminNoticiaForm {
     }
 
     if (error.status === 413) {
-      return 'La imagen es demasiado pesada. Usa una imagen de hasta 5 MB.';
+      return 'La imagen supera el límite de 30 MB. Seleccioná una foto más pequeña.';
     }
 
     if (error.error?.detail || error.error?.mensaje) {

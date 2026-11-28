@@ -1,0 +1,38 @@
+{
+    admin off
+    auto_https disable_redirects
+    skip_install_trust
+}
+(angular_ssr) {
+    reverse_proxy 127.0.0.1:4000 {
+        header_up -Forwarded
+        header_up -X-Forwarded-For
+        header_up -X-Forwarded-Port
+        header_up -X-Forwarded-Prefix
+    }
+}
+https://localhost:18443 {
+    tls internal
+    @upload path /api/admin/archivos/noticias /api/admin/archivos/sitio /api/admin/hacienda/*/archivos /api/admin/proveedores/documentos
+    request_body @upload {
+        max_size 31MiB
+    }
+    @uploads path /uploads/noticias/* /uploads/sitio/* /uploads/hacienda/* /uploads/proveedores/*
+    handle @uploads {
+        reverse_proxy app:8000
+    }
+    handle /api/* {
+        reverse_proxy app:8000
+    }
+    handle {
+        import angular_ssr
+    }
+    handle_errors 413 {
+        respond "" 413
+    }
+}
+import /etc/caddy/stage4a/*.caddy
+https://localhost:19443 {
+    tls internal
+    respond "<html><body>Origen ajeno de prueba CSRF</body></html>" 200
+}

@@ -1,0 +1,146 @@
+name: ensenada-auth-stage2
+x-auth-environment: &auth-environment
+  APP_ENV: local
+  APP_DEBUG: "false"
+  APP_URL: https://localhost:18443
+  AUTH_LOCAL_ONLY: "true"
+  AUTH_DISPOSABLE_MYSQL: "true"
+  DB_CONNECTION: mysql
+  DB_HOST: mysql-auth
+  DB_PORT: "3306"
+  DB_DATABASE: ensenada_auth_test
+  DB_USERNAME: auth_runtime
+  DB_PASSWORD: synthetic-runtime-only-1234
+  LOG_CHANNEL: stderr
+  CACHE_STORE: array
+  SESSION_DRIVER: array
+  QUEUE_CONNECTION: sync
+  PHP_CLI_SERVER_WORKERS: "4"
+services:
+  mysql-auth:
+    image: mysql:8.4@sha256:76f0358884cb92d9a086d24e5671c38048d3fef40f2588703d73eb55392d6b69
+    command: ["--skip-log-bin"]
+    environment:
+      MYSQL_DATABASE: ensenada_auth_test
+      MYSQL_USER: auth_setup
+      MYSQL_PASSWORD: synthetic-setup-only-1234
+      MYSQL_ROOT_PASSWORD: synthetic-root-only-1234
+    tmpfs:
+      - /var/lib/mysql
+      - /var/lib/mysql-files
+      - /tmp
+    volumes:
+      - ./database/schema/mysql-auth-flyway.sql:/docker-entrypoint-initdb.d/10-auth-core.sql:ro
+      - ./database/schema/mysql-news-flyway.sql:/docker-entrypoint-initdb.d/11-news-core.sql:ro
+      - ../backend/src/main/resources/db/migration/V6__auditoria_noticias.sql:/docker-entrypoint-initdb.d/12-news-audit.sql:ro
+      - ./database/schema/site-content-flyway.sql:/docker-entrypoint-initdb.d/13-site-content.sql:ro
+      - ../backend/src/main/resources/db/migration/V2__hacienda_publicaciones.sql:/docker-entrypoint-initdb.d/14-hacienda.sql:ro
+      - ./database/schema/mysql-proveedores-flyway.sql:/docker-entrypoint-initdb.d/15-proveedores.sql:ro
+      - ./docker/mysql/20-test-users.sql:/docker-entrypoint-initdb.d/20-test-users.sql:ro
+    networks: [isolated]
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=synthetic-setup-only-1234 mysql --protocol=TCP -h127.0.0.1 -uauth_setup -Densenada_auth_test -e 'SELECT 1' >/dev/null 2>&1"]
+      interval: 2s
+      timeout: 3s
+      retries: 45
+  mysql-setup:
+    image: ensenada-auth-stage2-app:local
+    environment:
+      <<: *auth-environment
+      DB_USERNAME: auth_setup
+      DB_PASSWORD: synthetic-setup-only-1234
+    command: ["sh", "docker/local-env.sh", "php", "docker/mysql-setup.php"]
+    depends_on:
+      mysql-auth:
+        condition: service_healthy
+    networks: [isolated]
+  app:
+    image: ensenada-auth-stage2-app:local
+    build:
+      context: .
+      target: application
+      additional_contexts:
+        flyway: ../backend/src/main/resources/db/migration
+    environment: *auth-environment
+    mem_limit: 1536m
+    cpus: 2.0
+    tmpfs:
+      - /tmp
+      - /var/lib/ensenada-news-input:size=128m,mode=0700,noexec,nosuid,nodev
+      - /var/lib/ensenada-news-storage:size=64m,mode=0700,noexec,nosuid,nodev
+      - /var/lib/ensenada-site-scratch:size=256m,mode=0700,noexec,nosuid,nodev
+    volumes: [public-ca:/certs:ro, site-images:/var/lib/ensenada-site-storage, hacienda-documents:/var/lib/ensenada-hacienda-storage, proveedores-documents:/var/lib/ensenada-proveedores-storage]
+    depends_on:
+      mysql-setup:
+        condition: service_completed_successfully
+    networks: [isolated]
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@fsockopen('127.0.0.1', 8000) ? 0 : 1);"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  angular:
+    image: ensenada-auth-stage2-angular:local
+    build:
+      context: .
+      dockerfile: docker/angular/Dockerfile
+      additional_contexts:
+        frontend: ../frontend
+    environment:
+      PORT: "4000"
+      BACKEND_URL: http://app:8000
+      NG_ALLOWED_HOSTS: localhost
+      NG_TRUST_PROXY_HEADERS: x-forwarded-host,x-forwarded-proto
+      NODE_EXTRA_CA_CERTS: /certs/root.crt
+    network_mode: service:tls
+    volumes: [public-ca:/certs:ro]
+    depends_on:
+      tls:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "const s=require('net').connect(4000,'127.0.0.1');s.on('connect',()=>process.exit(0));s.on('error',()=>process.exit(1));"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  tls:
+    image: caddy:2-alpine@sha256:e70b164da81ef698b3ad19af799ea6086ce6d9e48ed4079eb9fe26f6fbf14ee5
+    ports: ["127.0.0.1:18443:18443"]
+    volumes:
+      - ./docker/angular/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./docker/local-tls.sh:/local-tls.sh:ro
+      - public-ca:/certs
+    tmpfs: [/data, /config]
+    entrypoint: ["sh", "/local-tls.sh"]
+    depends_on:
+      app:
+        condition: service_healthy
+    networks: [isolated, loopback-edge]
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /certs/root.crt && pidof caddy >/dev/null"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  browser:
+    image: ensenada-auth-stage2-browser:local
+    build:
+      context: ./tests/Angular
+      additional_contexts:
+        auth-fixtures: ./tests/Fixtures
+    environment:
+      HOME: /tmp/browser-home
+      AUTH_TEST_MYSQL_HOST: mysql-auth
+    network_mode: service:tls
+    volumes:
+      - public-ca:/certs:ro
+      - ./output/angular:/results
+    tmpfs: [/tmp]
+    profiles: [browser]
+networks:
+  isolated:
+    internal: true
+  loopback-edge:
+volumes:
+  public-ca:
+  site-images:
+  hacienda-documents:
+  proveedores-documents:

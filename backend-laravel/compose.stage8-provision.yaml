@@ -1,0 +1,12 @@
+# Local, empty staging fixture. Apply after compose.stage8b.yaml.
+services:
+  mysql-auth:
+    volumes:
+      - ./tests/Stage8/provision-grants.sh:/docker-entrypoint-initdb.d/90-provision-grants.sh:ro
+  mysql-setup:
+    command: ["true"]
+  app:
+    command: ["sh", "docker/local-env.sh", "php", "artisan", "serve", "--host=0.0.0.0", "--port=8000", "--no-reload"]
+  tls:
+    volumes:
+      - ./docker/stage8.Caddyfile:/etc/caddy/Caddyfile:ro
